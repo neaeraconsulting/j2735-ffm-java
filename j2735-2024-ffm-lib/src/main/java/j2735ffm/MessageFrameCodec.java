@@ -10,12 +10,15 @@ import java.util.Arrays;
 import static j2735_2024_MessageFrame.MessageFrame_h.*;
 import j2735_2024_MessageFrame.*;
 
+/**
+ * @author Ivan Yourshaw
+ */
 public class MessageFrameCodec {
 
     public static byte[] xerToUper(String xer) {
         byte[] xmlBytes = xer.getBytes(StandardCharsets.UTF_8);
-        ByteBuffer bb = ByteBuffer.wrap(xmlBytes);
-        MemorySegment heapXml = MemorySegment.ofBuffer(bb);
+//        ByteBuffer bb = ByteBuffer.wrap(xmlBytes);
+        MemorySegment heapXml = MemorySegment.ofArray(xmlBytes);
 
         int outputBufferSize = 16384;
         byte[] outputArray = new byte[outputBufferSize];
@@ -66,7 +69,7 @@ public class MessageFrameCodec {
                 throw new RuntimeException("Error encoding");
                 // Check the error info
                 // fprintf(stderr, ”Cannot encode %s: %s\n”, er.failed_typeି >name, strerror(errno))
-                // Need c function to expose errno macro?
+                // Need c function to expose errno macro
             }
 
         }

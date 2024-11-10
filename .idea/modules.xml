@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/j2735-2024-api/j2735-ffm-java.j2735-2024-api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/j2735-2024-api/j2735-ffm-java.j2735-2024-api.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/j2735-2024-ffm-lib/j2735-ffm-java.j2735-2024-ffm-lib.main.iml" filepath="$PROJECT_DIR$/.idea/modules/j2735-2024-ffm-lib/j2735-ffm-java.j2735-2024-ffm-lib.main.iml" />
     </modules>
   </component>
 </project>

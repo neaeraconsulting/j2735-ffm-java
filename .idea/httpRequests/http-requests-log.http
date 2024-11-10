@@ -1,0 +1,2268 @@
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2084
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T033235.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2103
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime>
+    <confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList>
+    <ConnectionManeuverAssist><connectionID>1</connectionID>
+        <queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T033204.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2135
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name>
+    <intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision>
+        <status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime>
+    <confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type>
+    <speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList>
+    <ConnectionManeuverAssist><connectionID>1</connectionID>
+        <queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop>
+            <true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T033156.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2161
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name>
+    <intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision>
+        <status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes>
+            <LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed>
+            <MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime>
+    <confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type>
+    <speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList>
+    <ConnectionManeuverAssist><connectionID>1</connectionID>
+        <queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop>
+            <true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T033151.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2178
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name>
+    <intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision>
+        <status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes>
+            <LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed>
+            <MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime>
+                <minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime>
+    <confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type>
+    <speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList>
+    <ConnectionManeuverAssist><connectionID>1</connectionID>
+        <queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop>
+            <true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T033029.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2094
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime>
+    <confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList>
+    <ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T032959.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2089
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime>
+    <confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T032949.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2084
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T032934.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 4304
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>1</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength><waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>2</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T032825.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 4341
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>1</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>2</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T032654.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 4497
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>1</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>2</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T032539.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 4534
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>1</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>2</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T032522.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 4567
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>1</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>2</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T032447.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 4567
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>1</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>2</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T032050.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 4567
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>1</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>2</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T032003.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 3786
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T031703.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 3539
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T031609.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 3142
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T031526.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2506
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T031445.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2335
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T031424.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2142
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T031402.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2084
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T031343.200.json
+
+###
+
+POST http://localhost:4000/xer/uper/bin
+Content-Type: application/xml
+Content-Length: 2084
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T031306.200.octet-stream
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 5829
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>
+                        1111111111111111
+                    </status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>
+                                                <transit/>
+                                            </type>
+                                            <speed>250</speed>
+                                            <confidence>
+                                                <prec1ms/>
+                                            </confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>
+                                                <greenwave/>
+                                            </type>
+                                            <speed>250</speed>
+                                            <confidence>
+                                                <prec100ms/>
+                                            </confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>1</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>2</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                            </maneuverAssistList>
+                        </MovementState>
+                    </states>
+                    <maneuverAssistList>
+                        <ConnectionManeuverAssist>
+                            <connectionID>1</connectionID>
+                            <queueLength>0</queueLength>
+                            <availableStorageLength>0</availableStorageLength>
+                            <waitOnStop>
+                                <true/>
+                            </waitOnStop>
+                            <pedBicycleDetect>
+                                <true/>
+                            </pedBicycleDetect>
+                        </ConnectionManeuverAssist>
+                        <ConnectionManeuverAssist>
+                            <connectionID>2</connectionID>
+                            <queueLength>0</queueLength>
+                            <availableStorageLength>0</availableStorageLength>
+                            <waitOnStop>
+                                <true/>
+                            </waitOnStop>
+                            <pedBicycleDetect>
+                                <true/>
+                            </pedBicycleDetect>
+                        </ConnectionManeuverAssist>
+                    </maneuverAssistList>
+                </IntersectionState>
+            </intersections>
+        </SPAT>
+    </value>
+</MessageFrame>
+
+<> 2024-11-10T031152.500.json
+
+###
+
+POST http://localhost:4000/jer/xer
+Content-Type: application/json
+Content-Length: 2476
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "messageId": 19,
+  "value": {
+    "SPAT": {
+      "timeStamp": 400000,
+      "name": "Example Name",
+      "intersections": [
+        {
+          "id": {
+            "region": 0,
+            "id": 12111
+          },
+          "revision": 0,
+          "status": "FFFF",
+          "moy": 400000,
+          "timeStamp": 35176,
+          "enabledLanes": [
+            1
+          ],
+          "states": [
+            {
+              "signalGroup": 2,
+              "state-time-speed": [
+                {
+                  "eventState": "protected-Movement-Allowed",
+                  "timing": {
+                    "startTime": 22120,
+                    "minEndTime": 22120,
+                    "maxEndTime": 22121,
+                    "likelyTime": 22120,
+                    "confidence": 15,
+                    "nextTime": 22220
+                  },
+                  "speeds": [
+                    {
+                      "type": "transit",
+                      "speed": 250,
+                      "confidence": "prec1ms",
+                      "distance": 100,
+                      "class": 1
+                    },
+                    {
+                      "type": "greenwave",
+                      "speed": 250,
+                      "confidence": "prec100ms",
+                      "distance": 50,
+                      "class": 1
+                    }
+                  ]
+                }
+              ],
+              "maneuverAssistList": [
+                {
+                  "connectionID": 1,
+                  "queueLength": 0,
+                  "availableStorageLength": 0,
+                  "waitOnStop": true,
+                  "pedBicycleDetect": true
+                },
+                {
+                  "connectionID": 2,
+                  "queueLength": 0,
+                  "availableStorageLength": 0,
+                  "waitOnStop": true,
+                  "pedBicycleDetect": true
+                }
+              ]
+            }
+          ],
+          "maneuverAssistList": [
+            {
+              "connectionID": 1,
+              "queueLength": 0,
+              "availableStorageLength": 0,
+              "waitOnStop": true,
+              "pedBicycleDetect": true
+            },
+            {
+              "connectionID": 2,
+              "queueLength": 0,
+              "availableStorageLength": 0,
+              "waitOnStop": true,
+              "pedBicycleDetect": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+<> 2024-11-10T031121.200.xml
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 5367
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>1</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>2</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                            </maneuverAssistList>
+                        </MovementState>
+                    </states>
+                    <maneuverAssistList>
+                        <ConnectionManeuverAssist>
+                            <connectionID>1</connectionID>
+                            <queueLength>0</queueLength>
+                            <availableStorageLength>0</availableStorageLength>
+                            <waitOnStop>
+                                <true/>
+                            </waitOnStop>
+                            <pedBicycleDetect>
+                                <true/>
+                            </pedBicycleDetect>
+                        </ConnectionManeuverAssist>
+                        <ConnectionManeuverAssist>
+                            <connectionID>2</connectionID>
+                            <queueLength>0</queueLength>
+                            <availableStorageLength>0</availableStorageLength>
+                            <waitOnStop>
+                                <true/>
+                            </waitOnStop>
+                            <pedBicycleDetect>
+                                <true/>
+                            </pedBicycleDetect>
+                        </ConnectionManeuverAssist>
+                    </maneuverAssistList>
+                </IntersectionState>
+            </intersections>
+        </SPAT>
+    </value>
+</MessageFrame>
+
+<> 2024-11-10T031058.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2448
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T030935.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2116
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T030853.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2084
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T030837.200.json
+
+###
+
+POST http://localhost:4000/xer/uper/hex
+Content-Type: application/xml
+Content-Length: 2084
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T030826.200.txt
+
+###
+
+POST http://localhost:4000/xer/uper/bin
+Content-Type: application/xml
+Content-Length: 2084
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T030814.200.octet-stream
+
+###
+
+POST http://localhost:4000/xer/uper/bin
+Content-Type: application/xml
+Content-Length: 2084
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T030745.200.octet-stream
+
+###
+
+POST http://localhost:4000/jer/xer
+Content-Type: application/json
+Content-Length: 2476
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "messageId": 19,
+  "value": {
+    "SPAT": {
+      "timeStamp": 400000,
+      "name": "Example Name",
+      "intersections": [
+        {
+          "id": {
+            "region": 0,
+            "id": 12111
+          },
+          "revision": 0,
+          "status": "FFFF",
+          "moy": 400000,
+          "timeStamp": 35176,
+          "enabledLanes": [
+            1
+          ],
+          "states": [
+            {
+              "signalGroup": 2,
+              "state-time-speed": [
+                {
+                  "eventState": "protected-Movement-Allowed",
+                  "timing": {
+                    "startTime": 22120,
+                    "minEndTime": 22120,
+                    "maxEndTime": 22121,
+                    "likelyTime": 22120,
+                    "confidence": 15,
+                    "nextTime": 22220
+                  },
+                  "speeds": [
+                    {
+                      "type": "transit",
+                      "speed": 250,
+                      "confidence": "prec1ms",
+                      "distance": 100,
+                      "class": 1
+                    },
+                    {
+                      "type": "greenwave",
+                      "speed": 250,
+                      "confidence": "prec100ms",
+                      "distance": 50,
+                      "class": 1
+                    }
+                  ]
+                }
+              ],
+              "maneuverAssistList": [
+                {
+                  "connectionID": 1,
+                  "queueLength": 0,
+                  "availableStorageLength": 0,
+                  "waitOnStop": true,
+                  "pedBicycleDetect": true
+                },
+                {
+                  "connectionID": 2,
+                  "queueLength": 0,
+                  "availableStorageLength": 0,
+                  "waitOnStop": true,
+                  "pedBicycleDetect": true
+                }
+              ]
+            }
+          ],
+          "maneuverAssistList": [
+            {
+              "connectionID": 1,
+              "queueLength": 0,
+              "availableStorageLength": 0,
+              "waitOnStop": true,
+              "pedBicycleDetect": true
+            },
+            {
+              "connectionID": 2,
+              "queueLength": 0,
+              "availableStorageLength": 0,
+              "waitOnStop": true,
+              "pedBicycleDetect": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+<> 2024-11-10T030717.200.xml
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2084
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T030708.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 2122
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<?xml version="1.0" encoding="UTF-8"?><MessageFrame><messageId>19</messageId><value><SPAT><timeStamp>400000</timeStamp><name>Example Name</name><intersections><IntersectionState><id><region>0</region><id>12111</id></id><revision>0</revision><status>1111111111111111</status><moy>400000</moy><timeStamp>35176</timeStamp><enabledLanes><LaneID>1</LaneID></enabledLanes><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><startTime>22120</startTime><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime><likelyTime>22120</likelyTime><confidence>15</confidence><nextTime>22220</nextTime></timing><speeds><AdvisorySpeed><type>3</type><speed>250</speed><confidence>4</confidence><distance>100</distance><class>1</class></AdvisorySpeed><AdvisorySpeed><type>1</type><speed>250</speed><confidence>1</confidence><distance>50</distance><class>1</class></AdvisorySpeed></speeds></MovementEvent></state-time-speed><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></MovementState></states><maneuverAssistList><ConnectionManeuverAssist><connectionID>1</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist><ConnectionManeuverAssist><connectionID>2</connectionID><queueLength>0</queueLength><availableStorageLength>0</availableStorageLength><waitOnStop><true/></waitOnStop><pedBicycleDetect><true/></pedBicycleDetect></ConnectionManeuverAssist></maneuverAssistList></IntersectionState></intersections></SPAT></value></MessageFrame>
+
+<> 2024-11-10T030643.200.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 5367
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>1</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>2</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                            </maneuverAssistList>
+                        </MovementState>
+                    </states>
+                    <maneuverAssistList>
+                        <ConnectionManeuverAssist>
+                            <connectionID>1</connectionID>
+                            <queueLength>0</queueLength>
+                            <availableStorageLength>0</availableStorageLength>
+                            <waitOnStop>
+                                <true/>
+                            </waitOnStop>
+                            <pedBicycleDetect>
+                                <true/>
+                            </pedBicycleDetect>
+                        </ConnectionManeuverAssist>
+                        <ConnectionManeuverAssist>
+                            <connectionID>2</connectionID>
+                            <queueLength>0</queueLength>
+                            <availableStorageLength>0</availableStorageLength>
+                            <waitOnStop>
+                                <true/>
+                            </waitOnStop>
+                            <pedBicycleDetect>
+                                <true/>
+                            </pedBicycleDetect>
+                        </ConnectionManeuverAssist>
+                    </maneuverAssistList>
+                </IntersectionState>
+            </intersections>
+        </SPAT>
+    </value>
+</MessageFrame>
+
+<> 2024-11-10T030606.500.json
+
+###
+
+POST http://localhost:4000/xer/jer
+Content-Type: application/xml
+Content-Length: 5406
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<?xml version="1.0" encoding="UTF-8"?>
+<MessageFrame>
+    <messageId>19</messageId>
+    <value>
+        <SPAT>
+            <timeStamp>400000</timeStamp>
+            <name>Example Name</name>
+            <intersections>
+                <IntersectionState>
+                    <id>
+                        <region>0</region>
+                        <id>12111</id>
+                    </id>
+                    <revision>0</revision>
+                    <status>1111111111111111</status>
+                    <moy>400000</moy>
+                    <timeStamp>35176</timeStamp>
+                    <enabledLanes>
+                        <LaneID>1</LaneID>
+                    </enabledLanes>
+                    <states>
+                        <MovementState>
+                            <signalGroup>2</signalGroup>
+                            <state-time-speed>
+                                <MovementEvent>
+                                    <eventState>
+                                        <protected-Movement-Allowed/>
+                                    </eventState>
+                                    <timing>
+                                        <startTime>22120</startTime>
+                                        <minEndTime>22120</minEndTime>
+                                        <maxEndTime>22121</maxEndTime>
+                                        <likelyTime>22120</likelyTime>
+                                        <confidence>15</confidence>
+                                        <nextTime>22220</nextTime>
+                                    </timing>
+                                    <speeds>
+                                        <AdvisorySpeed>
+                                            <type>3</type>
+                                            <speed>250</speed>
+                                            <confidence>4</confidence>
+                                            <distance>100</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                        <AdvisorySpeed>
+                                            <type>1</type>
+                                            <speed>250</speed>
+                                            <confidence>1</confidence>
+                                            <distance>50</distance>
+                                            <class>1</class>
+                                        </AdvisorySpeed>
+                                    </speeds>
+                                </MovementEvent>
+                            </state-time-speed>
+                            <maneuverAssistList>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>1</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                                <ConnectionManeuverAssist>
+                                    <connectionID>2</connectionID>
+                                    <queueLength>0</queueLength>
+                                    <availableStorageLength>0</availableStorageLength>
+                                    <waitOnStop>
+                                        <true/>
+                                    </waitOnStop>
+                                    <pedBicycleDetect>
+                                        <true/>
+                                    </pedBicycleDetect>
+                                </ConnectionManeuverAssist>
+                            </maneuverAssistList>
+                        </MovementState>
+                    </states>
+                    <maneuverAssistList>
+                        <ConnectionManeuverAssist>
+                            <connectionID>1</connectionID>
+                            <queueLength>0</queueLength>
+                            <availableStorageLength>0</availableStorageLength>
+                            <waitOnStop>
+                                <true/>
+                            </waitOnStop>
+                            <pedBicycleDetect>
+                                <true/>
+                            </pedBicycleDetect>
+                        </ConnectionManeuverAssist>
+                        <ConnectionManeuverAssist>
+                            <connectionID>2</connectionID>
+                            <queueLength>0</queueLength>
+                            <availableStorageLength>0</availableStorageLength>
+                            <waitOnStop>
+                                <true/>
+                            </waitOnStop>
+                            <pedBicycleDetect>
+                                <true/>
+                            </pedBicycleDetect>
+                        </ConnectionManeuverAssist>
+                    </maneuverAssistList>
+                </IntersectionState>
+            </intersections>
+        </SPAT>
+    </value>
+</MessageFrame>
+
+<> 2024-11-10T030541.500.json
+
+###
+
+POST http://localhost:4000/uper/hex/xer
+Content-Type: text/plain
+Content-Length: 1398
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+002182B72F00878190A929E86A88B1BFD51931DD5E3826BFFB8B343AFB6741300FE5C32BA3BBDE67193178F6B7A4C55D7F92AC0F0491F9F41C7FF5C0EAAC660564EC7395A3852EF80497084BD802D70CEE59F40525C774EA036AC088DCD87C1F53E812C941115332BD8AD799163C0A9C81C982D69E83F981552BFD669E5A5F2D16C74FA63E918F8F0F604A90F3A1C12E23BBAD93CB049305AD3E920B77A512C50E4CA153321E342E7B46E1E301A8A4E59014982D4A049305AD3E880A4C16A881C14BB827A1AA228030783694F4354452130736F1056E8D0514C69E86A88BA29495BE95B96477A30E24A8B850AE4165F37B57429305AA82946C0941100F20C350AD1F10EFBC12F596922EAF9F5EE842DA5CB6A3207E642A0903C5B0D861EC9F40E00D471F4F4B0459E06117072B5EC72EDD6E8A402049001556AA6ADA64EBB41999C5CFA6548032950FA47C8D7026AC31E9E66DAADAA6D910CD5064C14484DC189C9FC95A23DF37185E92AD35592B8E0E5EFD26B49962279A2B778687051070CE2BA22974CB3B0110112EADFF2FCBC29B8D28C75BF56B3AB2B823CFE3F939D142D716370A601AC78E4A5FBCF10807A140AB40F08C4344158FB9404A4FC4F5DF57B57F128327A46AD6AD1BBBBF0FF8413612022A903960AA847A131787C4361D860C2B5BD507FAF45ECD0BAF9DC89D2817EC92DDCFDD89C28532C350AD3DEA25C2100228D4347F980931D2B8DFE2BADCA94D615CA0CBEBB2A091E58BE2B51215BE98AE235E1515E348C6CA2AF567FF1CB6449305AD3E988951821392E876D923D4C0E367116255FE6BBB512CBBCD0D5A0FEA65F650A52B5E633EA40E8458E51282F562201A529BB46DA51247A862897C9696F1FB10774216AB8E3CF15D715DB2E514268A9DA38D309EF0FA0C539C893308E63BD5AFBA44436666541EA275627FC4448A5CC2AFBCB2A88869C4D09800949BB79F0573CD5AA7DE4F46A0
+
+<> 2024-11-10T030411.200.xml
+
+###
+
+POST http://localhost:4000/uper/hex/xer
+Content-Type: text/plain
+Content-Length: 1840
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+0012835138023000205e9c094d3eab092ca624b5518202dc3258042800000400022f163328027d9b522afebe04e22f5a3070027d99bff3e9804f1339ec7fd009ec1fb71ff20b1380008012c03140000020001978ae901813ecbdbabeb809f6670e6fd5813b0beac3e7809ec675a6fec813c4bd30bf2409f666147021813ec3eccc0001625000100258082800000200012f14af84027d99e09c02804ec270ec28027d85a251ca0b0c40003011006220000000178db602813ec0db6071005220000000178db6b5013ec0d4a001007220000000178f6524813ec0db61b100c4200000000489012c080087100d420000000844c012c081c7a040100020081cb028d000000800051560840b1fff0a9409d863fae5b40141457fef53b76402246701414c836c10e02851b036cbf6a052302c6a0000804b024d00000080005562103b013ecc8024d64027d98ff60dfc04f631fde03bc09f66c02fa56b0143cc83545b6028a190be0b78051e02c6e0000804b02cd0000004000114af03db1fe0175809e21c270b900b1240001012c0834000000800095c2a0b804fb09e6c1718ffd863e04ec09e1c670060e40002581ea800000400012cd36c0602829ab70b0034050f354625ff680a322aec9400682c1a0001004b04150000008000259b7dae005053540ee003c0a326a9cf3fed8143c419de0010582c0002009608aa00000080004b36f3b900a0a6aea23ff70143cd51497ffe028c843c8e980b1a40007011012620000000167288ef814281378fc8404d88000000059cbe638050a04fd400101462000000016744a66814280072002c17740000020001148ddede050a360386c0000a1e6c01452d1013d8c8083f6302788100400d8025b3a2027d816190000c02582ce8000004000128cefde80a146c02e54758143cd8059ad3e027b1b00b5a54204ec02c360001804b055d0000002000450c7fc781428b80871b80a0a6402bbb3814284819b2ca6c02ad70d813c4c804f041027b00628400025830e80000020001297a7e180a14640398f301414b82c7b440a0a53b8fa5014140b0640001012c1974000001000054e57ef2050a3200ec7c80a0a5be9717c050502c150000404406a080000000556a7b70141487e76002828406e0800000005628fb00141487e74c028284072080000001571bfa90141407cb5a0401038024a52058c4000100806050502c920001004b02d90000008000459fa164404fb30a8580a00a14619c306701414c32ce10e02829659081f814141029030164b000080200
+
+<> 2024-11-10T030408.200.xml
+
+###
+
+POST http://localhost:4000/uper/hex/xer
+Content-Type: text/plain
+Content-Length: 1840
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+0012835138023000205e9c094d3eab092ca624b5518202dc3258042800000400022f163328027d9b522afebe04e22f5a3070027d99bff3e9804f1339ec7fd009ec1fb71ff20b1380008012c03140000020001978ae901813ecbdbabeb809f6670e6fd5813b0beac3e7809ec675a6fec813c4bd30bf2409f666147021813ec3eccc0001625000100258082800000200012f14af84027d99e09c02804ec270ec28027d85a251ca0b0c40003011006220000000178db602813ec0db6071005220000000178db6b5013ec0d4a001007220000000178f6524813ec0db61b100c4200000000489012c080087100d420000000844c012c081c7a040100020081cb028d000000800051560840b1fff0a9409d863fae5b40141457fef53b76402246701414c836c10e02851b036cbf6a052302c6a0000804b024d00000080005562103b013ecc8024d64027d98ff60dfc04f631fde03bc09f66c02fa56b0143cc83545b6028a190be0b78051e02c6e0000804b02cd0000004000114af03db1fe0175809e21c270b900b1240001012c0834000000800095c2a0b804fb09e6c1718ffd863e04ec09e1c670060e40002581ea800000400012cd36c0602829ab70b0034050f354625ff680a322aec9400682c1a0001004b04150000008000259b7dae005053540ee003c0a326a9cf3fed8143c419de0010582c0002009608aa00000080004b36f3b900a0a6aea23ff70143cd51497ffe028c843c8e980b1a40007011012620000000167288ef814281378fc8404d88000000059cbe638050a04fd400101462000000016744a66814280072002c17740000020001148ddede050a360386c0000a1e6c01452d1013d8c8083f6302788100400d8025b3a2027d816190000c02582ce8000004000128cefde80a146c02e54758143cd8059ad3e027b1b00b5a54204ec02c360001804b055d0000002000450c7fc781428b80871b80a0a6402bbb3814284819b2ca6c02ad70d813c4c804f041027b00628400025830e80000020001297a7e180a14640398f301414b82c7b440a0a53b8fa5014140b0640001012c1974000001000054e57ef2050a3200ec7c80a0a5be9717c050502c150000404406a080000000556a7b70141487e76002828406e0800000005628fb00141487e74c028284072080000001571bfa90141407cb5a0401038024a52058c4000100806050502c920001004b02d90000008000459fa164404fb30a8580a00a14619c306701414c32ce10e02829659081f814141029030164b000080200
+
+<> 2024-11-10T030330.200.xml
+
+###
+
+POST http://localhost:4000/uper/hex/jer
+Content-Type: text/plain
+Content-Length: 1398
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+002182B72F00878190A929E86A88B1BFD51931DD5E3826BFFB8B343AFB6741300FE5C32BA3BBDE67193178F6B7A4C55D7F92AC0F0491F9F41C7FF5C0EAAC660564EC7395A3852EF80497084BD802D70CEE59F40525C774EA036AC088DCD87C1F53E812C941115332BD8AD799163C0A9C81C982D69E83F981552BFD669E5A5F2D16C74FA63E918F8F0F604A90F3A1C12E23BBAD93CB049305AD3E920B77A512C50E4CA153321E342E7B46E1E301A8A4E59014982D4A049305AD3E880A4C16A881C14BB827A1AA228030783694F4354452130736F1056E8D0514C69E86A88BA29495BE95B96477A30E24A8B850AE4165F37B57429305AA82946C0941100F20C350AD1F10EFBC12F596922EAF9F5EE842DA5CB6A3207E642A0903C5B0D861EC9F40E00D471F4F4B0459E06117072B5EC72EDD6E8A402049001556AA6ADA64EBB41999C5CFA6548032950FA47C8D7026AC31E9E66DAADAA6D910CD5064C14484DC189C9FC95A23DF37185E92AD35592B8E0E5EFD26B49962279A2B778687051070CE2BA22974CB3B0110112EADFF2FCBC29B8D28C75BF56B3AB2B823CFE3F939D142D716370A601AC78E4A5FBCF10807A140AB40F08C4344158FB9404A4FC4F5DF57B57F128327A46AD6AD1BBBBF0FF8413612022A903960AA847A131787C4361D860C2B5BD507FAF45ECD0BAF9DC89D2817EC92DDCFDD89C28532C350AD3DEA25C2100228D4347F980931D2B8DFE2BADCA94D615CA0CBEBB2A091E58BE2B51215BE98AE235E1515E348C6CA2AF567FF1CB6449305AD3E988951821392E876D923D4C0E367116255FE6BBB512CBBCD0D5A0FEA65F650A52B5E633EA40E8458E51282F562201A529BB46DA51247A862897C9696F1FB10774216AB8E3CF15D715DB2E514268A9DA38D309EF0FA0C539C893308E63BD5AFBA44436666541EA275627FC4448A5CC2AFBCB2A88869C4D09800949BB79F0573CD5AA7DE4F46A0
+
+<> 2024-11-10T030258.200.json
+
+###
+
+POST http://localhost:4000/uper/hex/xer
+Content-Type: text/plain
+Content-Length: 1840
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+0012835138023000205e9c094d3eab092ca624b5518202dc3258042800000400022f163328027d9b522afebe04e22f5a3070027d99bff3e9804f1339ec7fd009ec1fb71ff20b1380008012c03140000020001978ae901813ecbdbabeb809f6670e6fd5813b0beac3e7809ec675a6fec813c4bd30bf2409f666147021813ec3eccc0001625000100258082800000200012f14af84027d99e09c02804ec270ec28027d85a251ca0b0c40003011006220000000178db602813ec0db6071005220000000178db6b5013ec0d4a001007220000000178f6524813ec0db61b100c4200000000489012c080087100d420000000844c012c081c7a040100020081cb028d000000800051560840b1fff0a9409d863fae5b40141457fef53b76402246701414c836c10e02851b036cbf6a052302c6a0000804b024d00000080005562103b013ecc8024d64027d98ff60dfc04f631fde03bc09f66c02fa56b0143cc83545b6028a190be0b78051e02c6e0000804b02cd0000004000114af03db1fe0175809e21c270b900b1240001012c0834000000800095c2a0b804fb09e6c1718ffd863e04ec09e1c670060e40002581ea800000400012cd36c0602829ab70b0034050f354625ff680a322aec9400682c1a0001004b04150000008000259b7dae005053540ee003c0a326a9cf3fed8143c419de0010582c0002009608aa00000080004b36f3b900a0a6aea23ff70143cd51497ffe028c843c8e980b1a40007011012620000000167288ef814281378fc8404d88000000059cbe638050a04fd400101462000000016744a66814280072002c17740000020001148ddede050a360386c0000a1e6c01452d1013d8c8083f6302788100400d8025b3a2027d816190000c02582ce8000004000128cefde80a146c02e54758143cd8059ad3e027b1b00b5a54204ec02c360001804b055d0000002000450c7fc781428b80871b80a0a6402bbb3814284819b2ca6c02ad70d813c4c804f041027b00628400025830e80000020001297a7e180a14640398f301414b82c7b440a0a53b8fa5014140b0640001012c1974000001000054e57ef2050a3200ec7c80a0a5be9717c050502c150000404406a080000000556a7b70141487e76002828406e0800000005628fb00141487e74c028284072080000001571bfa90141407cb5a0401038024a52058c4000100806050502c920001004b02d90000008000459fa164404fb30a8580a00a14619c306701414c32ce10e02829659081f814141029030164b000080200
+
+<> 2024-11-10T030025.200.xml
+
+###
+
+POST http://localhost:4000/uper/hex/jer
+Content-Type: text/plain
+Content-Length: 1840
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+0012835138023000205e9c094d3eab092ca624b5518202dc3258042800000400022f163328027d9b522afebe04e22f5a3070027d99bff3e9804f1339ec7fd009ec1fb71ff20b1380008012c03140000020001978ae901813ecbdbabeb809f6670e6fd5813b0beac3e7809ec675a6fec813c4bd30bf2409f666147021813ec3eccc0001625000100258082800000200012f14af84027d99e09c02804ec270ec28027d85a251ca0b0c40003011006220000000178db602813ec0db6071005220000000178db6b5013ec0d4a001007220000000178f6524813ec0db61b100c4200000000489012c080087100d420000000844c012c081c7a040100020081cb028d000000800051560840b1fff0a9409d863fae5b40141457fef53b76402246701414c836c10e02851b036cbf6a052302c6a0000804b024d00000080005562103b013ecc8024d64027d98ff60dfc04f631fde03bc09f66c02fa56b0143cc83545b6028a190be0b78051e02c6e0000804b02cd0000004000114af03db1fe0175809e21c270b900b1240001012c0834000000800095c2a0b804fb09e6c1718ffd863e04ec09e1c670060e40002581ea800000400012cd36c0602829ab70b0034050f354625ff680a322aec9400682c1a0001004b04150000008000259b7dae005053540ee003c0a326a9cf3fed8143c419de0010582c0002009608aa00000080004b36f3b900a0a6aea23ff70143cd51497ffe028c843c8e980b1a40007011012620000000167288ef814281378fc8404d88000000059cbe638050a04fd400101462000000016744a66814280072002c17740000020001148ddede050a360386c0000a1e6c01452d1013d8c8083f6302788100400d8025b3a2027d816190000c02582ce8000004000128cefde80a146c02e54758143cd8059ad3e027b1b00b5a54204ec02c360001804b055d0000002000450c7fc781428b80871b80a0a6402bbb3814284819b2ca6c02ad70d813c4c804f041027b00628400025830e80000020001297a7e180a14640398f301414b82c7b440a0a53b8fa5014140b0640001012c1974000001000054e57ef2050a3200ec7c80a0a5be9717c050502c150000404406a080000000556a7b70141487e76002828406e0800000005628fb00141487e74c028284072080000001571bfa90141407cb5a0401038024a52058c4000100806050502c920001004b02d90000008000459fa164404fb30a8580a00a14619c306701414c32ce10e02829659081f814141029030164b000080200
+
+<> 2024-11-10T025954.200.json
+
+###
+
+POST http://localhost:4000/jer/xer
+Content-Type: application/json
+Content-Length: 2476
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "messageId": 19,
+  "value": {
+    "SPAT": {
+      "timeStamp": 400000,
+      "name": "Example Name",
+      "intersections": [
+        {
+          "id": {
+            "region": 0,
+            "id": 12111
+          },
+          "revision": 0,
+          "status": "FFFF",
+          "moy": 400000,
+          "timeStamp": 35176,
+          "enabledLanes": [
+            1
+          ],
+          "states": [
+            {
+              "signalGroup": 2,
+              "state-time-speed": [
+                {
+                  "eventState": "protected-Movement-Allowed",
+                  "timing": {
+                    "startTime": 22120,
+                    "minEndTime": 22120,
+                    "maxEndTime": 22121,
+                    "likelyTime": 22120,
+                    "confidence": 15,
+                    "nextTime": 22220
+                  },
+                  "speeds": [
+                    {
+                      "type": "transit",
+                      "speed": 250,
+                      "confidence": "prec1ms",
+                      "distance": 100,
+                      "class": 1
+                    },
+                    {
+                      "type": "greenwave",
+                      "speed": 250,
+                      "confidence": "prec100ms",
+                      "distance": 50,
+                      "class": 1
+                    }
+                  ]
+                }
+              ],
+              "maneuverAssistList": [
+                {
+                  "connectionID": 1,
+                  "queueLength": 0,
+                  "availableStorageLength": 0,
+                  "waitOnStop": true,
+                  "pedBicycleDetect": true
+                },
+                {
+                  "connectionID": 2,
+                  "queueLength": 0,
+                  "availableStorageLength": 0,
+                  "waitOnStop": true,
+                  "pedBicycleDetect": true
+                }
+              ]
+            }
+          ],
+          "maneuverAssistList": [
+            {
+              "connectionID": 1,
+              "queueLength": 0,
+              "availableStorageLength": 0,
+              "waitOnStop": true,
+              "pedBicycleDetect": true
+            },
+            {
+              "connectionID": 2,
+              "queueLength": 0,
+              "availableStorageLength": 0,
+              "waitOnStop": true,
+              "pedBicycleDetect": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+<> 2024-11-10T025838.200.xml
+
+###
+
+POST http://localhost:4000/jer/uper/hex
+Content-Type: application/json
+Content-Length: 2476
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "messageId": 19,
+  "value": {
+    "SPAT": {
+      "timeStamp": 400000,
+      "name": "Example Name",
+      "intersections": [
+        {
+          "id": {
+            "region": 0,
+            "id": 12111
+          },
+          "revision": 0,
+          "status": "FFFF",
+          "moy": 400000,
+          "timeStamp": 35176,
+          "enabledLanes": [
+            1
+          ],
+          "states": [
+            {
+              "signalGroup": 2,
+              "state-time-speed": [
+                {
+                  "eventState": "protected-Movement-Allowed",
+                  "timing": {
+                    "startTime": 22120,
+                    "minEndTime": 22120,
+                    "maxEndTime": 22121,
+                    "likelyTime": 22120,
+                    "confidence": 15,
+                    "nextTime": 22220
+                  },
+                  "speeds": [
+                    {
+                      "type": "transit",
+                      "speed": 250,
+                      "confidence": "prec1ms",
+                      "distance": 100,
+                      "class": 1
+                    },
+                    {
+                      "type": "greenwave",
+                      "speed": 250,
+                      "confidence": "prec100ms",
+                      "distance": 50,
+                      "class": 1
+                    }
+                  ]
+                }
+              ],
+              "maneuverAssistList": [
+                {
+                  "connectionID": 1,
+                  "queueLength": 0,
+                  "availableStorageLength": 0,
+                  "waitOnStop": true,
+                  "pedBicycleDetect": true
+                },
+                {
+                  "connectionID": 2,
+                  "queueLength": 0,
+                  "availableStorageLength": 0,
+                  "waitOnStop": true,
+                  "pedBicycleDetect": true
+                }
+              ]
+            }
+          ],
+          "maneuverAssistList": [
+            {
+              "connectionID": 1,
+              "queueLength": 0,
+              "availableStorageLength": 0,
+              "waitOnStop": true,
+              "pedBicycleDetect": true
+            },
+            {
+              "connectionID": 2,
+              "queueLength": 0,
+              "availableStorageLength": 0,
+              "waitOnStop": true,
+              "pedBicycleDetect": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+<> 2024-11-10T025801.200.txt
+
+###
+
+POST http://localhost:4000/jer/uper/hex
+Content-Type: application/json
+Content-Length: 2476
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "messageId": 19,
+  "value": {
+    "SPAT": {
+      "timeStamp": 400000,
+      "name": "Example Name",
+      "intersections": [
+        {
+          "id": {
+            "region": 0,
+            "id": 12111
+          },
+          "revision": 0,
+          "status": "FFFF",
+          "moy": 400000,
+          "timeStamp": 35176,
+          "enabledLanes": [
+            1
+          ],
+          "states": [
+            {
+              "signalGroup": 2,
+              "state-time-speed": [
+                {
+                  "eventState": "protected-Movement-Allowed",
+                  "timing": {
+                    "startTime": 22120,
+                    "minEndTime": 22120,
+                    "maxEndTime": 22121,
+                    "likelyTime": 22120,
+                    "confidence": 15,
+                    "nextTime": 22220
+                  },
+                  "speeds": [
+                    {
+                      "type": "transit",
+                      "speed": 250,
+                      "confidence": "prec1ms",
+                      "distance": 100,
+                      "class": 1
+                    },
+                    {
+                      "type": "greenwave",
+                      "speed": 250,
+                      "confidence": "prec100ms",
+                      "distance": 50,
+                      "class": 1
+                    }
+                  ]
+                }
+              ],
+              "maneuverAssistList": [
+                {
+                  "connectionID": 1,
+                  "queueLength": 0,
+                  "availableStorageLength": 0,
+                  "waitOnStop": true,
+                  "pedBicycleDetect": true
+                },
+                {
+                  "connectionID": 2,
+                  "queueLength": 0,
+                  "availableStorageLength": 0,
+                  "waitOnStop": true,
+                  "pedBicycleDetect": true
+                }
+              ]
+            }
+          ],
+          "maneuverAssistList": [
+            {
+              "connectionID": 1,
+              "queueLength": 0,
+              "availableStorageLength": 0,
+              "waitOnStop": true,
+              "pedBicycleDetect": true
+            },
+            {
+              "connectionID": 2,
+              "queueLength": 0,
+              "availableStorageLength": 0,
+              "waitOnStop": true,
+              "pedBicycleDetect": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+<> 2024-11-10T025724.200.txt
+
+###
+
+POST http://localhost:4000/jer/uper/bin
+Content-Type: application/json
+Content-Length: 1051
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{"messageId":19,"value":{"SPAT":{"timeStamp":400000,"name":"Example Name","intersections":[{"id":{"region":0,"id":12111},"revision":0,"status":"FFFF","moy":400000,"timeStamp":35176,"enabledLanes":[1],"states":[{"signalGroup":2,"state-time-speed":[{"eventState":"protected-Movement-Allowed","timing":{"startTime":22120,"minEndTime":22120,"maxEndTime":22121,"likelyTime":22120,"confidence":15,"nextTime":22220},"speeds":[{"type":"transit","speed":250,"confidence":"prec1ms","distance":100,"class":1},{"type":"greenwave","speed":250,"confidence":"prec100ms","distance":50,"class":1}]}],"maneuverAssistList":[{"connectionID":1,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true},{"connectionID":2,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true}]}],"maneuverAssistList":[{"connectionID":1,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true},{"connectionID":2,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true}]}]}}}
+
+<> 2024-11-10T025550.200.octet-stream
+
+###
+
+POST http://localhost:4000/jer/uper/hex
+Content-Type: application/json
+Content-Length: 1051
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{"messageId":19,"value":{"SPAT":{"timeStamp":400000,"name":"Example Name","intersections":[{"id":{"region":0,"id":12111},"revision":0,"status":"FFFF","moy":400000,"timeStamp":35176,"enabledLanes":[1],"states":[{"signalGroup":2,"state-time-speed":[{"eventState":"protected-Movement-Allowed","timing":{"startTime":22120,"minEndTime":22120,"maxEndTime":22121,"likelyTime":22120,"confidence":15,"nextTime":22220},"speeds":[{"type":"transit","speed":250,"confidence":"prec1ms","distance":100,"class":1},{"type":"greenwave","speed":250,"confidence":"prec100ms","distance":50,"class":1}]}],"maneuverAssistList":[{"connectionID":1,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true},{"connectionID":2,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true}]}],"maneuverAssistList":[{"connectionID":1,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true},{"connectionID":2,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true}]}]}}}
+
+<> 2024-11-10T025500.200.txt
+
+###
+
+POST http://localhost:4000/jer/uper/hex
+Content-Type: application/json
+Content-Length: 1051
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{"messageId":19,"value":{"SPAT":{"timeStamp":400000,"name":"Example Name","intersections":[{"id":{"region":0,"id":12111},"revision":0,"status":"FFFF","moy":400000,"timeStamp":35176,"enabledLanes":[1],"states":[{"signalGroup":2,"state-time-speed":[{"eventState":"protected-Movement-Allowed","timing":{"startTime":22120,"minEndTime":22120,"maxEndTime":22121,"likelyTime":22120,"confidence":15,"nextTime":22220},"speeds":[{"type":"transit","speed":250,"confidence":"prec1ms","distance":100,"class":1},{"type":"greenwave","speed":250,"confidence":"prec100ms","distance":50,"class":1}]}],"maneuverAssistList":[{"connectionID":1,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true},{"connectionID":2,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true}]}],"maneuverAssistList":[{"connectionID":1,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true},{"connectionID":2,"queueLength":0,"availableStorageLength":0,"waitOnStop":true,"pedBicycleDetect":true}]}]}}}
+
+<> 2024-11-10T025307.200.txt
+
+###
+

@@ -1,0 +1,9 @@
+spring.application.name: j2735-2024-api
+server.port: 4000
+spring.main.web-application-type: servlet
+
+j2735.api:
+  text-buffer-size: 262144
+  uper-buffer-size: 8192
+  asn-codec-ctx-max-stack-size: 30000
+  message-frame-allocate-size: 16384

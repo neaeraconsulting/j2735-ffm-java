@@ -24,27 +24,6 @@ public class J2735ApiApplication {
         SpringApplication.run(j2735api.J2735ApiApplication.class, args);
     }
 
-    @Bean
-    public MessageFrameCodec messageFrameCodec() {
-        return new MessageFrameCodec();
-    }
 
-//    // Ref. https://gist.github.com/benoitdevos/fc49f3b9633eb7ba0f5c8dfe085cba14?permalink_comment_id=2270442#gistcomment-2270442
-//    // Support application/octet-stream content type
-//    @Bean
-//    public HttpMessageConverter addOctetStreamConverter() {
-//        return new AbstractHttpMessageConverter<InputStream>(MediaType.APPLICATION_OCTET_STREAM) {
-//            protected boolean supports(Class<?> clazz) {
-//                return InputStream.class.isAssignableFrom(clazz);
-//            }
-//
-//            protected InputStream readInternal(Class<? extends InputStream> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
-//                return inputMessage.getBody();
-//            }
-//
-//            protected void writeInternal(InputStream inputStream, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-//                IOUtils.copy(inputStream, outputMessage.getBody());
-//            }
-//        };
-//    }
+
 }

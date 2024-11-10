@@ -5,11 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="445d0e4d-d0ed-4914-a12f-4b30a87153e2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/JacksonConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/jer-to-uper-binary.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/jer-to-uper-hex.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/jer-to-xer.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-binary-to-jer.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-binary-to-xer.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-jer.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-xer.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-jer.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-uper-binary.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-uper-hex.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/ApiConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/ApiController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/CodecConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-api/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/JacksonConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-ffm-lib/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-ffm-lib/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/HexUtil.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,10 +77,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 7
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
 }]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2odOFoWMpDTdnP7lyR93RbL2PJM" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -69,9 +92,24 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
     "Gradle.j2735-ffm-java [build].executor": "Run",
     "Gradle.j2735-ffm-java:j2735-2024-api [build].executor": "Run",
     "Gradle.j2735-ffm-java:j2735-2024-ffm-lib [build].executor": "Run",
+    "HTTP Request.jer-to-uper-binary | #1.executor": "Run",
+    "HTTP Request.jer-to-uper-hex | #1.executor": "Run",
+    "HTTP Request.jer-to-xer | #1.executor": "Run",
+    "HTTP Request.uper-hex-to-jer | #1.executor": "Run",
+    "HTTP Request.uper-hex-to-jer | RSM.executor": "Run",
+    "HTTP Request.uper-hex-to-xer | #1.executor": "Run",
+    "HTTP Request.uper-hex-to-xer | MAP.executor": "Run",
+    "HTTP Request.uper-hex-to-xer | RSM.executor": "Run",
+    "HTTP Request.xer-to-jer | #1.executor": "Run",
+    "HTTP Request.xer-to-uper-binary | #1.executor": "Run",
+    "HTTP Request.xer-to-uper-hex | #1.executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
@@ -85,75 +123,24 @@
 }]]></component>
   <component name="RunAnythingCache">
     <option name="myCommands">
-      <command value="gradle build" />
       <command value="gradle build -xtest" />
+      <command value="gradle build" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.j2735-ffm-java [build]">
-    <configuration name="j2735-ffm-java [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="build" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
+  <component name="RunManager" selected="HTTP Request.xer-to-jer | #1">
+    <configuration name="jer-to-xer | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/j2735-2024-api/http-tests/jer-to-xer.http" requestIdentifier="#1" runType="Run single request">
       <method v="2" />
     </configuration>
-    <configuration name="j2735-ffm-java:j2735-2024-api [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/j2735-2024-api" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="build" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
+    <configuration name="uper-hex-to-xer | RSM" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-xer.http" index="2" requestIdentifier="RSM" runType="Run single request">
       <method v="2" />
     </configuration>
-    <configuration name="j2735-ffm-java:j2735-2024-ffm-lib [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/j2735-2024-ffm-lib" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="build" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
+    <configuration name="xer-to-jer | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-jer.http" requestIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="xer-to-uper-binary | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-uper-binary.http" requestIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="xer-to-uper-hex | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-uper-hex.http" requestIdentifier="#1" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="J2735ApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
@@ -172,9 +159,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.j2735-ffm-java:j2735-2024-api [build]" />
-        <item itemvalue="Gradle.j2735-ffm-java:j2735-2024-ffm-lib [build]" />
-        <item itemvalue="Gradle.j2735-ffm-java [build]" />
+        <item itemvalue="HTTP Request.xer-to-jer | #1" />
+        <item itemvalue="HTTP Request.xer-to-uper-binary | #1" />
+        <item itemvalue="HTTP Request.jer-to-xer | #1" />
+        <item itemvalue="HTTP Request.xer-to-uper-hex | #1" />
+        <item itemvalue="HTTP Request.uper-hex-to-xer | RSM" />
       </list>
     </recent_temporary>
   </component>
@@ -194,7 +183,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1731195886040</updated>
-      <workItem from="1731195889384" duration="16127000" />
+      <workItem from="1731195889384" duration="19798000" />
+      <workItem from="1731220030794" duration="14010000" />
     </task>
     <servers />
   </component>

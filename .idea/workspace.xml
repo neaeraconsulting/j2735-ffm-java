@@ -5,29 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="445d0e4d-d0ed-4914-a12f-4b30a87153e2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T134555.200.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T134648.200.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T134703.200.octet-stream" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T134753.200.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T134756.200.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T134816.200.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T134819.200.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T025307.200.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T025500.200.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T025550.200.octet-stream" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T025724.200.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T025801.200.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T025838.200.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-jer.http" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-jer.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-xer.http" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-xer.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-jer.http" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-jer.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-uper-binary.http" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-uper-binary.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-uper-hex.http" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-uper-hex.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,7 +162,7 @@
       <option name="presentableId" value="Default" />
       <updated>1731195886040</updated>
       <workItem from="1731195889384" duration="19798000" />
-      <workItem from="1731220030794" duration="21085000" />
+      <workItem from="1731220030794" duration="21214000" />
     </task>
     <servers />
   </component>

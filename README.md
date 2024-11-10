@@ -51,11 +51,9 @@ the native library installed on it as follows:
 
 `MessageFrame.h` is the top level header that contains all the others transitively.
 
-Unpack and run `jextract` with a command line similar to:
+Run `jextract` with a command line similar to:
 
 ```bash
-tar xzvf openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
-
 ./jextract \
     --include-dir ./headers \
     --output ./java-src \
@@ -65,7 +63,8 @@ tar xzvf openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
 ```
 
 where the `/headers` directory contains the generated C headers, and `asnapplication` is the platform-dependent name
-of the native library (which on linux is the file name minus the `lib` prefix).
+of the native library (which on linux is the file name minus the `lib` prefix), and the `java-src` directory receives
+the generated source.
 
 
 

@@ -5,34 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="445d0e4d-d0ed-4914-a12f-4b30a87153e2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/j2735-2024-api/j2735-ffm-java.j2735-2024-api.main.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/app/App.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/app/MessageUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/org/example/app/MessageUtilsTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/src/main/java/org/example/list/LinkedList.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/src/test/java/org/example/list/LinkedListTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest-api/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest-api/src/main/java/org/example/restapi/RestApiApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest-api/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rest-api/src/test/java/org/example/restapi/RestApiApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/src/test/java/j2735api/J2735ApiApplicationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/src/main/java/org/example/utilities/JoinUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/src/main/java/org/example/utilities/SplitUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/src/main/java/org/example/utilities/StringUtils.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -216,7 +192,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1731195886040</updated>
-      <workItem from="1731195889384" duration="8318000" />
+      <workItem from="1731195889384" duration="10473000" />
     </task>
     <servers />
   </component>

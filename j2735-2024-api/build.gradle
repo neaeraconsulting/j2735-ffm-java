@@ -10,6 +10,8 @@ dependencies {
 
     implementation project(":j2735-2024-ffm-lib")
 
+
+    implementation 'org.apache.commons:commons-io:1.3.2'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

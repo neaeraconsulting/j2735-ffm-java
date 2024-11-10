@@ -9,11 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import j2735ffm.MessageFrameCodec;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-
 /**
  * HTTP Methods for converting J2735 MessageFrames between XER, JER and UPER
  * @author Ivan Yourshaw
@@ -47,5 +42,49 @@ public class J2735ApiController {
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public byte[] xerToUper(@RequestBody String xer) {
         return codec.xerToUper(xer);
+    }
+
+    @PostMapping(
+            value = "/jer/uper/bin",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public byte[] jerToUper(@RequestBody String jer) {
+        return codec.jerToUper(jer);
+    }
+
+    @PostMapping(
+            value = "/uper/xer",
+            consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE,
+            produces = MediaType.APPLICATION_XML_VALUE
+    )
+    public String uperToXer(@RequestBody byte[] uper) {
+        return codec.uperToXer(uper);
+    }
+
+    @PostMapping(
+            value = "/uper/jer",
+            consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public String uperToJer(@RequestBody byte[] uper) {
+        return codec.uperToJer(uper);
+    }
+
+    @PostMapping(
+            value = "/xer/jer",
+            consumes = MediaType.APPLICATION_XML_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public String xerToJer(@RequestBody String xer) {
+        return codec.xerToJer(xer);
+    }
+
+    @PostMapping(
+            value = "/jer/xer",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_XML_VALUE
+    )
+    public String jerToXer(@RequestBody String jer) {
+        return codec.jerToXer(jer);
     }
 }

@@ -19,17 +19,32 @@ import j2735_2024_MessageFrame.*;
  */
 public class MessageFrameCodec {
 
+    /**
+     * Buffer size for XER and JSON.  Messages larger than this, including whitespace, won't work.
+     */
     public final long textBufferSize;
+
+    /**
+     * Buffer size for UPER binary and hex-encoded messages.  Messages larger than this won't work.
+     */
     public final long uperBufferSize;
 
+    /**
+     * I'm unsure of the significance of this asn1c parameter or what an optimal value for it would be.
+     * The default value is random, and seems to work.
+     */
+    public final long asnCodecCtxMaxStackSize;
+
     public MessageFrameCodec() {
-        this.textBufferSize = 65536L;
-        this.uperBufferSize = 4096L;
+        this.textBufferSize = 131072L;
+        this.uperBufferSize = 8192L;
+        this.asnCodecCtxMaxStackSize = 2048L;
     }
 
-    public MessageFrameCodec(long textBufferSize, long uperBufferSize) {
+    public MessageFrameCodec(long textBufferSize, long uperBufferSize, int asnCodecCtxMaxStackSize) {
         this.textBufferSize = textBufferSize;
         this.uperBufferSize = uperBufferSize;
+        this.asnCodecCtxMaxStackSize = asnCodecCtxMaxStackSize;
     }
 
     /**
@@ -38,140 +53,132 @@ public class MessageFrameCodec {
      * @return Summary and error information
      */
     public String xerAsnFprint(String xer) {
-        byte[] xmlBytes = xer.getBytes(StandardCharsets.UTF_8);
-        ByteBuffer bb = ByteBuffer.wrap(xmlBytes);
-        MemorySegment heapXml = MemorySegment.ofBuffer(bb);
-        var sb = new StringBuilder();
-        var f = new Formatter(sb);
-
-        try (var arena = Arena.ofShared()) {
-            MemorySegment optCodecParameters = asn_codec_ctx_t.allocate(arena);
-
-            // I'm unsure of the significance of this parameter or what a good value for it would be
-            // so it is set to a random value.
-            asn_codec_ctx_t.max_stack_size(optCodecParameters, 2048);
-
-            MemorySegment typeToDecode = asn_DEF_MessageFrame();
-
-            // The result Message Frame
-            MemorySegment messageFrame = MessageFrame_t.allocate(arena);
-
-            // Pointer to the result Message Frame
-            MemorySegment structurePtr = arena.allocate(8);
-            structurePtr.set(ValueLayout.JAVA_LONG, 0, messageFrame.address());
-
-            //long bufferSize = 65536;
-            MemorySegment buffer = arena.allocate(textBufferSize);
-            buffer.copyFrom(heapXml);
-            MemorySegment er = asn_decode(arena, optCodecParameters, ATS_BASIC_XER(), typeToDecode, structurePtr,
-                    buffer, textBufferSize);
-            long retCode = asn_dec_rval_t.code(er);
-            long consumed = asn_dec_rval_t.consumed(er);
-            f.format("Ret code: %s. Consumer: %s%n", retCode, consumed);
-
-            long messagePointer = structurePtr.get(ValueLayout.JAVA_LONG, 0);
-            f.format("MessageFrame pointer: %s%n", messagePointer);
-
-            long messageId = MessageFrame_t.messageId(messageFrame);
-            f.format("Message ID: %s%n", messageId);
-
-            int printResult = asn_fprint(stdout(), typeToDecode, messageFrame);
-            f.format("Print result: %s%n", printResult);
-
+        String result;
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment messageFrame = xerToMessageFrame(arena, xer);
+            int printResult = asn_fprint(stdout(), asn_DEF_MessageFrame(), messageFrame);
+            result = "Print result: " + printResult;
         }
-        return sb.toString();
+        return result;
     }
 
     public byte[] xerToUper(String xer) {
-        byte[] xmlBytes = xer.getBytes(StandardCharsets.UTF_8);
-//        ByteBuffer bb = ByteBuffer.wrap(xmlBytes);
-        MemorySegment heapXml = MemorySegment.ofArray(xmlBytes);
-
-        //int outputBufferSize = 16384;
-        byte[] outputArray = new byte[(int) uperBufferSize];
-        MemorySegment heapOutput = MemorySegment.ofArray(outputArray);
-
         try (var arena = Arena.ofConfined()) {
-            MemorySegment optCodecParameters = asn_codec_ctx_t.allocate(arena);
-            asn_codec_ctx_t.max_stack_size(optCodecParameters, 2048);
-            MemorySegment typeToDecode = asn_DEF_MessageFrame();
-
-            // The result Message Frame
-            MemorySegment messageFrame = MessageFrame_t.allocate(arena);
-
-            // Pointer to the result Message Frame
-            MemorySegment structurePtr = arena.allocate(8);
-            structurePtr.set(ValueLayout.JAVA_LONG, 0, messageFrame.address());
-
-            //long bufferSize = 65536;
-            MemorySegment buffer = arena.allocate(textBufferSize);
-            buffer.copyFrom(heapXml);
-            MemorySegment er = asn_decode(arena, optCodecParameters, ATS_BASIC_XER(), typeToDecode, structurePtr,
-                    buffer, textBufferSize);
-            long retCode = asn_dec_rval_t.code(er);
-            long consumed = asn_dec_rval_t.consumed(er);
-            System.out.println("Ret code: " + retCode + ", Consumed: " + consumed);
-
-//            long messagePointer = structurePtr.get(ValueLayout.JAVA_LONG, 0);
-//            System.out.println("MessageFrame pointer: " + messagePointer);
-
-            long messageId = MessageFrame_t.messageId(messageFrame);
-            System.out.println("Message ID: " + messageId);
-
-            int printResult = asn_fprint(stdout(), typeToDecode, messageFrame);
-            System.out.println("Print result: " + printResult);
-
-
-            MemorySegment outputBuffer = arena.allocate(uperBufferSize);
-
-            MemorySegment erEnc = asn_encode_to_buffer(arena, optCodecParameters, ATS_UNALIGNED_BASIC_PER(),
-                    typeToDecode, messageFrame, outputBuffer, uperBufferSize);
-            long encoded = asn_enc_rval_t.encoded(erEnc);
-            if (encoded > -1) {
-                System.out.printf("Encoded %s bytes%n", encoded);
-                heapOutput.copyFrom(outputBuffer);
-                return Arrays.copyOfRange(outputArray, 0, (int)encoded);
-            } else {
-                System.out.println("Error");
-                throw new RuntimeException("Error encoding");
-                // Check the error info
-                // fprintf(stderr, ”Cannot encode %s: %s\n”, er.failed_typeି >name, strerror(errno))
-                // Need c function to expose errno macro
-            }
-
+            MemorySegment messageFrame = xerToMessageFrame(arena, xer);
+            return messageFrameToUper(arena, messageFrame);
         }
     }
 
     public byte[] jerToUper(String jer) {
-        return null;
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment messageFrame = jerToMessageFrame(arena, jer);
+            return messageFrameToUper(arena, messageFrame);
+        }
     }
 
     public String uperToXer(byte[] uper) {
-        return null;
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment messageFrame = uperToMessageFrame(arena, uper);
+            return messageFrameToXer(arena, messageFrame);
+        }
     }
 
     public String uperToJer(byte[] uper) {
-        return null;
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment messageFrame = uperToMessageFrame(arena, uper);
+            return messageFrameToJer(arena, messageFrame);
+        }
     }
 
     public String xerToJer(String xer) {
-        return null;
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment messageFrame = xerToMessageFrame(arena, xer);
+            return messageFrameToJer(arena, messageFrame);
+        }
     }
 
     public String jerToXer(String jer) {
-        return null;
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment messageFrame = jerToMessageFrame(arena, jer);
+            return messageFrameToXer(arena, messageFrame);
+        }
+    }
+
+    private MemorySegment encodedBytesToMessageFrame(Arena arena, final byte[] bytes, final int asnTransferSyntax) {
+        MemorySegment heapBytes = MemorySegment.ofArray(bytes);
+        MemorySegment optCodecParameters = optCodecParameters(arena);
+
+        // The result Message Frame
+        MemorySegment messageFrame = MessageFrame_t.allocate(arena);
+
+        // Pointer to the result Message Frame
+        MemorySegment structurePtr = arena.allocate(8);
+        structurePtr.set(ValueLayout.JAVA_LONG, 0, messageFrame.address());
+
+        MemorySegment buffer = arena.allocate(textBufferSize);
+        buffer.copyFrom(heapBytes);
+        MemorySegment er = asn_decode(arena, optCodecParameters, asnTransferSyntax, asn_DEF_MessageFrame(), structurePtr,
+                buffer, textBufferSize);
+        long retCode = asn_dec_rval_t.code(er);
+        long consumed = asn_dec_rval_t.consumed(er);
+        System.out.println("Ret code: " + retCode + ", Consumed: " + consumed);
+
+        return messageFrame;
     }
 
     private MemorySegment xerToMessageFrame(Arena arena, String xer) {
-        return null;
+        byte[] xmlBytes = xer.getBytes(StandardCharsets.UTF_8);
+        return encodedBytesToMessageFrame(arena, xmlBytes, ATS_BASIC_XER());
     }
 
     private MemorySegment jerToMessageFrame(Arena arena, String jer) {
-        return null;
+        byte[] jsonBytes = jer.getBytes(StandardCharsets.UTF_8);
+        return encodedBytesToMessageFrame(arena, jsonBytes, ATS_JER());
     }
 
     private MemorySegment uperToMessageFrame(Arena arena, byte[] uper) {
-        return null;
+        return encodedBytesToMessageFrame(arena, uper, ATS_UNALIGNED_BASIC_PER());
+    }
+
+    private byte[] messageFrameToEncodedBytes(Arena arena, MemorySegment messageFrame, final int asnTransferSyntax) {
+        byte[] outputArray = new byte[(int) uperBufferSize];
+        MemorySegment heapOutput = MemorySegment.ofArray(outputArray);
+        MemorySegment outputBuffer = arena.allocate(uperBufferSize);
+        MemorySegment optCodecParameters = optCodecParameters(arena);
+        MemorySegment erEnc = asn_encode_to_buffer(arena, optCodecParameters, asnTransferSyntax,
+                asn_DEF_MessageFrame(), messageFrame, outputBuffer, uperBufferSize);
+        long encoded = asn_enc_rval_t.encoded(erEnc);
+        if (encoded > -1) {
+            System.out.printf("Encoded %s bytes%n", encoded);
+            heapOutput.copyFrom(outputBuffer);
+            return Arrays.copyOfRange(outputArray, 0, (int)encoded);
+        } else {
+            System.out.println("Error");
+            throw new RuntimeException("Error encoding");
+            // Check the error info
+            // fprintf(stderr, ”Cannot encode %s: %s\n”, er.failed_type >name, strerror(errno))
+            // Need c function to expose errno macro
+        }
+    }
+
+    private byte[] messageFrameToUper(Arena arena, MemorySegment messageFrame) {
+        return messageFrameToEncodedBytes(arena, messageFrame, ATS_UNALIGNED_BASIC_PER());
+    }
+
+    private String messageFrameToXer(Arena arena, MemorySegment messageFrame) {
+        byte[] bytes = messageFrameToEncodedBytes(arena, messageFrame, ATS_BASIC_XER());
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    private String messageFrameToJer(Arena arena, MemorySegment messageFrame) {
+        byte[] bytes = messageFrameToEncodedBytes(arena, messageFrame, ATS_JER());
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    private MemorySegment optCodecParameters(Arena arena) {
+        MemorySegment optCodecParameters = asn_codec_ctx_t.allocate(arena);
+        asn_codec_ctx_t.max_stack_size(optCodecParameters, asnCodecCtxMaxStackSize);
+        return optCodecParameters;
     }
 
 

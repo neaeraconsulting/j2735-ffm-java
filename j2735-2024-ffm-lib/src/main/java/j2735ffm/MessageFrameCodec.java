@@ -79,7 +79,6 @@ public class MessageFrameCodec {
         log.info("Received {} bytes", uper.length);
         try (var arena = Arena.ofConfined()) {
             MemorySegment messageFrame = uperToMessageFrame(arena, uper);
-            printMessageFrame(arena, messageFrame);
             return messageFrameToXer(arena, messageFrame);
         }
     }
@@ -88,7 +87,6 @@ public class MessageFrameCodec {
         log.info("Received {} bytes", uper.length);
         try (var arena = Arena.ofConfined()) {
             MemorySegment messageFrame = uperToMessageFrame(arena, uper);
-            printMessageFrame(arena, messageFrame);
             return messageFrameToJer(arena, messageFrame);
         }
     }
@@ -120,17 +118,21 @@ public class MessageFrameCodec {
         MemorySegment heapBytes = MemorySegment.ofArray(bytes);
         MemorySegment optCodecParameters = optCodecParameters(arena);
 
-        // The result Message Frame
-        // Allocate the memory to receive a MessageFrame_t structure, because passing a pointer to 0 and having the
-        // decoder create the structure dynamically, as the C API docs recommend, does not work.
-        // UPER decoding fails using MessageFrame_t.allocate(),  probably because the MessageFrame value is an ASN.1
-        // open type whose size can't be determined just from the top level struct, so preallocate a fixed buffer size
-        // to make sure it is large enough.
-        MemorySegment messageFrame = arena.allocate(messageFrameAllocateSize);
+//        // The result Message Frame
+//        // Allocate the memory to receive a MessageFrame_t structure, because passing a pointer to 0 and having the
+//        // decoder create the structure dynamically, as the C API docs recommend, does not work.
+//        // UPER decoding fails using MessageFrame_t.allocate(),  probably because the MessageFrame value is an ASN.1
+//        // open type whose size can't be determined just from the top level struct, so preallocate a fixed buffer size
+//        // to make sure it is large enough.
+//        MemorySegment messageFrame = arena.allocate(messageFrameAllocateSize);
+//
+//        // Pointer to the result Message Frame
+//        MemorySegment structurePtr = arena.allocate(8);
+//        structurePtr.set(ValueLayout.JAVA_LONG, 0, messageFrame.address());
 
         // Pointer to the result Message Frame
         MemorySegment structurePtr = arena.allocate(8);
-        structurePtr.set(ValueLayout.JAVA_LONG, 0, messageFrame.address());
+        structurePtr.set(ValueLayout.JAVA_LONG, 0, 0L);
 
         MemorySegment buffer = arena.allocate(bytes.length);
         buffer.copyFrom(heapBytes);
@@ -149,6 +151,10 @@ public class MessageFrameCodec {
         };
 
         var msg = String.format("asn_decode return code: %s %s, consumed: %s", retCode, rcEnum, consumed);
+        long messageFramePointer = structurePtr.get(ValueLayout.JAVA_LONG, 0);
+        log.info("messageFrame pointer: {}", messageFramePointer);
+
+        MemorySegment messageFrame = MemorySegment.ofAddress(structurePtr.get(ValueLayout.JAVA_LONG, 0));
 
         if (retCode == 0) {
             log.info(msg);

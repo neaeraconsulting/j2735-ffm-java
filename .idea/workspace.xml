@@ -5,31 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="445d0e4d-d0ed-4914-a12f-4b30a87153e2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/jer-to-uper-binary.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/jer-to-uper-hex.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/jer-to-xer.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-binary-to-jer.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-binary-to-xer.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-jer.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-xer.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-jer.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-uper-binary.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-uper-hex.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/ApiConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/ApiController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/CodecConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/J2735ApiController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/java/j2735api/JacksonConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-ffm-lib/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-ffm-lib/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/HexUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-api/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/src/main/resources/application.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/org/example/Main.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -184,7 +163,7 @@
       <option name="presentableId" value="Default" />
       <updated>1731195886040</updated>
       <workItem from="1731195889384" duration="19798000" />
-      <workItem from="1731220030794" duration="14010000" />
+      <workItem from="1731220030794" duration="16030000" />
     </task>
     <servers />
   </component>

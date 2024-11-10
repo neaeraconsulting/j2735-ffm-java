@@ -43,7 +43,7 @@ public class MessageFrameCodec {
         this.uperBufferSize = 8192L;
         this.messageFrameAllocateSize = 16384L;
         this.asnCodecCtxMaxStackSize = 30000L;
-        log.info("MessageFrameCodec initialized with textBufferSize: {}, uperBufferSize: {}, messageFrameAllocateSize: {}, asnCodecCtxMaxStackSize: {}",
+        log.info("MessageFrameCodec initialized with defaults: textBufferSize: {}, uperBufferSize: {}, messageFrameAllocateSize: {}, asnCodecCtxMaxStackSize: {}",
                 textBufferSize, uperBufferSize, messageFrameAllocateSize, asnCodecCtxMaxStackSize);
     }
 
@@ -118,21 +118,36 @@ public class MessageFrameCodec {
         MemorySegment heapBytes = MemorySegment.ofArray(bytes);
         MemorySegment optCodecParameters = optCodecParameters(arena);
 
-//        // The result Message Frame
-//        // Allocate the memory to receive a MessageFrame_t structure, because passing a pointer to 0 and having the
-//        // decoder create the structure dynamically, as the C API docs recommend, does not work.
-//        // UPER decoding fails using MessageFrame_t.allocate(),  probably because the MessageFrame value is an ASN.1
-//        // open type whose size can't be determined just from the top level struct, so preallocate a fixed buffer size
-//        // to make sure it is large enough.
-//        MemorySegment messageFrame = arena.allocate(messageFrameAllocateSize);
-//
-//        // Pointer to the result Message Frame
-//        MemorySegment structurePtr = arena.allocate(8);
-//        structurePtr.set(ValueLayout.JAVA_LONG, 0, messageFrame.address());
+        // The result Message Frame
+        //
+        // Allocate the memory to receive a MessageFrame_t structure, because passing a pointer to 0 and having the
+        // decoder create the structure dynamically, as the C API docs recommend, would create a memory leak, because
+        // since we don't know the size of the created struct we can't reinterpret and free the memory using
+        // malloc/free, nor do we have access to the ASN_STRUCT_FREE macro from here.
+        //
+        // TODO Create a C header and function to expose ASN_STRUCT_FREE to FFM
+        // Also see https://docs.oracle.com/en/java/javase/23/core/foreign-functions-that-return-pointers.html
+        //
+        // Meanwhile, instead, pre-allocate a buffer large enough to handle the expected size of the returned data
+        // structure, managed by the memory arena, so it will be freed at the end of the try-with-resources.
+        //
+        // UPER decoding fails using MessageFrame_t.allocate(),  probably because the MessageFrame value is an ASN.1
+        // open type whose size can't be determined just from the top level struct, so preallocate a fixed buffer size
+        // to make sure it is large enough.
+        MemorySegment messageFrame = arena.allocate(messageFrameAllocateSize);
 
-        // Pointer to the result Message Frame
-        MemorySegment structurePtr = arena.allocate(8);
-        structurePtr.set(ValueLayout.JAVA_LONG, 0, 0L);
+        // Pointer to result MessageFrame
+        MemorySegment structurePtr = arena.allocate(ValueLayout.ADDRESS.byteSize());
+
+        // We  assume the address is a Java long.  But if the FFM code were recompiled on a platform other than x64,
+        // this wouldn't necessarily be true.
+        assert ValueLayout.ADDRESS.byteSize() == ValueLayout.JAVA_LONG.byteSize();
+
+        // Point to the preallocated MessageFrame buffer
+        structurePtr.set(ValueLayout.JAVA_LONG, 0, messageFrame.address());
+
+        // Pointer to 0 that we are not using for now
+        //structurePtr.set(ValueLayout.JAVA_LONG, 0, 0L);
 
         MemorySegment buffer = arena.allocate(bytes.length);
         buffer.copyFrom(heapBytes);
@@ -154,7 +169,9 @@ public class MessageFrameCodec {
         long messageFramePointer = structurePtr.get(ValueLayout.JAVA_LONG, 0);
         log.info("messageFrame pointer: {}", messageFramePointer);
 
-        MemorySegment messageFrame = MemorySegment.ofAddress(structurePtr.get(ValueLayout.JAVA_LONG, 0));
+        // This is how get the externally allocated MessageFrame.  It works, but don't do it without
+        // freeing or reinterpreting.
+        //MemorySegment messageFrame = MemorySegment.ofAddress(structurePtr.get(ValueLayout.JAVA_LONG, 0));
 
         if (retCode == 0) {
             log.info(msg);

@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="445d0e4d-d0ed-4914-a12f-4b30a87153e2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T025954.200.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2024-11-10T030025.200.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-binary-to-jer.http" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-binary-to-jer.http" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-binary-to-xer.http" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-binary-to-xer.http" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java" beforeDir="false" afterPath="$PROJECT_DIR$/j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,6 +82,8 @@
     "HTTP Request.jer-to-uper-binary | #1.executor": "Run",
     "HTTP Request.jer-to-uper-hex | #1.executor": "Run",
     "HTTP Request.jer-to-xer | #1.executor": "Run",
+    "HTTP Request.uper-binary-to-jer | #1.executor": "Run",
+    "HTTP Request.uper-binary-to-xer | #1.executor": "Run",
     "HTTP Request.uper-hex-to-jer | #1.executor": "Run",
     "HTTP Request.uper-hex-to-jer | MAP.executor": "Run",
     "HTTP Request.uper-hex-to-jer | RSM.executor": "Run",
@@ -105,8 +113,11 @@
       <command value="gradle build" />
     </option>
   </component>
-  <component name="RunManager" selected="HTTP Request.uper-hex-to-xer | RSM">
-    <configuration name="uper-hex-to-jer | MAP" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-jer.http" requestIdentifier="MAP" runType="Run single request">
+  <component name="RunManager" selected="HTTP Request.uper-binary-to-xer | #1">
+    <configuration name="uper-binary-to-jer | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-binary-to-jer.http" requestIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="uper-binary-to-xer | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-binary-to-xer.http" requestIdentifier="#1" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="uper-hex-to-jer | RSM" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-jer.http" index="2" requestIdentifier="RSM" runType="Run single request">
@@ -116,9 +127,6 @@
       <method v="2" />
     </configuration>
     <configuration name="uper-hex-to-xer | RSM" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/j2735-2024-api/http-tests/uper-hex-to-xer.http" index="2" requestIdentifier="RSM" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="xer-to-uper-binary | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/j2735-2024-api/http-tests/xer-to-uper-binary.http" requestIdentifier="#1" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="J2735ApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
@@ -137,11 +145,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.uper-binary-to-xer | #1" />
+        <item itemvalue="HTTP Request.uper-binary-to-jer | #1" />
         <item itemvalue="HTTP Request.uper-hex-to-xer | RSM" />
         <item itemvalue="HTTP Request.uper-hex-to-xer | MAP" />
         <item itemvalue="HTTP Request.uper-hex-to-jer | RSM" />
-        <item itemvalue="HTTP Request.uper-hex-to-jer | MAP" />
-        <item itemvalue="HTTP Request.xer-to-uper-binary | #1" />
       </list>
     </recent_temporary>
   </component>
@@ -162,7 +170,7 @@
       <option name="presentableId" value="Default" />
       <updated>1731195886040</updated>
       <workItem from="1731195889384" duration="19798000" />
-      <workItem from="1731220030794" duration="21214000" />
+      <workItem from="1731220030794" duration="25021000" />
     </task>
     <servers />
   </component>

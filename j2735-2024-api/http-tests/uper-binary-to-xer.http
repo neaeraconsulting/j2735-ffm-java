@@ -1,0 +1,4 @@
+POST http://localhost:4000/uper/bin/xer
+Content-Type: application/octet-stream
+
+< ./spat_uper.bin

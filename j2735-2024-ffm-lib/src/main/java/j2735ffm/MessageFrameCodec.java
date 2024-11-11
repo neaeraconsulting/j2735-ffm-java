@@ -169,8 +169,8 @@ public class MessageFrameCodec {
         long messageFramePointer = structurePtr.get(ValueLayout.JAVA_LONG, 0);
         log.info("messageFrame pointer: {}", messageFramePointer);
 
-        // This is how get the externally allocated MessageFrame.  It works, but don't do it without
-        // freeing or reinterpreting.
+        // This is how to get the externally allocated MessageFrame.  It works, but don't do it without
+        // reinterpreting and freeing.
         //MemorySegment messageFrame = MemorySegment.ofAddress(structurePtr.get(ValueLayout.JAVA_LONG, 0));
 
         if (retCode == 0) {

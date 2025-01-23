@@ -187,7 +187,7 @@ public class MessageFrameCodec {
     private MemorySegment xerToMessageFrame(Arena arena, String xer) {
         log.info("xerToMessageFrame");
         byte[] xmlBytes = xer.getBytes(StandardCharsets.UTF_8);
-        return decodeToMessageFrame(arena, xmlBytes, ATS_BASIC_XER());
+        return decodeToMessageFrame(arena, xmlBytes, ATS_CANONICAL_XER());
     }
 
     private MemorySegment jerToMessageFrame(Arena arena, String jer) {
@@ -231,7 +231,7 @@ public class MessageFrameCodec {
 
     private String messageFrameToXer(Arena arena, MemorySegment messageFrame) {
         log.info("messageFrameToXer");
-        byte[] bytes = encodeFromMessageFrame(arena, messageFrame, ATS_BASIC_XER(), textBufferSize);
+        byte[] bytes = encodeFromMessageFrame(arena, messageFrame, ATS_CANONICAL_XER(), textBufferSize);
         return new String(bytes, StandardCharsets.UTF_8);
     }
 

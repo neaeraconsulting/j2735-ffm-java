@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import j2735ffm.MessageFrameCodec;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.HexFormat;
 
 import static org.springframework.http.MediaType.*;
@@ -24,6 +25,7 @@ import static org.springframework.http.MediaType.*;
 public class ApiController {
 
     MessageFrameCodec codec;
+    private static final Base64.Decoder base64Decoder = Base64.getDecoder();
 
     @Autowired
     public ApiController(MessageFrameCodec codec) {
@@ -97,6 +99,16 @@ public class ApiController {
     }
 
     @PostMapping(
+            value = "uper/b64/xer",
+            consumes = TEXT_PLAIN_VALUE,
+            produces = APPLICATION_XML_VALUE
+    )
+    public String uperBase64ToXer(@RequestBody String base64) {
+        byte[] bytes = base64Decoder.decode(base64);
+        return codec.uperToXer(bytes);
+    }
+
+    @PostMapping(
             value = "/uper/bin/jer",
             consumes = APPLICATION_OCTET_STREAM_VALUE,
             produces = APPLICATION_JSON_VALUE
@@ -118,6 +130,16 @@ public class ApiController {
     )
     public String uperHexToJer(@RequestBody String uperHex) {
         byte[] bytes = HexFormat.of().parseHex(uperHex);
+        return codec.uperToJer(bytes);
+    }
+
+    @PostMapping(
+            value = "/uper/b64/jer",
+            consumes = TEXT_PLAIN_VALUE,
+            produces = APPLICATION_JSON_VALUE
+    )
+    public String uperBase64ToJer(@RequestBody String base64) {
+        byte[] bytes = base64Decoder.decode(base64);
         return codec.uperToJer(bytes);
     }
 

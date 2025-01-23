@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import j2735ffm.MessageFrameCodec;
+import us.dot.its.jpo.ode.api.models.messages.TimestampedMessageFrame;
+import us.dot.its.jpo.ode.api.models.messages.TimestampedMessageFrameList;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Formatter;
 import java.util.HexFormat;
 
 import static org.springframework.http.MediaType.*;
@@ -159,5 +162,22 @@ public class ApiController {
     )
     public String jerToXer(@RequestBody String jer) {
         return codec.jerToXer(jer);
+    }
+
+    @PostMapping(
+            value = "/batch",
+            consumes = APPLICATION_JSON_VALUE,
+            produces = TEXT_PLAIN_VALUE
+    )
+    public String batch(@RequestBody TimestampedMessageFrameList messageFrameList) {
+        log.info("Start decoding batch with {} items", messageFrameList.size());
+        Formatter xmlList = new Formatter();
+        for (TimestampedMessageFrame messageFrame : messageFrameList) {
+            String xer = codec.uperToXer(messageFrame.getMessageFrame());
+            // Line-delimited XML
+            xmlList.format("%s%n", xer);
+        }
+        log.info("Finished decoding batch");
+        return xmlList.toString();
     }
 }

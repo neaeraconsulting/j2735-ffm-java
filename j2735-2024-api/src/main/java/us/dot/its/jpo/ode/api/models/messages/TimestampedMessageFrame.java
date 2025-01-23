@@ -1,14 +1,13 @@
 package us.dot.its.jpo.ode.api.models.messages;
 
-import java.util.Arrays;
-import java.util.HexFormat;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Arrays;
+import java.util.HexFormat;
 
 import static java.lang.Byte.toUnsignedInt;
 

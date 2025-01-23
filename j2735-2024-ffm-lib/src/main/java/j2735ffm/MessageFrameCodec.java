@@ -76,7 +76,7 @@ public class MessageFrameCodec {
     }
 
     public String uperToXer(byte[] uper) {
-        log.info("Received {} bytes", uper.length);
+        log.trace("Received {} bytes", uper.length);
         try (var arena = Arena.ofConfined()) {
             MemorySegment messageFrame = uperToMessageFrame(arena, uper);
             return messageFrameToXer(arena, messageFrame);
@@ -84,7 +84,7 @@ public class MessageFrameCodec {
     }
 
     public String uperToJer(byte[] uper) {
-        log.info("Received {} bytes", uper.length);
+        log.trace("Received {} bytes", uper.length);
         try (var arena = Arena.ofConfined()) {
             MemorySegment messageFrame = uperToMessageFrame(arena, uper);
             return messageFrameToJer(arena, messageFrame);
@@ -106,13 +106,13 @@ public class MessageFrameCodec {
     }
 
     private void printMessageFrame(Arena arena, MemorySegment messageFrame) {
-        log.info("Printing message frame");
+        log.trace("Printing message frame");
         int printResult = asn_fprint(stdout(), asn_DEF_MessageFrame(), messageFrame);
-        log.info("Printed message frame to stdout, result: " + printResult);
+        log.trace("Printed message frame to stdout, result: " + printResult);
     }
 
     private MemorySegment decodeToMessageFrame(Arena arena, final byte[] bytes, final int asnTransferSyntax) {
-        log.info("decodeToMessageFrame, num bytes: {}, transfer syntax: {}", bytes.length,
+        log.trace("decodeToMessageFrame, num bytes: {}, transfer syntax: {}", bytes.length,
                 asnTransferSyntax);
 
         MemorySegment heapBytes = MemorySegment.ofArray(bytes);
@@ -167,14 +167,14 @@ public class MessageFrameCodec {
 
         var msg = String.format("asn_decode return code: %s %s, consumed: %s", retCode, rcEnum, consumed);
         long messageFramePointer = structurePtr.get(ValueLayout.JAVA_LONG, 0);
-        log.info("messageFrame pointer: {}", messageFramePointer);
+        log.trace("messageFrame pointer: {}", messageFramePointer);
 
         // This is how to get the externally allocated MessageFrame.  It works, but don't do it without
         // reinterpreting and freeing.
         //MemorySegment messageFrame = MemorySegment.ofAddress(structurePtr.get(ValueLayout.JAVA_LONG, 0));
 
         if (retCode == 0) {
-            log.info(msg);
+            log.trace(msg);
         } else {
             // Print partially decoded data
             printMessageFrame(arena, messageFrame);
@@ -185,25 +185,25 @@ public class MessageFrameCodec {
     }
 
     private MemorySegment xerToMessageFrame(Arena arena, String xer) {
-        log.info("xerToMessageFrame");
+        log.trace("xerToMessageFrame");
         byte[] xmlBytes = xer.getBytes(StandardCharsets.UTF_8);
         return decodeToMessageFrame(arena, xmlBytes, ATS_CANONICAL_XER());
     }
 
     private MemorySegment jerToMessageFrame(Arena arena, String jer) {
-        log.info("jerToMessageFrame");
+        log.trace("jerToMessageFrame");
         byte[] jsonBytes = jer.getBytes(StandardCharsets.UTF_8);
         return decodeToMessageFrame(arena, jsonBytes, ATS_JER());
     }
 
     private MemorySegment uperToMessageFrame(Arena arena, byte[] uper) {
-        log.info("uperToMessageFrame");
+        log.trace("uperToMessageFrame");
         return decodeToMessageFrame(arena, uper, ATS_UNALIGNED_BASIC_PER());
     }
 
     private byte[] encodeFromMessageFrame(Arena arena, MemorySegment messageFrame, final int asnTransferSyntax,
                                           final long bufferSize) {
-        log.info("encodeFromMessageFrame, transferSyntax: {}, bufferSize: {}", asnTransferSyntax, bufferSize);
+        log.trace("encodeFromMessageFrame, transferSyntax: {}, bufferSize: {}", asnTransferSyntax, bufferSize);
         byte[] outputArray = new byte[(int) bufferSize];
         MemorySegment heapOutput = MemorySegment.ofArray(outputArray);
         MemorySegment outputBuffer = arena.allocate(bufferSize);
@@ -212,11 +212,11 @@ public class MessageFrameCodec {
                 asn_DEF_MessageFrame(), messageFrame, outputBuffer, bufferSize);
         long encoded = asn_enc_rval_t.encoded(erEnc);
         if (encoded > -1) {
-            log.info("asn_encode_to_buffer succeeded. Encoded {} bytes", encoded);
+            log.trace("asn_encode_to_buffer succeeded. Encoded {} bytes", encoded);
             heapOutput.copyFrom(outputBuffer);
             return Arrays.copyOfRange(outputArray, 0, (int)encoded);
         } else {
-            log.error("Error in asn_encode_to_buffer");
+            log.trace("Error in asn_encode_to_buffer");
             throw new RuntimeException("Error calling asn_encode_to_buffer");
             // Check the error info
             // fprintf(stderr, ”Cannot encode %s: %s\n”, er.failed_type >name, strerror(errno))
@@ -225,18 +225,18 @@ public class MessageFrameCodec {
     }
 
     private byte[] messageFrameToUper(Arena arena, MemorySegment messageFrame) {
-        log.info("messageFrameToUper");
+        log.trace("messageFrameToUper");
         return encodeFromMessageFrame(arena, messageFrame, ATS_UNALIGNED_BASIC_PER(), uperBufferSize);
     }
 
     private String messageFrameToXer(Arena arena, MemorySegment messageFrame) {
-        log.info("messageFrameToXer");
+        log.trace("messageFrameToXer");
         byte[] bytes = encodeFromMessageFrame(arena, messageFrame, ATS_CANONICAL_XER(), textBufferSize);
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
     private String messageFrameToJer(Arena arena, MemorySegment messageFrame) {
-        log.info("messageFrameToJer");
+        log.trace("messageFrameToJer");
         byte[] bytes = encodeFromMessageFrame(arena, messageFrame, ATS_JER(), textBufferSize);
         return new String(bytes, StandardCharsets.UTF_8);
     }

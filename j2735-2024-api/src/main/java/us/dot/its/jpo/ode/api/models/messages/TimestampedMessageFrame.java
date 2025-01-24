@@ -54,7 +54,7 @@ public class TimestampedMessageFrame {
     }
 
     /**
-     * Search for a J2735 Message Frame, and set startIndex and endIndex to the beginning and end of it
+     * Search for a J2735 Message Frame, and set reset the array to only include the message frame.
      * @return true if a MessageFrame was detected, false if not
      */
     public boolean findMessageFrame() {

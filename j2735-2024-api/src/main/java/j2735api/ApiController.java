@@ -166,8 +166,32 @@ public class ApiController {
         return codec.jerToXer(jer);
     }
 
+    /**
+     * Convert batch of base64 encoded messages to XER.  Accepts a JSON array
+     * with the format:
+     * <pre>
+     * [
+     *     { "timestamp": 1683155399091, "type": "SPAT", "base64": "ABNmIi..." },
+     *     { "timestamp": 1683155410467, "type": "BSM",  "base64": "ABQlCs..."  },
+     *     ...
+     *  ]
+     * </pre>
+     * <p>Returns line-delimited XML in the following format:
+     * <pre>
+     * <![CDATA[
+     *    SPAT,1683155399091
+     *    <MessageFrame><messageId>19</messageId><value><SPAT>...
+     *    BSM,1683155410467
+     *    <MessageFrame><messageId>20</messageId><value><BasicSafetyMessage>...
+     *    ...
+     * ]]>
+     * </pre>
+     * @param messageFrameList A json array of containing base64 messages
+     *
+     * @return line delimited alternating type/timestamps and XML
+     */
     @PostMapping(
-            value = "/batch",
+            value = "/batch/uper/b64/xer",
             consumes = APPLICATION_JSON_VALUE,
             produces = TEXT_PLAIN_VALUE
     )
@@ -182,6 +206,7 @@ public class ApiController {
                 String xer = codec.uperToXer(messageFrame.getMessageFrame(), arena, messageFrameMemory,
                         codec.textBufferSize, outputBuffer, inputBuffer);
                 // Line-delimited XML
+                xmlList.format("%s,%s%n", messageFrame.getMessageFrameType(), messageFrame.getTimestamp());
                 xmlList.format("%s%n", xer);
             }
         }

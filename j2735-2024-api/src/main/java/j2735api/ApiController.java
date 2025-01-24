@@ -167,8 +167,8 @@ public class ApiController {
     }
 
     /**
-     * Convert batch of base64 encoded messages to XER.  Accepts a JSON array
-     * with the format:
+     * Convert batch of base64 encoded messages to XER.
+     * <p>Accepts a JSON array with the format:
      * <pre>
      * [
      *     { "timestamp": 1683155399091, "type": "SPAT", "base64": "ABNmIi..." },

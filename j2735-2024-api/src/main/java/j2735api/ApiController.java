@@ -13,6 +13,8 @@ import us.dot.its.jpo.ode.api.models.messages.TimestampedMessageFrame;
 import us.dot.its.jpo.ode.api.models.messages.TimestampedMessageFrameList;
 
 import java.io.IOException;
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
 import java.util.Base64;
 import java.util.Formatter;
 import java.util.HexFormat;
@@ -172,10 +174,14 @@ public class ApiController {
     public String batch(@RequestBody TimestampedMessageFrameList messageFrameList) {
         log.info("Start decoding batch with {} items", messageFrameList.size());
         Formatter xmlList = new Formatter();
-        for (TimestampedMessageFrame messageFrame : messageFrameList) {
-            String xer = codec.uperToXer(messageFrame.getMessageFrame());
-            // Line-delimited XML
-            xmlList.format("%s%n", xer);
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment messageFrameMemory = arena.allocate(codec.messageFrameAllocateSize);
+            MemorySegment outputBuffer = arena.allocate(codec.textBufferSize);
+            for (TimestampedMessageFrame messageFrame : messageFrameList) {
+                String xer = codec.uperToXer(messageFrame.getMessageFrame(), arena, messageFrameMemory, codec.textBufferSize, outputBuffer);
+                // Line-delimited XML
+                xmlList.format("%s%n", xer);
+            }
         }
         log.info("Finished decoding batch");
         return xmlList.toString();

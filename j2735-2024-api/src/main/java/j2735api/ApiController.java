@@ -177,8 +177,10 @@ public class ApiController {
         try (var arena = Arena.ofConfined()) {
             MemorySegment messageFrameMemory = arena.allocate(codec.messageFrameAllocateSize);
             MemorySegment outputBuffer = arena.allocate(codec.textBufferSize);
+            MemorySegment inputBuffer = arena.allocate(codec.uperBufferSize);
             for (TimestampedMessageFrame messageFrame : messageFrameList) {
-                String xer = codec.uperToXer(messageFrame.getMessageFrame(), arena, messageFrameMemory, codec.textBufferSize, outputBuffer);
+                String xer = codec.uperToXer(messageFrame.getMessageFrame(), arena, messageFrameMemory,
+                        codec.textBufferSize, outputBuffer, inputBuffer);
                 // Line-delimited XML
                 xmlList.format("%s%n", xer);
             }

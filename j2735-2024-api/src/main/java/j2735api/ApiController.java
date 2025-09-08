@@ -176,7 +176,7 @@ public class ApiController {
      *     ...
      *  ]
      * </pre>
-     * <p>Returns line-delimited XML in the following format:
+     * <p>Returns line-delimited XER in the following format:
      * <pre>
      * <![CDATA[
      *    SPAT,1683155399091

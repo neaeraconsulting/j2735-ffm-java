@@ -2,9 +2,31 @@
 plugins {
     id 'buildlogic.java-library-conventions'
     id "io.freefair.lombok" version "8.10.2"
+    id "maven-publish"
 }
 
+group = 'usdot.jpo.ode'
+version = '1.0.2'
 
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/OWNER/REPOSITORY")
+            credentials {
+                username = System.getenv("GITHUB_USERNAME")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = project.name
+            version = version
+        }
+    }
+}
 
 dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.16'

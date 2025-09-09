@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'usdot.jpo.ode'
-version = '1.0.4'
+version = '1.0.5'
 
 publishing {
     repositories {
@@ -24,6 +24,7 @@ publishing {
             groupId = group
             artifactId = project.name
             version = version
+            from components.java
         }
     }
 }

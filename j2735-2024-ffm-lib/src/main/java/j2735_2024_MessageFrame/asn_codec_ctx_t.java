@@ -2,6 +2,9 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
+
 /**
  * {@snippet lang=c :
  * typedef struct asn_codec_ctx_s {
@@ -9,10 +12,18 @@ package j2735_2024_MessageFrame;
  * } asn_codec_ctx_t
  * }
  */
-public class asn_codec_ctx_t extends asn_codec_ctx_s {
+public class asn_codec_ctx_t {
 
     asn_codec_ctx_t() {
         // Should not be called directly
+    }
+
+    public static MemorySegment allocate(Arena arena) {
+        return null;
+    }
+
+    public static void max_stack_size(MemorySegment er, long maxStackSize) {
+
     }
 }
 

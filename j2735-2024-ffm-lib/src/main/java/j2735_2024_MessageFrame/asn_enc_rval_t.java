@@ -2,6 +2,8 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.foreign.MemorySegment;
+
 /**
  * {@snippet lang=c :
  * typedef struct asn_enc_rval_s {
@@ -11,10 +13,14 @@ package j2735_2024_MessageFrame;
  * } asn_enc_rval_t
  * }
  */
-public class asn_enc_rval_t extends asn_enc_rval_s {
+public class asn_enc_rval_t {
 
     asn_enc_rval_t() {
         // Should not be called directly
+    }
+
+    public static long encoded(MemorySegment er) {
+        return 0;
     }
 }
 

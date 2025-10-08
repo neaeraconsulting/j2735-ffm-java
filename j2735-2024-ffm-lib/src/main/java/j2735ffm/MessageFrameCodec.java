@@ -9,7 +9,6 @@ import java.lang.foreign.ValueLayout;
 import java.nio.charset.StandardCharsets;
 
 import static j2735_2024_MessageFrame.MessageFrame_h.ATS_CANONICAL_XER;
-import static j2735_2024_MessageFrame.MessageFrame_h.ATS_JER;
 import static j2735_2024_MessageFrame.MessageFrame_h.ATS_UNALIGNED_BASIC_PER;
 import static j2735_2024_MessageFrame.MessageFrame_h.asn_DEF_MessageFrame;
 import static j2735_2024_MessageFrame.MessageFrame_h.asn_decode;
@@ -79,15 +78,7 @@ public class MessageFrameCodec {
         }
     }
 
-    public byte[] jerToUper(String jer) {
-        try (var arena = Arena.ofConfined()) {
-            MemorySegment messageFrame = arena.allocate(messageFrameAllocateSize);
-            MemorySegment inputBuffer = arena.allocate(textBufferSize);
-            jerToMessageFrame(arena, jer, messageFrame, inputBuffer);
-            MemorySegment outputBuffer = arena.allocate(uperBufferSize);
-            return messageFrameToUper(arena, messageFrame, uperBufferSize, outputBuffer);
-        }
-    }
+
 
     public String uperToXer(byte[] uper) {
         log.trace("Received {} bytes", uper.length);
@@ -105,36 +96,7 @@ public class MessageFrameCodec {
         return messageFrameToXer(arena, messageFrame, bufferSize, outputBuffer);
     }
 
-    public String uperToJer(byte[] uper) {
-        log.trace("Received {} bytes", uper.length);
-        try (var arena = Arena.ofConfined()) {
-            MemorySegment messageFrame = arena.allocate(messageFrameAllocateSize);
-            MemorySegment inputBuffer = arena.allocate(uperBufferSize);
-            uperToMessageFrame(arena, uper, messageFrame, inputBuffer);
-            MemorySegment outputBuffer = arena.allocate(textBufferSize);
-            return messageFrameToJer(arena, messageFrame, textBufferSize, outputBuffer);
-        }
-    }
 
-    public String xerToJer(String xer) {
-        try (var arena = Arena.ofConfined()) {
-            MemorySegment messageFrame = arena.allocate(messageFrameAllocateSize);
-            MemorySegment inputBuffer = arena.allocate(textBufferSize);
-            xerToMessageFrame(arena, xer, messageFrame, inputBuffer);
-            MemorySegment outputBuffer = arena.allocate(textBufferSize);
-            return messageFrameToJer(arena, messageFrame, textBufferSize, outputBuffer);
-        }
-    }
-
-    public String jerToXer(String jer) {
-        try (var arena = Arena.ofConfined()) {
-            MemorySegment messageFrame = arena.allocate(messageFrameAllocateSize);
-            MemorySegment inputBuffer = arena.allocate(textBufferSize);
-            jerToMessageFrame(arena, jer, messageFrame, inputBuffer);
-            MemorySegment outputBuffer = arena.allocate(textBufferSize);
-            return messageFrameToXer(arena, messageFrame, textBufferSize, outputBuffer);
-        }
-    }
 
     private void printMessageFrame(Arena arena, MemorySegment messageFrame) {
         log.trace("Printing message frame");
@@ -222,11 +184,7 @@ public class MessageFrameCodec {
         decodeToMessageFrame(arena, xmlBytes, ATS_CANONICAL_XER(), messageFrame, inputBuffer);
     }
 
-    private void jerToMessageFrame(Arena arena, String jer, MemorySegment messageFrame, MemorySegment inputBuffer) {
-        log.trace("jerToMessageFrame");
-        byte[] jsonBytes = jer.getBytes(StandardCharsets.UTF_8);
-        decodeToMessageFrame(arena, jsonBytes, ATS_JER(), messageFrame, inputBuffer);
-    }
+
 
     private void uperToMessageFrame(Arena arena, byte[] uper, MemorySegment messageFrame, MemorySegment inputBuffer) {
         log.trace("uperToMessageFrame");
@@ -266,11 +224,7 @@ public class MessageFrameCodec {
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
-    private String messageFrameToJer(Arena arena, MemorySegment messageFrame, long bufferSize, MemorySegment outputBuffer) {
-        log.trace("messageFrameToJer");
-        byte[] bytes = encodeFromMessageFrame(arena, messageFrame, ATS_JER(), bufferSize, outputBuffer);
-        return new String(bytes, StandardCharsets.UTF_8);
-    }
+
 
     private MemorySegment optCodecParameters(Arena arena) {
         MemorySegment optCodecParameters = asn_codec_ctx_t.allocate(arena);

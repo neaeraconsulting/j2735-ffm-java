@@ -7,3 +7,10 @@ services:
     restart: always
     ports:
       - "4000:4000"
+    volumes:
+      - type: bind
+        source: ./publish/lib
+        target: /publish/lib/
+      - type: bind
+        source: ./publish/src/main/java
+        target: /publish/src/main/java/

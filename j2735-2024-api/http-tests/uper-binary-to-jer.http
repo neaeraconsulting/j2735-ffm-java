@@ -1,4 +1,0 @@
-POST http://localhost:4000/uper/bin/jer
-Content-Type: application/octet-stream
-
-< ./spat_uper.bin

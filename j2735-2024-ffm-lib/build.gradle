@@ -5,29 +5,7 @@ plugins {
     id "maven-publish"
 }
 
-group = 'usdot.jpo.ode'
-version = '1.0.5'
 
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/neaeraconsulting/j2735-ffm-java")
-            credentials {
-                username = System.getenv("GITHUB_USERNAME")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-    publications {
-        maven(MavenPublication) {
-            groupId = group
-            artifactId = project.name
-            version = version
-            from components.java
-        }
-    }
-}
 
 dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.16'

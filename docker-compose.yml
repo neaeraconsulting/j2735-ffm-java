@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: j2735-2024-api:latest
-    restart: always
+    restart: no
     ports:
       - "4000:4000"
     volumes:

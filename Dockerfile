@@ -37,14 +37,10 @@ ADD ./j2735-2024-ffm-lib                                    /build/lib
 COPY --from=build-shared ./build/generated-files/2024/*.h   /build/headers/
 ADD ./run-jextract.sh                                       /build
 
-
-ENV JEXTRACT_JAVA_OPTIONS="-Djava.library.path=/llvm/lib:/usr/lib64:/lib64:/lib:/usr/lib:/lib/x86_64-linux-gnu"
-ENV JDK_HOME="/usr/local/openjdk-22"
-ENV LLVM_HOME="/llvm"
 ENV JEXTRACT="/jextract/jextract-22/bin/jextract"
 
 RUN apt update && \
-    apt install -y build-essential libncurses5 xz-utils wget && \
+    apt install -y build-essential libncurses5 wget && \
     mkdir /jextract && \
     wget -nc -O /jextract/jextract.tar.gz --show-progress https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz && \
     mkdir java-src && \
@@ -77,8 +73,8 @@ COPY ./buildSrc/build.gradle            /home/app/buildSrc
 COPY ./buildSrc/settings.gradle         /home/app/buildSrc
 
 # api
-COPY ./j2735-2024-api/src                       /home/app/j2735-2024-api/src
-COPY ./j2735-2024-api/build.gradle              /home/app/j2735-2024-api
+COPY ./j2735-2024-api/src               /home/app/j2735-2024-api/src
+COPY ./j2735-2024-api/build.gradle      /home/app/j2735-2024-api
 
 # lib
 COPY ./j2735-2024-ffm-lib/src/main/java/j2735ffm              /home/app/j2735-2024-ffm-lib/src/main/java/j2735ffm
@@ -88,11 +84,13 @@ COPY ./j2735-2024-ffm-lib/build.gradle                        /home/app/j2735-20
 COPY ./settings.gradle                  /home/app
 COPY ./gradle                           /home/app/gradle
 
+ADD ./run-java.sh                       /home/app
 
 RUN gradle clean build
 
 ## Entrypoint for debugging
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
+CMD ["/home/app/run-java.sh"]
 
 ########################################################################################
 #

@@ -27,7 +27,7 @@ jobs:
       - name: Publish package
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_REPOSITORY_OWNER: $${{ github.repository_owner }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew publish
         working-directory: publish

@@ -22,8 +22,8 @@ RUN apt update && \
     cp libasnapplication.so.1.0.0 out/libasnapplication.so
 
 ## Entrypoint for debugging
-#ENTRYPOINT ["tail", "-f", "/dev/null"]
-CMD ["/build/run-lib.sh"]
+ENTRYPOINT ["tail", "-f", "/dev/null"]
+#CMD ["/build/run-lib.sh"]
 
 ####################################################################################################
 #
@@ -101,6 +101,7 @@ COPY --from=build-shared /build/out/libasnapplication.so /usr/lib
 COPY --from=builder /home/app/j2735-2024-api/build/libs/j2735-2024-api.jar /home
 
 ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "-jar", "/home/j2735-2024-api.jar"]
+
 
 # Entrypoint for debugging
 #ENTRYPOINT ["tail", "-f", "/dev/null"]

@@ -26,8 +26,8 @@ jobs:
         uses: docker/build-push-action@v5
       - name: Publish package
         env:
-          GITHUB_ACTOR: $GITHUB_ACTOR
-          GITHUB_REPOSITORY_OWNER: $GITHUB_REPOSITORY_OWNER
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REPOSITORY_OWNER: $${{ github.repository_owner }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew publish
         working-directory: publish

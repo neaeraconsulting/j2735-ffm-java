@@ -1,0 +1,15 @@
+{
+  "OutputFoldersPerTargetSystem": {
+    "Local Machine": [
+      "out\\build\\x64-Clang-Debug",
+      "out\\install\\x64-Clang-Debug",
+      "out\\build\\x64-Clang-Release",
+      "out\\install\\x64-Clang-Release"
+    ]
+  },
+  "ExpandedNodes": [
+    ""
+  ],
+  "SelectedNode": "\\C:\\Users\\ivan\\asn1\\j2735-ffm-java\\CMakeLists.txt\\asnapplication.dll",
+  "PreviewInSolutionExplorer": false
+}

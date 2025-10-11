@@ -12,6 +12,8 @@ repositories {
     mavenCentral()
 }
 
+
+
 dependencies {
     implementation 'usdot.jpo.ode:j2735-2024-ffm-lib-build'
     // Use JUnit Jupiter for testing.
@@ -22,6 +24,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.hamcrest:hamcrest:3.0'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -31,10 +34,13 @@ java {
     }
 }
 
-tasks.named('test') {
-    // Use JUnit Platform for unit tests.
+test {
+    jvmArgs(["--enable-native-access=ALL-UNNAMED"])
     useJUnitPlatform()
+    testLogging.showStandardStreams = true
 }
+
+
 
 
 

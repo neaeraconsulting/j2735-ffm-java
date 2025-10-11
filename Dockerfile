@@ -61,34 +61,34 @@ RUN apt update && \
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
 CMD ["/build/run-jextract.sh"]
 
-##########################################################################################
-##
-## Build container for Java app
-##
-#FROM gradle:8.10-jdk22 AS builder
-#USER root
-#WORKDIR /home/app
+#########################################################################################
 #
-## api
-#COPY ./j2735-2024-api/src               /home/app/j2735-2024-api/src
-#COPY ./j2735-2024-api/build.gradle      /home/app/j2735-2024-api
-#COPY ./j2735-2024-api/settings.gradle   /home/app/j2735-2024-api
-#COPY ./j2735-2024-api/gradle            /home/app/j2735-2024-api/gradle
+# Build container for Java app
 #
-## lib
-#COPY ./j2735-2024-ffm-lib-build/src/main/java/j2735ffm        /home/app/j2735-2024-ffm-lib-build/src/main/java/j2735ffm
-#COPY --from=jextract /build/java-src/j2735_2024_MessageFrame  /home/app/j2735-2024-ffm-lib-build/src/main/java/j2735_2024_MessageFrame
-#COPY ./j2735-2024-ffm-lib-build/build.gradle                  /home/app/j2735-2024-ffm-lib-build
-#COPY ./j2735-2024-ffm-lib-build/settings.gradle               /home/app/j2735-2024-ffm-lib-build
-#
-#ADD ./run-java.sh                       /home/app
-#
+FROM gradle:8.10-jdk22 AS builder
+USER root
+WORKDIR /home/app
+
+# api
+COPY ./j2735-2024-api/src               /home/app/j2735-2024-api/src
+COPY ./j2735-2024-api/build.gradle      /home/app/j2735-2024-api
+COPY ./j2735-2024-api/settings.gradle   /home/app/j2735-2024-api
+COPY ./j2735-2024-api/gradle            /home/app/j2735-2024-api/gradle
+
+# lib
+COPY ./j2735-2024-ffm-lib-build/src/main/java/j2735ffm        /home/app/j2735-2024-ffm-lib-build/src/main/java/j2735ffm
+COPY --from=jextract /build/java-src/generated  /home/app/j2735-2024-ffm-lib-build/src/main/java/generated
+COPY ./j2735-2024-ffm-lib-build/build.gradle                  /home/app/j2735-2024-ffm-lib-build
+COPY ./j2735-2024-ffm-lib-build/settings.gradle               /home/app/j2735-2024-ffm-lib-build
+
+ADD ./run-java.sh                       /home/app
+
 #RUN cd j2735-2024-api && gradle clean build
-#
-### Entrypoint for debugging
-##ENTRYPOINT ["tail", "-f", "/dev/null"]
+
+## Entrypoint for debugging
+ENTRYPOINT ["tail", "-f", "/dev/null"]
 #CMD ["/home/app/run-java.sh"]
-#
+
 #########################################################################################
 ##
 ## Run container
@@ -97,7 +97,7 @@ CMD ["/build/run-jextract.sh"]
 #WORKDIR /home
 #
 ## Install native library
-#COPY --from=build-shared /build/out/libasnapplication.so /usr/lib
+##COPY --from=build-shared /build/out/libasnapplication.so /usr/lib
 #
 ## Copy java app
 #COPY --from=builder /home/app/j2735-2024-api/build/libs/j2735-2024-api.jar /home

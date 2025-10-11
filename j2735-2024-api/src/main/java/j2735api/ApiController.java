@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.HexFormat;
 
-import static org.springframework.http.MediaType.*;
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 /**
  * HTTP Methods for converting J2735 MessageFrames between XER, JER and UPER
@@ -25,7 +27,6 @@ import static org.springframework.http.MediaType.*;
 public class ApiController {
 
     MessageFrameCodec codec;
-    private static final Base64.Decoder base64Decoder = Base64.getDecoder();
 
     @Autowired
     public ApiController(MessageFrameCodec codec) {
@@ -81,16 +82,6 @@ public class ApiController {
     )
     public String uperHexToXer(@RequestBody String uperHex) {
         byte[] bytes = HexFormat.of().parseHex(uperHex);
-        return codec.uperToXer(bytes);
-    }
-
-    @PostMapping(
-            value = "uper/b64/xer",
-            consumes = TEXT_PLAIN_VALUE,
-            produces = APPLICATION_XML_VALUE
-    )
-    public String uperBase64ToXer(@RequestBody String base64) {
-        byte[] bytes = base64Decoder.decode(base64);
         return codec.uperToXer(bytes);
     }
 

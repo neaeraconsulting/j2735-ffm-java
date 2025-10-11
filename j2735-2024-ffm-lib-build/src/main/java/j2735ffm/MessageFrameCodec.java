@@ -2,10 +2,17 @@ package j2735ffm;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.lang.foreign.SymbolLookup;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static generated.convert_h.convert_bytes;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -38,12 +45,8 @@ public class MessageFrameCodec {
     public final long asnCodecCtxMaxStackSize;
 
     public MessageFrameCodec() {
-        this.textBufferSize = 262144L;
-        this.uperBufferSize = 8192L;
-        this.messageFrameAllocateSize = 16384L;
-        this.asnCodecCtxMaxStackSize = 30000L;
-        log.info("MessageFrameCodec initialized with defaults: textBufferSize: {}, uperBufferSize: {}, messageFrameAllocateSize: {}, asnCodecCtxMaxStackSize: {}",
-                textBufferSize, uperBufferSize, messageFrameAllocateSize, asnCodecCtxMaxStackSize);
+        this(262144L, 8192L, 16384L, 30000L);
+        loadLibrary();
     }
 
     public MessageFrameCodec(
@@ -57,6 +60,57 @@ public class MessageFrameCodec {
         this.asnCodecCtxMaxStackSize = asnCodecCtxMaxStackSize;
         log.info("MessageFrameCodec initialized with textBufferSize: {}, uperBufferSize: {}, messageFrameAllocateSize: {}, asnCodecCtxMaxStackSize: {}",
                 textBufferSize, uperBufferSize, messageFrameAllocateSize, asnCodecCtxMaxStackSize);
+        loadLibrary();
+    }
+
+    public MessageFrameCodec(
+        long textBufferSize, long uperBufferSize, URI libraryURI
+    ) {
+        this(textBufferSize, uperBufferSize, 16384L, 30000L);
+        loadLibrary(libraryURI);
+    }
+
+    /**
+     * Default loader doesn't work with Spring Boot
+     */
+    private void loadLibrary() {
+        ClassLoader classLoader = MessageFrameCodec.class.getClassLoader();
+        // Load the library into the global arena
+        if (isWindows()) {
+            log.warn("Windows: no library available");
+            return;
+        }
+        URL libraryUrl = classLoader.getResource("j2735ffm/libasnapplication.so");
+        if (libraryUrl == null) {
+            throw new RuntimeException("libasnapplication.so resource not found");
+        } else {
+            log.info("Found library: {}", libraryUrl);
+        }
+        try {
+            URI libUri = libraryUrl.toURI();
+            loadLibrary(libUri);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * load library with given class loader.  Needed by Spring Boot
+     * @param libUri The URI of the library resource
+     */
+    private void loadLibrary(URI libUri) {
+        // Load the library into the global arena
+        Arena global = Arena.global();
+        if (isWindows()) {
+            log.warn("Windows: no library available");
+        } else {
+            Path pathToLibrary = Paths.get(libUri);
+            SymbolLookup.libraryLookup(pathToLibrary, global);
+        }
+    }
+
+    private boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("win");
     }
 
 

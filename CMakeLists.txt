@@ -14,6 +14,8 @@ file (GLOB generated_SRC
 # Native shared library
 add_library(asnapplication SHARED
         ${generated_SRC}
+        src/convert.h
+        src/convert.c
 )
 
 # Need this for includes with angle brackets to work

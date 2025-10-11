@@ -9,6 +9,7 @@ WORKDIR /build
 ADD ./asn1_codec/asn1c_combined/generated-files/2024.tar.gz /build
 ADD ./CMakeLists.txt                                        /build
 ADD ./run-lib.sh                                            /build
+COPY ./src                                                  /build/src/
 
 ENV CC=/usr/bin/clang
 
@@ -34,7 +35,8 @@ USER root
 WORKDIR /build
 
 ADD ./j2735-2024-ffm-lib-build                              /build/lib
-COPY --from=build-shared ./build/generated-files/2024/*.h   /build/headers/
+COPY --from=build-shared ./build/generated-files/2024/*.h   /build/generated-files/2024/
+COPY --from=build-shared ./build/src/*.h                    /build/src/
 ADD ./run-jextract.sh                                       /build
 
 ENV JEXTRACT="/jextract/jextract-22/bin/jextract"
@@ -50,58 +52,58 @@ RUN apt update && \
     cd /build && \
     $JEXTRACT --include-dir /build/headers \
       --output /build/java-src \
-      --target-package j2735_2024_MessageFrame \
+      --target-package generated \
       --library asnapplication \
-      /build/headers/MessageFrame.h
+      /build/src/convert.h
 
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
 CMD ["/build/run-jextract.sh"]
 
+##########################################################################################
+##
+## Build container for Java app
+##
+#FROM gradle:8.10-jdk22 AS builder
+#USER root
+#WORKDIR /home/app
+#
+## api
+#COPY ./j2735-2024-api/src               /home/app/j2735-2024-api/src
+#COPY ./j2735-2024-api/build.gradle      /home/app/j2735-2024-api
+#COPY ./j2735-2024-api/settings.gradle   /home/app/j2735-2024-api
+#COPY ./j2735-2024-api/gradle            /home/app/j2735-2024-api/gradle
+#
+## lib
+#COPY ./j2735-2024-ffm-lib-build/src/main/java/j2735ffm        /home/app/j2735-2024-ffm-lib-build/src/main/java/j2735ffm
+#COPY --from=jextract /build/java-src/j2735_2024_MessageFrame  /home/app/j2735-2024-ffm-lib-build/src/main/java/j2735_2024_MessageFrame
+#COPY ./j2735-2024-ffm-lib-build/build.gradle                  /home/app/j2735-2024-ffm-lib-build
+#COPY ./j2735-2024-ffm-lib-build/settings.gradle               /home/app/j2735-2024-ffm-lib-build
+#
+#ADD ./run-java.sh                       /home/app
+#
+#RUN cd j2735-2024-api && gradle clean build
+#
+### Entrypoint for debugging
+##ENTRYPOINT ["tail", "-f", "/dev/null"]
+#CMD ["/home/app/run-java.sh"]
+#
 #########################################################################################
+##
+## Run container
+##
+#FROM eclipse-temurin:22-jdk-noble
+#WORKDIR /home
 #
-# Build container for Java app
+## Install native library
+#COPY --from=build-shared /build/out/libasnapplication.so /usr/lib
 #
-FROM gradle:8.10-jdk22 AS builder
-USER root
-WORKDIR /home/app
-
-# api
-COPY ./j2735-2024-api/src               /home/app/j2735-2024-api/src
-COPY ./j2735-2024-api/build.gradle      /home/app/j2735-2024-api
-COPY ./j2735-2024-api/settings.gradle   /home/app/j2735-2024-api
-COPY ./j2735-2024-api/gradle            /home/app/j2735-2024-api/gradle
-
-# lib
-COPY ./j2735-2024-ffm-lib-build/src/main/java/j2735ffm        /home/app/j2735-2024-ffm-lib-build/src/main/java/j2735ffm
-COPY --from=jextract /build/java-src/j2735_2024_MessageFrame  /home/app/j2735-2024-ffm-lib-build/src/main/java/j2735_2024_MessageFrame
-COPY ./j2735-2024-ffm-lib-build/build.gradle                  /home/app/j2735-2024-ffm-lib-build
-COPY ./j2735-2024-ffm-lib-build/settings.gradle               /home/app/j2735-2024-ffm-lib-build
-
-ADD ./run-java.sh                       /home/app
-
-RUN cd j2735-2024-api && gradle clean build
-
+## Copy java app
+#COPY --from=builder /home/app/j2735-2024-api/build/libs/j2735-2024-api.jar /home
+#
+#ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "-jar", "/home/j2735-2024-api.jar"]
+#
+#
 ## Entrypoint for debugging
-#ENTRYPOINT ["tail", "-f", "/dev/null"]
-CMD ["/home/app/run-java.sh"]
-
-########################################################################################
-#
-# Run container
-#
-FROM eclipse-temurin:22-jdk-noble
-WORKDIR /home
-
-# Install native library
-COPY --from=build-shared /build/out/libasnapplication.so /usr/lib
-
-# Copy java app
-COPY --from=builder /home/app/j2735-2024-api/build/libs/j2735-2024-api.jar /home
-
-ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "-jar", "/home/j2735-2024-api.jar"]
-
-
-# Entrypoint for debugging
-#ENTRYPOINT ["tail", "-f", "/dev/null"]
+##ENTRYPOINT ["tail", "-f", "/dev/null"]

@@ -9,8 +9,8 @@ services:
       - "4000:4000"
     volumes:
       - type: bind
-        source: ./publish/lib
-        target: /publish/lib/
+        source: ./j2735-2024-ffm-lib/lib
+        target: /j2735-2024-ffm-lib/lib/
       - type: bind
-        source: ./publish/src/main/java
-        target: /publish/src/main/java/
+        source: ./j2735-2024-ffm-lib/src/main/java
+        target: /j2735-2024-ffm-lib/src/main/java/

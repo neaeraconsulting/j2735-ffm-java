@@ -1,15 +1,21 @@
 plugins {
-    id 'buildlogic.java-library-conventions'
+    id 'java'
+    id "io.freefair.lombok" version "8.10.2"
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
+group = 'usdot.jpo.ode'
 
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
 
 dependencies {
-
-    implementation project(":j2735-2024-ffm-lib")
-
+    implementation 'usdot.jpo.ode:j2735-2024-ffm-lib-build'
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
     implementation 'commons-io:commons-io:2.18.0'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
@@ -17,5 +23,21 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+// Apply a specific Java toolchain to ease working on different environments.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(22)
+    }
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
+
+
+
 
 

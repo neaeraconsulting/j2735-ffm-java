@@ -71,9 +71,12 @@ public class convert_h {
         };
     }
 
+    // Manual edit to jextract generates source
+    // Comment out default symbol lookup
 //    static final SymbolLookup SYMBOL_LOOKUP = SymbolLookup.libraryLookup(System.mapLibraryName("asnapplication"), LIBRARY_ARENA)
 //            .or(SymbolLookup.loaderLookup())
 //            .or(Linker.nativeLinker().defaultLookup());
+    // Make symbol lookup
     public static SymbolLookup SYMBOL_LOOKUP;
 
     public static final OfBoolean C_BOOL = ValueLayout.JAVA_BOOLEAN;

@@ -4,16 +4,12 @@ import generated.convert_h;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SymbolLookup;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static generated.convert_h.convert_bytes;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -38,76 +34,39 @@ public class MessageFrameCodec {
      */
     public final long uperBufferSize;
 
-    /**
-     * Buffer size for internal representation of a MessageFrame_t struct
-     */
-    public final long messageFrameAllocateSize;
+    private final static Path DEFAULT_LIBRARY_PATH = Paths.get("/usr/lib/libasnapplication.so");
 
-    public final long asnCodecCtxMaxStackSize;
-
-    public MessageFrameCodec() {
-        this(262144L, 8192L, 16384L, 30000L);
-        loadLibrary();
-    }
-
+    @Deprecated
     public MessageFrameCodec(
             long textBufferSize,
             long uperBufferSize,
-            long messageFrameAllocateSize,
-            long asnCodecCtxMaxStackSize) {
+            @Deprecated long messageFrameAllocateSize,
+            @Deprecated long asnCodecCtxMaxStackSize) {
+        this(textBufferSize, uperBufferSize, DEFAULT_LIBRARY_PATH);
+    }
+
+    public MessageFrameCodec(long textBufferSize, long uperBufferSize, Path libraryPath) {
         this.textBufferSize = textBufferSize;
         this.uperBufferSize = uperBufferSize;
-        this.messageFrameAllocateSize = messageFrameAllocateSize;
-        this.asnCodecCtxMaxStackSize = asnCodecCtxMaxStackSize;
-        log.info("MessageFrameCodec initialized with textBufferSize: {}, uperBufferSize: {}, messageFrameAllocateSize: {}, asnCodecCtxMaxStackSize: {}",
-                textBufferSize, uperBufferSize, messageFrameAllocateSize, asnCodecCtxMaxStackSize);
-        loadLibrary();
+        loadLibrary(libraryPath);
+        log.info("MessageFrameCodec initialized with textBufferSize: {}, uperBufferSize: {}, libraryPath: {}",
+            textBufferSize, uperBufferSize, libraryPath);
     }
 
-    public MessageFrameCodec(
-        long textBufferSize, long uperBufferSize, URI libraryURI
-    ) {
-        this(textBufferSize, uperBufferSize, 16384L, 30000L);
-        loadLibrary(libraryURI);
-    }
+
 
     /**
-     * Default loader doesn't work with Spring Boot
+     * load library with given class loader.
+     * @param libraryPath The URI of the library resource
      */
-    private void loadLibrary() {
-        ClassLoader classLoader = MessageFrameCodec.class.getClassLoader();
-        // Load the library into the global arena
-        if (isWindows()) {
-            log.warn("Windows: no library available");
-            return;
-        }
-        URL libraryUrl = classLoader.getResource("j2735ffm/libasnapplication.so");
-        if (libraryUrl == null) {
-            throw new RuntimeException("libasnapplication.so resource not found");
-        } else {
-            log.info("Found library: {}", libraryUrl);
-        }
-        try {
-            URI libUri = libraryUrl.toURI();
-            loadLibrary(libUri);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * load library with given class loader.  Needed by Spring Boot
-     * @param libUri The URI of the library resource
-     */
-    private void loadLibrary(URI libUri) {
+    private void loadLibrary(Path libraryPath) {
         // Load the library into a garbage-collected arena
         Arena global = Arena.ofAuto();
         if (isWindows()) {
             log.warn("Windows: no library available");
         } else {
-            Path pathToLibrary = Paths.get(libUri);
-            SymbolLookup lookup = SymbolLookup.libraryLookup(pathToLibrary, global);
-            log.info("Loaded library: {}", pathToLibrary);
+            SymbolLookup lookup = SymbolLookup.libraryLookup(libraryPath, global);
+            log.info("Loaded library: {}", libraryPath);
             var symbol = lookup.find("convert_bytes");
             if (symbol.isPresent()) {
                 log.info("found symbol convert_bytes: {}", symbol);

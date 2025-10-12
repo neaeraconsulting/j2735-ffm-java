@@ -1,0 +1,46 @@
+#
+# Dockerfile to run the API
+#
+
+#########################################################################################
+#
+# Build container for Java app
+#
+FROM gradle:8.10-jdk22 AS builder
+USER root
+WORKDIR /home/app
+
+# api
+COPY ./j2735-2024-api/src               /home/app/j2735-2024-api/src
+COPY ./j2735-2024-api/build.gradle      /home/app/j2735-2024-api
+COPY ./j2735-2024-api/settings.gradle   /home/app/j2735-2024-api
+COPY ./j2735-2024-api/gradle            /home/app/j2735-2024-api/gradle
+
+# lib
+COPY ./j2735-2024-ffm-lib-build/src/main/java     /home/app/j2735-2024-ffm-lib-build/src/main/java
+COPY ./j2735-2024-ffm-lib-build/build.gradle      /home/app/j2735-2024-ffm-lib-build
+COPY ./j2735-2024-ffm-lib-build/settings.gradle   /home/app/j2735-2024-ffm-lib-build
+
+ADD ./run-java.sh                       /home/app
+
+RUN cd j2735-2024-api && gradle clean build
+
+## Entrypoint for debugging
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
+
+########################################################################################
+#
+# Run container
+#
+FROM eclipse-temurin:22-jre-noble
+WORKDIR /home
+USER root
+
+## Copy native library
+COPY ./j2735-2024-ffm-lib-build/src/test/resources/j2735ffm/libasnapplication.so    /home
+
+# Copy java app
+COPY --from=builder /home/app/j2735-2024-api/build/libs/j2735-2024-api.jar          /home
+
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "-jar", "/home/j2735-2024-api.jar"]

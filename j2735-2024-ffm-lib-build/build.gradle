@@ -19,6 +19,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.16'
     testImplementation 'org.slf4j:slf4j-simple:2.0.16'
     testImplementation 'org.hamcrest:hamcrest:3.0'
+    implementation 'commons-io:commons-io:2.20.0'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

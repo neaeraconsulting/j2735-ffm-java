@@ -6,3 +6,7 @@ build
 
 .idea/
 
+bin/
+
+out.log
+

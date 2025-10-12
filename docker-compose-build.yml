@@ -2,15 +2,18 @@ services:
   j2735-2024-api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-build
     image: j2735-2024-api:latest
     restart: no
     ports:
       - "4000:4000"
     volumes:
       - type: bind
-        source: ./j2735-2024-ffm-lib/lib
+        source: ./lib
         target: /j2735-2024-ffm-lib/lib/
       - type: bind
-        source: ./j2735-2024-ffm-lib/src/main/java
+        source: ./generated-jextract
         target: /j2735-2024-ffm-lib/src/main/java/
+      - type: bind
+        source: ./generated-files
+        target: /generated-files/

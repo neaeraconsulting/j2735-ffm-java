@@ -10,6 +10,5 @@ import org.springframework.stereotype.Component;
 public class ApiConfiguration {
     long textBufferSize;
     long uperBufferSize;
-    long messageFrameAllocateSize;
-    long asnCodecCtxMaxStackSize;
+    String libraryPath;
 }

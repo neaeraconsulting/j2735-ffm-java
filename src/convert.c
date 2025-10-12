@@ -14,7 +14,7 @@
    limitations under the License.
  */
 #include "convert.h"
-#include "/build/generated-files/2024/asn_application.h"
+#include "../generated-files/2024/asn_application.h"
 #include <stdlib.h>    /* for atoi(3) */
 #include <string.h>    /* for strerror(3) */
 

@@ -1,0 +1,10 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile-api
+    image: api:latest
+    restart: no
+    ports:
+      - "4000:4000"
+

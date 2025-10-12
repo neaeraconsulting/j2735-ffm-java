@@ -20,6 +20,7 @@ add_library(asnapplication SHARED
 
 # Need this for includes with angle brackets to work
 target_include_directories(asnapplication PUBLIC generated-files/2024)
+target_include_directories(asnapplication PUBLIC src)
 
 set_target_properties(asnapplication PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${LIB_SO_VERSION})
 

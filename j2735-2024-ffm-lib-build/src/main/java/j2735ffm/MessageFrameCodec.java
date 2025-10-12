@@ -1,5 +1,6 @@
 package j2735ffm;
 
+import generated.convert_h;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SymbolLookup;
@@ -99,13 +100,21 @@ public class MessageFrameCodec {
      * @param libUri The URI of the library resource
      */
     private void loadLibrary(URI libUri) {
-        // Load the library into the global arena
-        Arena global = Arena.global();
+        // Load the library into a garbage-collected arena
+        Arena global = Arena.ofAuto();
         if (isWindows()) {
             log.warn("Windows: no library available");
         } else {
             Path pathToLibrary = Paths.get(libUri);
-            SymbolLookup.libraryLookup(pathToLibrary, global);
+            SymbolLookup lookup = SymbolLookup.libraryLookup(pathToLibrary, global);
+            log.info("Loaded library: {}", pathToLibrary);
+            var symbol = lookup.find("convert_bytes");
+            if (symbol.isPresent()) {
+                log.info("found symbol convert_bytes: {}", symbol);
+            } else {
+                throw new RuntimeException("symbol 'convert_bytes' not found in the library");
+            }
+            convert_h.SYMBOL_LOOKUP = lookup;
         }
     }
 
@@ -115,11 +124,15 @@ public class MessageFrameCodec {
 
 
     public byte[] xerToUper(String xer) {
+        log.debug("xerToUper: {}", xer);
         try (var arena = Arena.ofConfined()) {
             MemorySegment inputBuffer = arena.allocate(textBufferSize);
             MemorySegment outputBuffer = arena.allocate(uperBufferSize);
             return convert(arena, xer.getBytes(StandardCharsets.UTF_8), "xer",
                 "uper", inputBuffer, outputBuffer, uperBufferSize);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -140,18 +153,29 @@ public class MessageFrameCodec {
     private byte[] convert(Arena arena, final byte[] bytes,
         final String fromEncoding, final String toEncoding, MemorySegment inputBuffer,
         MemorySegment outputBuffer, long outputBufferSize) {
+        log.debug("convert: {} {}", fromEncoding, toEncoding);
+        byte[] outputArray = null;
 
         MemorySegment heapBytes = MemorySegment.ofArray(bytes);
         inputBuffer.copyFrom(heapBytes);
         MemorySegment pduName = arena.allocateFrom(PDU, StandardCharsets.UTF_8);
-        MemorySegment fromEncodingSeg = arena.allocateFrom(fromEncoding, StandardCharsets.UTF_8);
+        MemorySegment fromEncodingSeg = arena.allocateFrom(fromEncoding,
+            StandardCharsets.UTF_8);
         MemorySegment toEncodingSeg = arena.allocateFrom(toEncoding, StandardCharsets.UTF_8);
-
-        long numOut = convert_bytes(pduName, fromEncodingSeg, toEncodingSeg, inputBuffer, bytes.length, outputBuffer, outputBufferSize);
-
-        byte[] outputArray = new byte[(int) numOut];
+        log.debug("calling convert_bytes");
+        long numOut = 0;
+        try {
+            numOut = convert_bytes(pduName, fromEncodingSeg, toEncodingSeg, inputBuffer,
+                bytes.length, outputBuffer, outputBufferSize);
+        } catch (Throwable ex) {
+            log.info("error converting");
+            log.error(ex.getMessage(), ex);
+        }
+        log.debug("numOut: {}", numOut);
+        outputArray = new byte[(int) numOut];
         MemorySegment heapOutput = MemorySegment.ofArray(outputArray);
         MemorySegment.copy(outputBuffer, 0, heapOutput, 0, numOut);
+
         return outputArray;
     }
 

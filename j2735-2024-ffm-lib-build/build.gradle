@@ -30,6 +30,7 @@ java {
 
 test {
     jvmArgs(["--enable-native-access=ALL-UNNAMED"])
+    systemProperty("jextract.trace.downcalls", "true")
     useJUnitPlatform()
     testLogging.showStandardStreams = true
 }

@@ -71,9 +71,10 @@ public class convert_h {
         };
     }
 
-    static final SymbolLookup SYMBOL_LOOKUP = SymbolLookup.libraryLookup(System.mapLibraryName("asnapplication"), LIBRARY_ARENA)
-            .or(SymbolLookup.loaderLookup())
-            .or(Linker.nativeLinker().defaultLookup());
+//    static final SymbolLookup SYMBOL_LOOKUP = SymbolLookup.libraryLookup(System.mapLibraryName("asnapplication"), LIBRARY_ARENA)
+//            .or(SymbolLookup.loaderLookup())
+//            .or(Linker.nativeLinker().defaultLookup());
+    public static SymbolLookup SYMBOL_LOOKUP;
 
     public static final OfBoolean C_BOOL = ValueLayout.JAVA_BOOLEAN;
     public static final OfByte C_CHAR = ValueLayout.JAVA_BYTE;

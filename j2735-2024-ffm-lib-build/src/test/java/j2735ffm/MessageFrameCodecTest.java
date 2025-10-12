@@ -14,6 +14,7 @@ public class MessageFrameCodecTest {
   public void testLibraryLoaded() {
     var codec = new MessageFrameCodec();
     assertThat(codec, notNullValue());
+    log.info("Library loaded");
   }
 
   @Test

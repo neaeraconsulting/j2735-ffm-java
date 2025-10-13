@@ -45,6 +45,12 @@ public class MessageFrameCodec {
         this(textBufferSize, uperBufferSize, DEFAULT_LIBRARY_PATH);
     }
 
+    /**
+     * Constructor.  Configures the library and loads the underlying native library
+     * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
+     * @param uperBufferSize - Size of the input or output buffer for UPER binary encoding.
+     * @param libraryPath - Absolute or relative path to the native library, e.g. "/usr/lib/libasnapplication.so"
+     */
     public MessageFrameCodec(long textBufferSize, long uperBufferSize, Path libraryPath) {
         this.textBufferSize = textBufferSize;
         this.uperBufferSize = uperBufferSize;
@@ -74,6 +80,11 @@ public class MessageFrameCodec {
     }
 
 
+    /**
+     * Convert an XER encoded MessageFrame to UPER
+     * @param xer The XER encoded MessageFrame
+     * @return Byte array with the UPER encoding
+     */
     public byte[] xerToUper(String xer) {
         log.debug("xerToUper: {}", xer);
         try (var arena = Arena.ofConfined()) {
@@ -87,7 +98,11 @@ public class MessageFrameCodec {
         }
     }
 
-
+    /**
+     * Convert an UPER encoded MessageFrame to XER
+     * @param uper The UPER encoded MessageFrame
+     * @return XER encoded result
+     */
     public String uperToXer(byte[] uper) {
         log.trace("Received {} bytes", uper.length);
         try (var arena = Arena.ofConfined()) {
@@ -98,7 +113,6 @@ public class MessageFrameCodec {
             return new String(xerBytes, StandardCharsets.UTF_8);
         }
     }
-
 
 
     private byte[] convert(Arena arena, final byte[] bytes,

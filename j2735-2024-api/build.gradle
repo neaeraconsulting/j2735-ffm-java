@@ -16,7 +16,7 @@ repositories {
 
 
 dependencies {
-    api 'usdot.jpo.ode:j2735-2024-ffm-lib-build'
+    api 'usdot.jpo.ode:j2735-2024-ffm-lib'
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
     implementation 'commons-io:commons-io:2.18.0'

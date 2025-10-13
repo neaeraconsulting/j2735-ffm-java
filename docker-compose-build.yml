@@ -1,17 +1,17 @@
-name: build
+name: build-container
 services:
-  j2735-2024-api:
+  build-container:
     build:
       context: .
       dockerfile: Dockerfile-build
-    image: j2735-2024-api:latest
+    image: build-container:latest
     restart: no
     ports:
       - "4000:4000"
     volumes:
       - type: bind
         source: ./lib
-        target: /lib/
+        target: /build-lib/
       - type: bind
         source: ./generated-jextract
         target: /generated-jextract/

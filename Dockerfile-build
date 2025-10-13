@@ -6,7 +6,7 @@
 #
 # Build container for shared library
 #
-FROM ubuntu:noble AS build-shared
+FROM debian:trixie-slim AS build-shared
 USER root
 WORKDIR /build
 
@@ -27,41 +27,43 @@ RUN apt update && \
     cp libasnapplication.so.1.0.0 out/libasnapplication.so
 
 ## Entrypoint for debugging
-ENTRYPOINT ["tail", "-f", "/dev/null"]
-#CMD ["/build/run-lib.sh"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
 
-#####################################################################################################
-##
-## Build container for jextract
-##
-#FROM openjdk:22-jdk-slim AS jextract
-#USER root
-#WORKDIR /build
+
+####################################################################################################
 #
-#ADD ./j2735-2024-ffm-lib                                    /build/lib
-#COPY --from=build-shared ./build/generated-files/2024/*.h   /build/generated-files/2024/
-#COPY --from=build-shared ./build/src/*.h                    /build/src/
-#ADD ./run-jextract.sh                                       /build
+# Build container for jextract
 #
-#ENV JEXTRACT="/jextract/jextract-22/bin/jextract"
-#
-#RUN apt update && \
-#     apt install -y build-essential libncurses5 wget && \
-#     mkdir /jextract && \
-#     wget -nc -O /jextract/jextract.tar.gz --show-progress https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz && \
-#     mkdir java-src && \
-#     cd /jextract && \
-#     tar -xzvf jextract.tar.gz && \
-#     chmod gu+x $JEXTRACT && \
-#     cd /build && \
-#     $JEXTRACT --include-dir /build/headers \
-#       --output /build/java-src \
-#       --target-package generated \
-#       --library asnapplication \
-#       /build/src/convert.h
-#
-#
-# ## Entrypoint for debugging
-# #ENTRYPOINT ["tail", "-f", "/dev/null"]
-#CMD ["/build/run-jextract.sh"]
+FROM openjdk:22-jdk-slim AS jextract
+USER root
+WORKDIR /build
+
+ADD ./j2735-2024-ffm-lib                                    /build/lib
+COPY --from=build-shared ./build/generated-files/2024       /build/generated-files/2024/
+COPY --from=build-shared ./build/src/*.h                    /build/src/
+ADD ./run-jextract.sh                                       /build
+COPY --from=build-shared ./build/out                        /build/out/
+
+
+ENV JEXTRACT="/jextract/jextract-22/bin/jextract"
+
+RUN apt update && \
+     apt install -y build-essential libncurses5 wget && \
+     mkdir /jextract && \
+     wget -nc -O /jextract/jextract.tar.gz --show-progress https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz && \
+     mkdir java-src && \
+     cd /jextract && \
+     tar -xzvf jextract.tar.gz && \
+     chmod gu+x $JEXTRACT && \
+     cd /build && \
+     $JEXTRACT --include-dir /build/headers \
+       --output /build/java-src \
+       --target-package generated \
+       --library asnapplication \
+       /build/src/convert.h
+
+
+ ## Entrypoint for debugging
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
+CMD ["/build/run-jextract.sh"]
 

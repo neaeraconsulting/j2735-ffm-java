@@ -5,7 +5,7 @@ by the Jextract tool.
 
 It includes the same complete implementation of J2735 (2024) as the [USDOT asn1_codec](https://github.com/usdot-jpo-ode/asn1_codec) C++ project, now easily accessible from Java on both Linux and Windows.
 
-It enables converting between various ASN.1 encodings:
+It enables converting between these ASN.1 encodings:
 * XER - XML Encoding Rules
 * UPER - Unaligned Packed Encoding Rules
 

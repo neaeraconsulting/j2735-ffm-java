@@ -26,3 +26,6 @@ set_target_properties(asnapplication PROPERTIES VERSION ${PROJECT_VERSION} SOVER
 
 # Sets -fPIC option to create library suitable for jextract
 set_property(TARGET asnapplication PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+# Export all symbols for windows dll
+set_property(TARGET asnapplication PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)

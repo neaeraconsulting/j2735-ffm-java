@@ -17,16 +17,24 @@ public class MessageFrameCodecTest {
 
   static MessageFrameCodec codec;
 
+  static boolean isWindows() {
+    return System.getProperty("os.name").toLowerCase().contains("win");
+  }
+
   @BeforeAll
   public static void setup() {
 
-    URL url = MessageFrameCodecTest.class.getClassLoader().getResource("j2735ffm/libasnapplication.so");
+    String libResource = isWindows() ? "j2735ffm/asnapplication.dll" : "j2735ffm/libasnapplication.so";
+    URL url = MessageFrameCodecTest.class.getClassLoader().getResource(libResource);
+    log.info("Loading library {}", libResource);
+
     if (url == null) {
-      throw new RuntimeException("libasnapplication.so not found");
+      throw new RuntimeException("libasnapplication not found");
     }
     try {
       Path libPath = Paths.get(url.toURI());
       codec = new MessageFrameCodec(262144L, 8192L, libPath);
+      log.info("Created codec");
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
@@ -53,4 +61,6 @@ public class MessageFrameCodecTest {
     assertThat(xer, notNullValue());
     log.info("xer: {}", xer);
   }
+
+
 }

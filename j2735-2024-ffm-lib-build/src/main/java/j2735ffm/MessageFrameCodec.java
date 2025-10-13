@@ -62,23 +62,15 @@ public class MessageFrameCodec {
     private void loadLibrary(Path libraryPath) {
         // Load the library into a garbage-collected arena
         Arena global = Arena.ofAuto();
-        if (isWindows()) {
-            log.warn("Windows: no library available");
+        SymbolLookup lookup = SymbolLookup.libraryLookup(libraryPath, global);
+        log.info("Loaded library: {}", libraryPath);
+        var symbol = lookup.find("convert_bytes");
+        if (symbol.isPresent()) {
+            log.info("found symbol convert_bytes: {}", symbol);
         } else {
-            SymbolLookup lookup = SymbolLookup.libraryLookup(libraryPath, global);
-            log.info("Loaded library: {}", libraryPath);
-            var symbol = lookup.find("convert_bytes");
-            if (symbol.isPresent()) {
-                log.info("found symbol convert_bytes: {}", symbol);
-            } else {
-                throw new RuntimeException("symbol 'convert_bytes' not found in the library");
-            }
-            convert_h.SYMBOL_LOOKUP = lookup;
+            throw new RuntimeException("symbol 'convert_bytes' not found in the library");
         }
-    }
-
-    private boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase().contains("win");
+        convert_h.SYMBOL_LOOKUP = lookup;
     }
 
 
@@ -128,7 +120,7 @@ public class MessageFrameCodec {
                 bytes.length, outputBuffer, outputBufferSize);
         } catch (Throwable ex) {
             log.info("error converting");
-            log.error(ex.getMessage(), ex);
+            throw ex;
         }
         log.debug("numOut: {}", numOut);
         outputArray = new byte[(int) numOut];

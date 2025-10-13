@@ -1,3 +1,4 @@
+name: build
 services:
   j2735-2024-api:
     build:
@@ -10,10 +11,10 @@ services:
     volumes:
       - type: bind
         source: ./lib
-        target: /j2735-2024-ffm-lib/lib/
+        target: /lib/
       - type: bind
         source: ./generated-jextract
-        target: /j2735-2024-ffm-lib/src/main/java/
+        target: /generated-jextract/
       - type: bind
         source: ./generated-files
         target: /generated-files/

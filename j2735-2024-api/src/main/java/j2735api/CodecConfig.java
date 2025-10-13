@@ -1,6 +1,7 @@
 package j2735api;
 
 import j2735ffm.MessageFrameCodec;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +17,14 @@ public class CodecConfig {
 
     @Bean
     public MessageFrameCodec messageFrameCodec() {
+      String libResource = System.getProperty("os.name").toLowerCase().contains("win")
+          ? config.getWindowsLibraryPath()
+          : config.getLibraryPath();
+      Path libPath = Paths.get(libResource);
           return new MessageFrameCodec(
               config.getTextBufferSize(),
               config.getUperBufferSize(),
-              Paths.get(config.getLibraryPath())
+              libPath
           );
     }
 

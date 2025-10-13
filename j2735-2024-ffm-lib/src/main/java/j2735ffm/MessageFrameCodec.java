@@ -67,8 +67,8 @@ public class MessageFrameCodec {
      */
     private void loadLibrary(Path libraryPath) {
         // Load the library into a garbage-collected arena
-        Arena global = Arena.ofAuto();
-        SymbolLookup lookup = SymbolLookup.libraryLookup(libraryPath, global);
+        Arena arena = Arena.ofAuto();
+        SymbolLookup lookup = SymbolLookup.libraryLookup(libraryPath, arena);
         log.info("Loaded library: {}", libraryPath);
         var symbol = lookup.find("convert_bytes");
         if (symbol.isPresent()) {

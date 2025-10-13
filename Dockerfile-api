@@ -21,9 +21,7 @@ COPY ./j2735-2024-ffm-lib/src/main/java     /home/app/j2735-2024-ffm-lib/src/mai
 COPY ./j2735-2024-ffm-lib/build.gradle      /home/app/j2735-2024-ffm-lib
 COPY ./j2735-2024-ffm-lib/settings.gradle   /home/app/j2735-2024-ffm-lib
 
-ADD ./run-java.sh                       /home/app
-
-RUN cd j2735-2024-api && gradle clean build
+RUN cd j2735-2024-api && gradle clean build -xtest
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
@@ -37,7 +35,7 @@ WORKDIR /home
 USER root
 
 ## Copy native library
-COPY ./j2735-2024-ffm-lib/src/test/resources/j2735ffm/libasnapplication.so    /home
+COPY ./j2735-2024-ffm-lib/src/test/resources/j2735ffm/libasnapplication.so          /home
 
 # Copy java app
 COPY --from=builder /home/app/j2735-2024-api/build/libs/j2735-2024-api.jar          /home

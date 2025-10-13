@@ -11,4 +11,5 @@ public class ApiConfiguration {
     long textBufferSize;
     long uperBufferSize;
     String libraryPath;
+    String windowsLibraryPath;
 }

@@ -9,7 +9,7 @@ on:
       - main
       - develop
 jobs:
-  publish:
+  test:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -28,6 +28,7 @@ jobs:
           gradle-version: '8.13'
       - name: Test Library
         run: ./gradlew build test
+        working-directory: j2735-2024-ffm-lib
 
 
 

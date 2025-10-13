@@ -47,9 +47,9 @@ Content types are:
 ### Native library
 
 A native, dynamic library, `libasnapplication.so`, is generated from asn1c generated C code. 
-The library is included in the `j2735-2024-ffm-lib/c-lib` directory.
+The library is included in the `/c-lib` directory.
 
-The `Dockerfile` installs the native library in the `/usr/lib` directory of the runtime image, which makes it
+The `Dockerfile-build` installs the native library on runtime image, which makes it
 generally available to applications running on that image.
 
 ### Java library

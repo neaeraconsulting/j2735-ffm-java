@@ -19,6 +19,7 @@ public class MessageFrameCodecTest {
 
   @BeforeAll
   public static void setup() {
+
     URL url = MessageFrameCodecTest.class.getClassLoader().getResource("j2735ffm/libasnapplication.so");
     if (url == null) {
       throw new RuntimeException("libasnapplication.so not found");

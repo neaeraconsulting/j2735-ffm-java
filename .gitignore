@@ -10,3 +10,13 @@ bin/
 
 out.log
 
+# CLion temp files
+/libasnapplication*
+/cmake_install.cmake
+/CMakeCache.txt
+/cmake-build-debug/
+/CMakeFiles/
+/Makefile
+
+# Visual Studio
+.vs/

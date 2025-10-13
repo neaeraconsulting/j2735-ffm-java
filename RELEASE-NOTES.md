@@ -4,7 +4,7 @@ Refactor to use the existing C codec from asn1_codec, with a new "convert_bytes"
 
 Includes Linux library and Windows shared libraries.
 
-Only UPER and XER are supported to match the current version of asn1_codec exactly.
+Only UPER and XER are supported to match the current version of asn1_codec exactly. (JER support not included).
 
 Linux library:
 [libasnapplication.so](https://github.com/neaeraconsulting/j2735-ffm-java/blob/main/lib/libasnapplication.so)

@@ -6,6 +6,9 @@ plugins {
 }
 
 group = 'usdot.jpo.ode'
+version = '2.0.0'
+
+
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -20,6 +23,27 @@ dependencies {
     testImplementation 'org.slf4j:slf4j-simple:2.0.16'
     testImplementation 'org.hamcrest:hamcrest:3.0'
     implementation 'commons-io:commons-io:2.20.0'
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/" + System.getenv("GITHUB_REPOSITORY_OWNER") + "/j2735-ffm-java")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = project.name
+            version = version
+            from components.java
+        }
+    }
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

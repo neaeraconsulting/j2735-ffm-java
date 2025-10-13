@@ -35,7 +35,7 @@ COPY ./j2735-2024-ffm-lib/src/main/java     /home/app/j2735-2024-ffm-lib/src/mai
 COPY ./j2735-2024-ffm-lib/build.gradle      /home/app/j2735-2024-ffm-lib
 COPY ./j2735-2024-ffm-lib/settings.gradle   /home/app/j2735-2024-ffm-lib
 
-RUN cd j2735-2024-api && gradle clean build -xtest
+RUN cd j2735-2024-api && gradle clean build
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["tail", "-f", "/dev/null"]

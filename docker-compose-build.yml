@@ -6,8 +6,6 @@ services:
       dockerfile: Dockerfile-build
     image: build-container:latest
     restart: no
-    ports:
-      - "4000:4000"
     volumes:
       - type: bind
         source: ./lib

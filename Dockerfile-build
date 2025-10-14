@@ -26,7 +26,6 @@ WORKDIR /build
 
 ADD ./asn1_codec/asn1c_combined/generated-files/2024.tar.gz /build
 ADD ./CMakeLists.txt                                        /build
-ADD ./run-lib.sh                                            /build
 COPY ./src                                                  /build/src/
 
 ENV CC=/usr/bin/clang

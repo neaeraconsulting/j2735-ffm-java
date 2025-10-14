@@ -34,7 +34,7 @@ import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 /**
- * HTTP Methods for converting J2735 MessageFrames between XER, JER and UPER
+ * HTTP Methods for converting J2735 MessageFrames between XER and UPER
  * @author Ivan Yourshaw
  */
 @RestController

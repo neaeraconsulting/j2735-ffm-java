@@ -25,10 +25,10 @@
 /**
  Convert a byte array representation of a J2735 PDU from one encoding to another.
  UPER format is rww bytes, not hex.
- JER and XER are 8-bit text.
+ XER is 8-bit text.
 
  @param pdu_name String with the J2375 PDU, e.g., "MessageFrame", "BasicSafetyMessage".
- @param from_encoding String with the name of the encoding of the input ("JER", "XER", or "UPER").
+ @param from_encoding String with the name of the encoding of the input ("XER", or "UPER").
  @param to_encoding Target encoding for the output ("XER", or "UPER").
  @param ibuf The input byte array in raw UPER, or XER text format.
  @param ibuf_len The length of the input byte array.

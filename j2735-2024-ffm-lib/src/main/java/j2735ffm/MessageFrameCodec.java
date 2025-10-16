@@ -120,9 +120,14 @@ public class MessageFrameCodec {
      */
     public byte[] convertGeneral(byte[] inputBytes, String pdu, String fromEncoding, String toEncoding) {
         log.debug("convertGeneral PDU: {}, {} -> {}", pdu, fromEncoding, toEncoding);
+        final long inputBufferSize = "uper".equals(fromEncoding) ? uperBufferSize : textBufferSize;
+        if (inputBytes.length > inputBufferSize) {
+            String errMsg = String.format("Input message too large: %d > %d", inputBytes.length, inputBufferSize);
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
+        }
+        final long outputBufferSize = "uper".equals(toEncoding) ? uperBufferSize : textBufferSize;
         try (var arena = Arena.ofConfined()) {
-            final long inputBufferSize = "uper".equals(fromEncoding) ? uperBufferSize : textBufferSize;
-            final long outputBufferSize = "uper".equals(toEncoding) ? uperBufferSize : textBufferSize;
             MemorySegment inputBuffer = arena.allocate(inputBufferSize);
             MemorySegment outputBuffer = arena.allocate(outputBufferSize);
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
@@ -142,6 +147,11 @@ public class MessageFrameCodec {
      */
     public byte[] xerToUper(String xer) {
         log.debug("xerToUper: {}", xer);
+        if (xer.length() > textBufferSize) {
+            String errMsg = String.format("Input XER message too large: %d > %d", xer.length(), textBufferSize);
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
+        }
         try (var arena = Arena.ofConfined()) {
             MemorySegment inputBuffer = arena.allocate(textBufferSize);
             MemorySegment outputBuffer = arena.allocate(uperBufferSize);
@@ -161,6 +171,11 @@ public class MessageFrameCodec {
      */
     public String uperToXer(byte[] uper) {
         log.trace("Received {} bytes", uper.length);
+        if (uper.length > uperBufferSize) {
+            String errMsg = String.format("Input UPER message too large: %d > %d", uper.length, uperBufferSize);
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
+        }
         try (var arena = Arena.ofConfined()) {
             MemorySegment inputBuffer = arena.allocate(uperBufferSize);
             MemorySegment outputBuffer = arena.allocate(textBufferSize);

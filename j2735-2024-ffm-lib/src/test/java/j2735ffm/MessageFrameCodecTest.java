@@ -16,6 +16,7 @@
 package j2735ffm;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.notNullValue;
@@ -150,6 +151,46 @@ public class MessageFrameCodecTest {
           codec.convertGeneral(inputBytes, SSM_PDU, "uper", "xer");
         }
     );
+  }
+
+  @Test
+  public void testConvertGeneral_InputTooBig() {
+    byte[] inputBytes = new byte[10000];
+    RuntimeException re = assertThrows(
+        RuntimeException.class,
+        () -> {
+          codec.convertGeneral(inputBytes, SSM_PDU, "uper", "xer");
+        }
+    );
+    assertThat(re.getMessage(), containsString("too large"));
+  }
+
+  @Test
+  public void testUperToXer_InputTooBig() {
+    byte[] inputBytes = new byte[10000];
+    RuntimeException re = assertThrows(
+        RuntimeException.class,
+        () -> {
+          codec.uperToXer(inputBytes);
+        }
+    );
+    assertThat(re.getMessage(), containsString("too large"));;
+  }
+
+  @Test
+  public void testXerToUper_InputTooBig() {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < 262144L + 10; i++) {
+      sb.append("A");
+    }
+    String inputXer = sb.toString();
+    RuntimeException re = assertThrows(
+        RuntimeException.class,
+        () -> {
+          codec.xerToUper(inputXer);
+        }
+    );
+    assertThat(re.getMessage(), containsString("too large"));;
   }
 
   private static Stream<Arguments> convertData() {

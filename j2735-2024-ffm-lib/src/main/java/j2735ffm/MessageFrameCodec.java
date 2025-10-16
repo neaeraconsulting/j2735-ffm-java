@@ -234,7 +234,7 @@ public class MessageFrameCodec {
             numOut = convert_bytes(pduName, fromEncodingSeg, toEncodingSeg, inputBuffer,
                 bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize);
         } catch (Throwable ex) {
-            log.info("error converting");
+            log.error("error converting",ex);
             throw ex;
         }
         log.debug("numOut: {}", numOut);

@@ -3,7 +3,10 @@ server.port: 4000
 spring.main.web-application-type: servlet
 
 j2735.api:
+  # Use a large default value for text encoding, because the XML encodings for some messages,
+  # such as MAPs and TIMs, can be quite large
   text-buffer-size: 262144
+  # UPER binary is a more compact encoding, so we can use a smaller buffer size.
   uper-buffer-size: 8192
   error-buffer-size: 256
   library-path: /home/libasnapplication.so

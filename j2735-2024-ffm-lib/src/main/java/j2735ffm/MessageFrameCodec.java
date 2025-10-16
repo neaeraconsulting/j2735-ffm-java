@@ -99,6 +99,13 @@ public class MessageFrameCodec {
         } else {
             throw new RuntimeException("symbol 'convert_bytes' not found in the library");
         }
+        // Note: Assign the lookup to a static field in the generated code.
+        // This will prevent the library from being garbage collected until
+        // the class loader that loaded the "convert_h" class is itself garbage collected.
+        // Normally that would happen when the JVM exits, but could happen sooner if this library is
+        // loaded dynamically by a custom class loader or is used in the context of OSGI or
+        // something. We do this instead of using the global arena to prevent memory leaks
+        // in case of that unlikely, but possible, scenario.
         convert_h.SYMBOL_LOOKUP = lookup;
     }
 

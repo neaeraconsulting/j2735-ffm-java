@@ -26,6 +26,10 @@ extern asn_TYPE_descriptor_t *asn_pdu_collection[];
 const int RETURN_ERROR = -1;
 
 static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev, char * err_buf, size_t err_buf_len) {
+    if (!abbrev) {
+        snprintf(err_buf, err_buf_len, "Error: NULL encoding parameter\n");
+        return ATS_INVALID;
+    }
     if (strcmp("xer", abbrev) == 0) {
         return ATS_CANONICAL_XER;
     }

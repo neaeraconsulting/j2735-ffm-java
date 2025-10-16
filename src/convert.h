@@ -34,16 +34,20 @@
  @param ibuf_len The length of the input byte array.
  @param obuf The buffer to store the output byte array.
  @param max_obuf_len The maximum length of the output buffer.
- @return The length of the converted output byte array.
+ @param err_buf A buffer to store any error messages, populated with the error if the return value is -1.
+ @param err_buf_len The size of the error buffer.
+ @return The length of the converted output byte array, or -1 if there was an error doing the conversion.
 */
-size_t convert_bytes(
+int convert_bytes(
     const char * pdu_name,
     const char * from_encoding,
     const char * to_encoding,
     const uint8_t * ibuf,
     size_t ibuf_len,
     uint8_t * obuf,
-    size_t max_obuf_len);
+    size_t max_obuf_len,
+    char * err_buf,
+    size_t err_buf_len);
 
 
 

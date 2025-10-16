@@ -39,6 +39,7 @@ public class CodecConfig {
           return new MessageFrameCodec(
               config.getTextBufferSize(),
               config.getUperBufferSize(),
+              config.getErrorBufferSize(),
               libPath
           );
     }

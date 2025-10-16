@@ -53,7 +53,7 @@ public class MessageFrameCodecTest {
     }
     try {
       Path libPath = Paths.get(url.toURI());
-      codec = new MessageFrameCodec(262144L, 8192L, libPath);
+      codec = new MessageFrameCodec(262144L, 8192L, 256L, libPath);
       log.info("Created codec");
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);

@@ -50,6 +50,11 @@ public class MessageFrameCodec {
      */
     public final long uperBufferSize;
 
+    /**
+     * Buffer size for error messages returned from the native library.
+     */
+    public final long errorBufferSize;
+
     private final static Path DEFAULT_LIBRARY_PATH = Paths.get("/usr/lib/libasnapplication.so");
 
     @Deprecated
@@ -58,7 +63,7 @@ public class MessageFrameCodec {
             long uperBufferSize,
             @Deprecated long messageFrameAllocateSize,
             @Deprecated long asnCodecCtxMaxStackSize) {
-        this(textBufferSize, uperBufferSize, DEFAULT_LIBRARY_PATH);
+        this(textBufferSize, uperBufferSize, 256L, DEFAULT_LIBRARY_PATH);
     }
 
     /**
@@ -67,9 +72,11 @@ public class MessageFrameCodec {
      * @param uperBufferSize - Size of the input or output buffer for UPER binary encoding.
      * @param libraryPath - Absolute or relative path to the native library, e.g. "/usr/lib/libasnapplication.so"
      */
-    public MessageFrameCodec(long textBufferSize, long uperBufferSize, Path libraryPath) {
+    public MessageFrameCodec(long textBufferSize, long uperBufferSize, long errorBufferSize,
+            Path libraryPath) {
         this.textBufferSize = textBufferSize;
         this.uperBufferSize = uperBufferSize;
+        this.errorBufferSize = errorBufferSize;
         loadLibrary(libraryPath);
         log.info("MessageFrameCodec initialized with textBufferSize: {}, uperBufferSize: {}, libraryPath: {}",
             textBufferSize, uperBufferSize, libraryPath);
@@ -106,10 +113,11 @@ public class MessageFrameCodec {
         try (var arena = Arena.ofConfined()) {
             MemorySegment inputBuffer = arena.allocate(textBufferSize);
             MemorySegment outputBuffer = arena.allocate(uperBufferSize);
+            MemorySegment errorBuffer = arena.allocate(errorBufferSize);
             return convert(arena, xer.getBytes(StandardCharsets.UTF_8), "xer",
-                "uper", inputBuffer, outputBuffer, uperBufferSize);
+                "uper", inputBuffer, outputBuffer, uperBufferSize, errorBuffer,
+                errorBufferSize);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -124,16 +132,20 @@ public class MessageFrameCodec {
         try (var arena = Arena.ofConfined()) {
             MemorySegment inputBuffer = arena.allocate(uperBufferSize);
             MemorySegment outputBuffer = arena.allocate(textBufferSize);
+            MemorySegment errorBuffer = arena.allocate(errorBufferSize);
             byte[] xerBytes = convert(arena, uper, "uper", "xer",
-                inputBuffer, outputBuffer, textBufferSize);
+                inputBuffer, outputBuffer, textBufferSize, errorBuffer, errorBufferSize);
             return new String(xerBytes, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
 
     private byte[] convert(Arena arena, final byte[] bytes,
-        final String fromEncoding, final String toEncoding, MemorySegment inputBuffer,
-        MemorySegment outputBuffer, long outputBufferSize) {
+            final String fromEncoding, final String toEncoding, MemorySegment inputBuffer,
+            MemorySegment outputBuffer, long outputBufferSize, MemorySegment errorBuffer, long errorBufferSize)
+            throws ConvertException{
         log.debug("convert: {} {}", fromEncoding, toEncoding);
         byte[] outputArray = null;
 
@@ -147,12 +159,18 @@ public class MessageFrameCodec {
         long numOut = 0;
         try {
             numOut = convert_bytes(pduName, fromEncodingSeg, toEncodingSeg, inputBuffer,
-                bytes.length, outputBuffer, outputBufferSize);
+                bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize);
         } catch (Throwable ex) {
             log.info("error converting");
             throw ex;
         }
         log.debug("numOut: {}", numOut);
+        if (numOut < 0) {
+            // Error was returned
+            String error = errorBuffer.getString(0);
+            log.error(error);
+            throw new ConvertException(error);
+        }
         outputArray = new byte[(int) numOut];
         MemorySegment heapOutput = MemorySegment.ofArray(outputArray);
         MemorySegment.copy(outputBuffer, 0, heapOutput, 0, numOut);

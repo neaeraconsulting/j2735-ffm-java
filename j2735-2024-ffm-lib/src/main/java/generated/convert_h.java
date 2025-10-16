@@ -2,31 +2,15 @@
 
 package generated;
 
-import static java.lang.foreign.ValueLayout.JAVA_BYTE;
-import static java.lang.foreign.ValueLayout.OfBoolean;
-import static java.lang.foreign.ValueLayout.OfByte;
-import static java.lang.foreign.ValueLayout.OfDouble;
-import static java.lang.foreign.ValueLayout.OfFloat;
-import static java.lang.foreign.ValueLayout.OfInt;
-import static java.lang.foreign.ValueLayout.OfLong;
-import static java.lang.foreign.ValueLayout.OfShort;
+import java.lang.invoke.*;
+import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
 
-import java.lang.foreign.AddressLayout;
-import java.lang.foreign.Arena;
-import java.lang.foreign.FunctionDescriptor;
-import java.lang.foreign.GroupLayout;
-import java.lang.foreign.Linker;
-import java.lang.foreign.MemoryLayout;
-import java.lang.foreign.MemorySegment;
-import java.lang.foreign.PaddingLayout;
-import java.lang.foreign.SequenceLayout;
-import java.lang.foreign.StructLayout;
-import java.lang.foreign.SymbolLookup;
-import java.lang.foreign.ValueLayout;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import static java.lang.foreign.ValueLayout.*;
+import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 public class convert_h {
 
@@ -71,7 +55,7 @@ public class convert_h {
         };
     }
 
-    // Manual edit to jextract generates source
+    // Manual edit to jextract generated source
     // Comment out default symbol lookup
 //    static final SymbolLookup SYMBOL_LOOKUP = SymbolLookup.libraryLookup(System.mapLibraryName("asnapplication"), LIBRARY_ARENA)
 //            .or(SymbolLookup.loaderLookup())
@@ -79,16 +63,16 @@ public class convert_h {
     // Make symbol lookup
     public static SymbolLookup SYMBOL_LOOKUP;
 
-    public static final OfBoolean C_BOOL = ValueLayout.JAVA_BOOLEAN;
-    public static final OfByte C_CHAR = ValueLayout.JAVA_BYTE;
-    public static final OfShort C_SHORT = ValueLayout.JAVA_SHORT;
-    public static final OfInt C_INT = ValueLayout.JAVA_INT;
-    public static final OfLong C_LONG_LONG = ValueLayout.JAVA_LONG;
-    public static final OfFloat C_FLOAT = ValueLayout.JAVA_FLOAT;
-    public static final OfDouble C_DOUBLE = ValueLayout.JAVA_DOUBLE;
+    public static final ValueLayout.OfBoolean C_BOOL = ValueLayout.JAVA_BOOLEAN;
+    public static final ValueLayout.OfByte C_CHAR = ValueLayout.JAVA_BYTE;
+    public static final ValueLayout.OfShort C_SHORT = ValueLayout.JAVA_SHORT;
+    public static final ValueLayout.OfInt C_INT = ValueLayout.JAVA_INT;
+    public static final ValueLayout.OfLong C_LONG_LONG = ValueLayout.JAVA_LONG;
+    public static final ValueLayout.OfFloat C_FLOAT = ValueLayout.JAVA_FLOAT;
+    public static final ValueLayout.OfDouble C_DOUBLE = ValueLayout.JAVA_DOUBLE;
     public static final AddressLayout C_POINTER = ValueLayout.ADDRESS
-            .withTargetLayout(MemoryLayout.sequenceLayout(Long.MAX_VALUE, JAVA_BYTE));
-    public static final OfLong C_LONG = ValueLayout.JAVA_LONG;
+            .withTargetLayout(MemoryLayout.sequenceLayout(java.lang.Long.MAX_VALUE, JAVA_BYTE));
+    public static final ValueLayout.OfLong C_LONG = ValueLayout.JAVA_LONG;
     private static final int _STDINT_H = (int)1L;
     /**
      * {@snippet lang=c :
@@ -1127,10 +1111,12 @@ public class convert_h {
 
     private static class convert_bytes {
         public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            convert_h.C_INT,
+            convert_h.C_POINTER,
+            convert_h.C_POINTER,
+            convert_h.C_POINTER,
+            convert_h.C_POINTER,
             convert_h.C_LONG,
-            convert_h.C_POINTER,
-            convert_h.C_POINTER,
-            convert_h.C_POINTER,
             convert_h.C_POINTER,
             convert_h.C_LONG,
             convert_h.C_POINTER,
@@ -1145,7 +1131,7 @@ public class convert_h {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * size_t convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len)
+     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len)
      * }
      */
     public static FunctionDescriptor convert_bytes$descriptor() {
@@ -1155,7 +1141,7 @@ public class convert_h {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * size_t convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len)
+     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len)
      * }
      */
     public static MethodHandle convert_bytes$handle() {
@@ -1165,7 +1151,7 @@ public class convert_h {
     /**
      * Address for:
      * {@snippet lang=c :
-     * size_t convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len)
+     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len)
      * }
      */
     public static MemorySegment convert_bytes$address() {
@@ -1174,16 +1160,16 @@ public class convert_h {
 
     /**
      * {@snippet lang=c :
-     * size_t convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len)
+     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len)
      * }
      */
-    public static long convert_bytes(MemorySegment pdu_name, MemorySegment from_encoding, MemorySegment to_encoding, MemorySegment ibuf, long ibuf_len, MemorySegment obuf, long max_obuf_len) {
+    public static int convert_bytes(MemorySegment pdu_name, MemorySegment from_encoding, MemorySegment to_encoding, MemorySegment ibuf, long ibuf_len, MemorySegment obuf, long max_obuf_len, MemorySegment err_buf, long err_buf_len) {
         var mh$ = convert_bytes.HANDLE;
         try {
             if (TRACE_DOWNCALLS) {
-                traceDowncall("convert_bytes", pdu_name, from_encoding, to_encoding, ibuf, ibuf_len, obuf, max_obuf_len);
+                traceDowncall("convert_bytes", pdu_name, from_encoding, to_encoding, ibuf, ibuf_len, obuf, max_obuf_len, err_buf, err_buf_len);
             }
-            return (long)mh$.invokeExact(pdu_name, from_encoding, to_encoding, ibuf, ibuf_len, obuf, max_obuf_len);
+            return (int)mh$.invokeExact(pdu_name, from_encoding, to_encoding, ibuf, ibuf_len, obuf, max_obuf_len, err_buf, err_buf_len);
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }

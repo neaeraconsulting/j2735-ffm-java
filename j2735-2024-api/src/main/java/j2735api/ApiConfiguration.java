@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 public class ApiConfiguration {
     long textBufferSize;
     long uperBufferSize;
+    long errorBufferSize;
     String libraryPath;
     String windowsLibraryPath;
 }

@@ -150,7 +150,19 @@ Content types are:
 | UPER hex    | text/plain               |
 | XER         | application/xml          |
 
+### Demo API Open API Documentation
 
+Swagger UI documentation for the Demo REST API is available at:
+
+http://localhost:4000/swagger-ui.html
+
+The OpenAPI specification is available in JSON format at:
+
+http://localhost:4000/api-docs
+
+or in YAML format at:
+
+http://localhost:4000/api-docs.yaml
 
 
 

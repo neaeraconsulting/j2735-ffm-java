@@ -1,0 +1,5 @@
+### OPEN API Docs in JSON format
+GET http://localhost:4000/api-docs
+
+### OPEN API Docs in YAML format
+GET http://localhost:4000/api-docs.yaml

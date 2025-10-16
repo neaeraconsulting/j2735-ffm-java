@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'java-library'
     id "io.freefair.lombok" version "8.10.2"
-    id 'org.springframework.boot' version '3.3.5'
+    id 'org.springframework.boot' version '3.5.6'
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
@@ -21,6 +21,17 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
     implementation 'commons-io:commons-io:2.18.0'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Springdoc 2.8, requires Spring Boot 3.5
+    // Ref: https://springdoc.org/#what-is-the-compatibility-matrix-of-springdoc-openapi-with-spring-boot
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
+
+    // Needed for springdoc to read javadocs
+    // Ref: https://springdoc.org/#javadoc-support
+    implementation 'com.github.therapi:therapi-runtime-javadoc:0.15.0'
+    annotationProcessor 'com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0'
+
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

@@ -53,6 +53,12 @@ public class ApiController {
         return "I am in good health, thanks for checking.";
     }
 
+
+    /**
+     * Convert a J2735 MessageFrame in XER format to UPER format
+     * @param xer The J2735 MessageFrame in XER format
+     * @return The J2735 MessageFrame in UPER format as a byte array
+     */
     @PostMapping(
             value = "/xer/uper/bin",
             consumes = APPLICATION_XML_VALUE,
@@ -61,6 +67,13 @@ public class ApiController {
         return codec.xerToUper(xer);
     }
 
+
+
+    /**
+     * Convert a J2735 MessageFrame in XER format to UPER format
+     * @param xer The J2735 MessageFrame in XER format
+     * @return The J2735 MessageFrame in UPER format as a Base64 encoded string
+     */
     @PostMapping(
             value = "/xer/uper/hex",
             consumes = APPLICATION_XML_VALUE,
@@ -74,7 +87,11 @@ public class ApiController {
 
 
 
-
+    /**
+     * Convert a J2735 MessageFrame in UPER format to XER format
+     * @param request The HttpServletRequest containing the J2735 MessageFrame in UPER format as a byte array
+     * @return The J2735 MessageFrame in XER format
+     */
     @PostMapping(
             value = "/uper/bin/xer",
             consumes = APPLICATION_OCTET_STREAM_VALUE,
@@ -90,6 +107,11 @@ public class ApiController {
         }
     }
 
+    /**
+     * Convert a J2735 MessageFrame in UPER format to XER format
+     * @param uperHex The J2735 MessageFrame in UPER format as a Hex encoded string
+     * @return The J2735 MessageFrame in XER format
+     */
     @PostMapping(
             value = "/uper/hex/xer",
             consumes = TEXT_PLAIN_VALUE,

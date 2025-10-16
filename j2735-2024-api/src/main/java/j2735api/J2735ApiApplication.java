@@ -15,17 +15,18 @@
 */
 package j2735api;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
+@OpenAPIDefinition
 public class J2735ApiApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(j2735api.J2735ApiApplication.class, args);
     }
-
 
 
 }

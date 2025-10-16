@@ -99,6 +99,14 @@ The Java source code from jextract is copied to the `generated-jextract` folder.
 
 The Windows library doesn't have an automated build process.  It can be recreated using Visual Studio 2022 (not VSCode) with the Clang compiler for Windows.  Some edits to the generated C files are required to build for Windows.  Follow the instructions here: [C codec edits for Windows](generated-files/README.md).  And then build via CMake in Visual Studio.  The `CMakeSettings.json` file contains the Visual Studio configuration to use CMake with the clang compiler.
 
+After regenerating the native libraries to here, also be sure to copy them to the [j2735-2024-ffm-lib/src/test/resources/j2735ffm](j2735-2024-ffm-lib/src/test/resources/j2735ffm) folder since they are required for the unit tests in that Java project via:
+
+```bash
+cd lib
+cp libasnapplication.so ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
+cp asnapplication.dll ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
+```
+
 ## Unit Tests
 
 The unit tests can be run in either Linux or Windows.

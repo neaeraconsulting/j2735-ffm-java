@@ -15,6 +15,9 @@
 */
 package j2735ffm;
 
+import static j2735ffm.AsnEncoding.INVALID;
+import static j2735ffm.AsnEncoding.UPER;
+import static j2735ffm.AsnEncoding.XER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -101,7 +104,7 @@ public class MessageFrameCodecTest {
   @MethodSource("convertData")
   public void testConvertGeneral(final String pdu, final String inputHex, final String expectXer) {
     byte[] inputBytes = hexFormat.parseHex(inputHex);
-    byte[] result = codec.convertGeneral(inputBytes, pdu, "uper", "xer");
+    byte[] result = codec.convertGeneral(inputBytes, pdu, UPER, XER);
     assertThat("result is null", result, notNullValue());
     if (expectXer != null) {
       String xer = new String(result, StandardCharsets.UTF_8);
@@ -115,7 +118,7 @@ public class MessageFrameCodecTest {
     assertThrows(
         RuntimeException.class,
         () -> {
-          codec.convertGeneral(inputBytes, "BadPDU", "uper", "xer");
+          codec.convertGeneral(inputBytes, "BadPDU", UPER, XER);
         }
     );
   }
@@ -126,7 +129,7 @@ public class MessageFrameCodecTest {
     assertThrows(
         RuntimeException.class,
         () -> {
-          codec.convertGeneral(inputBytes, VEHICLE_EVENT_FLAGS_PDU, "badinputencoding", "xer");
+          codec.convertGeneral(inputBytes, VEHICLE_EVENT_FLAGS_PDU, INVALID, XER);
         }
     );
   }
@@ -137,7 +140,7 @@ public class MessageFrameCodecTest {
     assertThrows(
         RuntimeException.class,
         () -> {
-          codec.convertGeneral(inputBytes, VEHICLE_EVENT_FLAGS_PDU, "uper", "badoutputencoding");
+          codec.convertGeneral(inputBytes, VEHICLE_EVENT_FLAGS_PDU, UPER, INVALID);
         }
     );
   }
@@ -148,7 +151,7 @@ public class MessageFrameCodecTest {
     assertThrows(
         RuntimeException.class,
         () -> {
-          codec.convertGeneral(inputBytes, SSM_PDU, "uper", "xer");
+          codec.convertGeneral(inputBytes, SSM_PDU, UPER, XER);
         }
     );
   }
@@ -159,7 +162,7 @@ public class MessageFrameCodecTest {
     RuntimeException re = assertThrows(
         RuntimeException.class,
         () -> {
-          codec.convertGeneral(inputBytes, SSM_PDU, "uper", "xer");
+          codec.convertGeneral(inputBytes, SSM_PDU, UPER, XER);
         }
     );
     assertThat(re.getMessage(), containsString("too large"));

@@ -28,6 +28,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import lombok.extern.slf4j.Slf4j;
 
+import static j2735ffm.AsnEncoding.XER;
+import static j2735ffm.AsnEncoding.UPER;
 
 /**
  * Functions for interconverting J2735 (2024) MessageFrames between XER, and UPER encodings
@@ -118,21 +120,31 @@ public class MessageFrameCodec {
      * @param toEncoding Output encoding, may be "xer" or "uper"
      * @return The encoded message as bytes or UTF-8 string
      */
-    public byte[] convertGeneral(byte[] inputBytes, String pdu, String fromEncoding, String toEncoding) {
+    public byte[] convertGeneral(byte[] inputBytes, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding) {
         log.debug("convertGeneral PDU: {}, {} -> {}", pdu, fromEncoding, toEncoding);
-        final long inputBufferSize = "uper".equals(fromEncoding) ? uperBufferSize : textBufferSize;
+        if (!fromEncoding.isSupported()) {
+            String errMsg = String.format("Unsupported fromEncoding: %s", fromEncoding);
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
+        }
+        if (!toEncoding.isSupported()) {
+            String errMsg = String.format("Unsupported toEncoding: %s", toEncoding);
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
+        }
+        final long inputBufferSize = fromEncoding.isBinary() ? uperBufferSize : textBufferSize;
         if (inputBytes.length > inputBufferSize) {
             String errMsg = String.format("Input message too large: %d > %d", inputBytes.length, inputBufferSize);
             log.error(errMsg);
             throw new IllegalArgumentException(errMsg);
         }
-        final long outputBufferSize = "uper".equals(toEncoding) ? uperBufferSize : textBufferSize;
+        final long outputBufferSize = toEncoding.isBinary() ? uperBufferSize : textBufferSize;
         try (var arena = Arena.ofConfined()) {
             MemorySegment inputBuffer = arena.allocate(inputBufferSize);
             MemorySegment outputBuffer = arena.allocate(outputBufferSize);
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
-            return convert(arena, inputBytes, fromEncoding,
-                toEncoding, inputBuffer, outputBuffer, outputBufferSize, errorBuffer,
+            return convert(arena, inputBytes, fromEncoding.getName(),
+                toEncoding.getName(), inputBuffer, outputBuffer, outputBufferSize, errorBuffer,
                 errorBufferSize, pdu);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -156,8 +168,8 @@ public class MessageFrameCodec {
             MemorySegment inputBuffer = arena.allocate(textBufferSize);
             MemorySegment outputBuffer = arena.allocate(uperBufferSize);
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
-            return convert(arena, xer.getBytes(StandardCharsets.UTF_8), "xer",
-                "uper", inputBuffer, outputBuffer, uperBufferSize, errorBuffer,
+            return convert(arena, xer.getBytes(StandardCharsets.UTF_8), XER.getName(),
+                UPER.getName(), inputBuffer, outputBuffer, uperBufferSize, errorBuffer,
                 errorBufferSize, MESSAGE_FRAME_PDU);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -180,7 +192,7 @@ public class MessageFrameCodec {
             MemorySegment inputBuffer = arena.allocate(uperBufferSize);
             MemorySegment outputBuffer = arena.allocate(textBufferSize);
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
-            byte[] xerBytes = convert(arena, uper, "uper", "xer",
+            byte[] xerBytes = convert(arena, uper, UPER.getName(), XER.getName(),
                 inputBuffer, outputBuffer, textBufferSize, errorBuffer, errorBufferSize,
                 MESSAGE_FRAME_PDU);
             return new String(xerBytes, StandardCharsets.UTF_8);

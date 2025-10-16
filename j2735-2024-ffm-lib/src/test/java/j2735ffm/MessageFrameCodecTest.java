@@ -16,19 +16,25 @@
 package j2735ffm;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HexFormat;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 @Slf4j
 public class MessageFrameCodecTest {
@@ -100,5 +106,63 @@ public class MessageFrameCodecTest {
     assertThat("round trip hex differs", roundTripUperHex, equalToIgnoringCase(uper));
   }
 
+  @ParameterizedTest
+  @MethodSource("convertData")
+  public void testConvertGeneral(final String pdu, final String inputHex, final String expectXer) {
+    byte[] inputBytes = hexFormat.parseHex(inputHex);
+    byte[] result = codec.convertGeneral(inputBytes, pdu, "uper", "xer");
+    assertThat("result is null", result, notNullValue());
+    if (expectXer != null) {
+      String xer = new String(result, StandardCharsets.UTF_8);
+      assertThat(xer, equalTo(expectXer));
+    }
+  }
+
+  @Test
+  public void invalidPduError() {
+    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    assertThrows(
+        RuntimeException.class,
+        () -> {
+          codec.convertGeneral(inputBytes, "BadPDU", "uper", "xer");
+        }
+    );
+  }
+
+  @Test
+  public void invalidInputEncodingError() {
+    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    assertThrows(
+        RuntimeException.class,
+        () -> {
+          codec.convertGeneral(inputBytes, VEHICLE_EVENT_FLAGS_PDU, "badinputencoding", "xer");
+        }
+    );
+  }
+
+  @Test
+  public void invalidOutputEncodingError() {
+    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    assertThrows(
+        RuntimeException.class,
+        () -> {
+          codec.convertGeneral(inputBytes, VEHICLE_EVENT_FLAGS_PDU, "uper", "badoutputencoding");
+        }
+    );
+  }
+
+  private static Stream<Arguments> convertData() {
+    return Stream.of(
+        Arguments.of(VEHICLE_EVENT_FLAGS_PDU, VEHICLE_EVENT_FLAGS_UPER, VEHICLE_EVENT_FLAGS_XER),
+        Arguments.of(SSM_PDU, SSM_UPER, null)
+    );
+  }
+
+  private static final String VEHICLE_EVENT_FLAGS_UPER = "8740FE";
+  private static final String VEHICLE_EVENT_FLAGS_XER = "<VehicleEventFlags>10000001111111</VehicleEventFlags>";
+  private static final String VEHICLE_EVENT_FLAGS_PDU = "VehicleEventFlags";
+
+  private static final String SSM_UPER = "65e539dc93b843af683249404f9e0fc6b04fd122cf2ce89941dc1ab4d3d288394b59be74b1c04cfdee07bc9868311d2c1caa51f03dc764f993d0d511779e9ef22be1121c093e1af96b1d141a1ba967c329e47cf884b8beb3268e790f72270ca44c2519740d31d85f3a0e91a6bca5145e560e920d281085568f931b7067cc9e86a88b8f5957847ac6b4fa9d1b07fc2cd2e6a91f327a1aa229d5e21e478318d630a67bd8ffd0ce05537cf12267f5df5fc2794ff0804001a150fe00a679ce1c7934b4a6891be64f435445f9206bc5ff8e09b516244086367d14aef993d0d51175f310f233515cb0082fa6f907e861f0be64f435445412a1bcae64260fe3aa2470ea9ccf666f993d0d5114a9c22f0ba4406960b0cc40a0bd244e285bce95385017cefcbbac8d3070a7819776806012dd1dd66d719a089f3d143c9b843e001e4439710aacb223e510b9397770640941fcec2f9fc6a4cba57da12f160011a4d7c2fc0f7f10429d2be7409299a6cd9053c256161af6572d28cf07d9bdc620";
+  private static final String SSM_PDU = "SignalStatusMessage";
 
 }

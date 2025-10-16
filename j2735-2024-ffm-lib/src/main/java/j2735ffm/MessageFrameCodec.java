@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MessageFrameCodec {
 
-    public final static String PDU = "MessageFrame";
+    public final static String MESSAGE_FRAME_PDU = "MessageFrame";
 
     /**
      * Output buffer size for XER and JSON.  Messages larger than this can't be produced.
@@ -102,6 +102,31 @@ public class MessageFrameCodec {
         convert_h.SYMBOL_LOOKUP = lookup;
     }
 
+    /**
+     * General purpose conversion function that can convert any PDU to or from
+     * any encoding.
+     * @param inputBytes Input byte array: XER or UPER binary
+     * @param pdu The name of the PDU, e.g., "MessageFrame", "MessageFrame", "VehicleEventFlags", etc.
+     * @param fromEncoding Input encoding, may be "xer" or "uper"
+     * @param toEncoding Output encoding, may be "xer" or "uper"
+     * @return The encoded message as bytes or UTF-8 string
+     */
+    public byte[] convertGeneral(byte[] inputBytes, String pdu, String fromEncoding, String toEncoding) {
+        log.debug("convertGeneral PDU: {}, {} -> {}", pdu, fromEncoding, toEncoding);
+        try (var arena = Arena.ofConfined()) {
+            final long inputBufferSize = "uper".equals(fromEncoding) ? uperBufferSize : textBufferSize;
+            final long outputBufferSize = "uper".equals(toEncoding) ? uperBufferSize : textBufferSize;
+            MemorySegment inputBuffer = arena.allocate(inputBufferSize);
+            MemorySegment outputBuffer = arena.allocate(outputBufferSize);
+            MemorySegment errorBuffer = arena.allocate(errorBufferSize);
+            return convert(arena, inputBytes, fromEncoding,
+                toEncoding, inputBuffer, outputBuffer, outputBufferSize, errorBuffer,
+                errorBufferSize, pdu);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     /**
      * Convert an XER encoded MessageFrame to UPER
@@ -116,7 +141,7 @@ public class MessageFrameCodec {
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
             return convert(arena, xer.getBytes(StandardCharsets.UTF_8), "xer",
                 "uper", inputBuffer, outputBuffer, uperBufferSize, errorBuffer,
-                errorBufferSize);
+                errorBufferSize, MESSAGE_FRAME_PDU);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -134,7 +159,8 @@ public class MessageFrameCodec {
             MemorySegment outputBuffer = arena.allocate(textBufferSize);
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
             byte[] xerBytes = convert(arena, uper, "uper", "xer",
-                inputBuffer, outputBuffer, textBufferSize, errorBuffer, errorBufferSize);
+                inputBuffer, outputBuffer, textBufferSize, errorBuffer, errorBufferSize,
+                MESSAGE_FRAME_PDU);
             return new String(xerBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -144,14 +170,15 @@ public class MessageFrameCodec {
 
     private byte[] convert(Arena arena, final byte[] bytes,
             final String fromEncoding, final String toEncoding, MemorySegment inputBuffer,
-            MemorySegment outputBuffer, long outputBufferSize, MemorySegment errorBuffer, long errorBufferSize)
+            MemorySegment outputBuffer, long outputBufferSize, MemorySegment errorBuffer,
+            long errorBufferSize, final String pdu)
             throws ConvertException{
         log.debug("convert: {} {}", fromEncoding, toEncoding);
         byte[] outputArray = null;
 
         MemorySegment heapBytes = MemorySegment.ofArray(bytes);
         inputBuffer.copyFrom(heapBytes);
-        MemorySegment pduName = arena.allocateFrom(PDU, StandardCharsets.UTF_8);
+        MemorySegment pduName = arena.allocateFrom(pdu, StandardCharsets.UTF_8);
         MemorySegment fromEncodingSeg = arena.allocateFrom(fromEncoding,
             StandardCharsets.UTF_8);
         MemorySegment toEncodingSeg = arena.allocateFrom(toEncoding, StandardCharsets.UTF_8);

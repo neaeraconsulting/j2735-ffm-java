@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 
 import static generated.convert_h.convert_bytes;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import lombok.extern.slf4j.Slf4j;
@@ -92,23 +93,34 @@ public class MessageFrameCodec {
      */
     private void loadLibrary(Path libraryPath) {
         // Load the library into a garbage-collected arena
-        Arena arena = Arena.ofAuto();
-        SymbolLookup lookup = SymbolLookup.libraryLookup(libraryPath, arena);
-        log.info("Loaded library: {}", libraryPath);
-        var symbol = lookup.find("convert_bytes");
-        if (symbol.isPresent()) {
-            log.info("found symbol convert_bytes: {}", symbol);
-        } else {
-            throw new RuntimeException("symbol 'convert_bytes' not found in the library");
+        if (!Files.exists(libraryPath)) {
+            String errMsg = String.format("Library not found at path: %s", libraryPath);
+            log.error(errMsg);
+            throw new RuntimeException(errMsg);
         }
-        // Note: Assign the lookup to a static field in the generated code.
-        // This will prevent the library from being garbage collected until
-        // the class loader that loaded the "convert_h" class is itself garbage collected.
-        // Normally that would happen when the JVM exits, but could happen sooner if this library is
-        // loaded dynamically by a custom class loader or is used in the context of OSGI or
-        // something. We do this instead of using the global arena to prevent memory leaks
-        // in case of that unlikely, but possible, scenario.
-        convert_h.SYMBOL_LOOKUP = lookup;
+        try {
+            Arena arena = Arena.ofAuto();
+            SymbolLookup lookup = SymbolLookup.libraryLookup(libraryPath, arena);
+            log.info("Loaded library: {}", libraryPath);
+            var symbol = lookup.find("convert_bytes");
+            if (symbol.isPresent()) {
+                log.info("found symbol convert_bytes: {}", symbol);
+            } else {
+                throw new RuntimeException("symbol 'convert_bytes' not found in the library");
+            }
+            // Note: Assign the lookup to a static field in the generated code.
+            // This will prevent the library from being garbage collected until
+            // the class loader that loaded the "convert_h" class is itself garbage collected.
+            // Normally that would happen when the JVM exits, but could happen sooner if this library is
+            // loaded dynamically by a custom class loader or is used in the context of OSGI or
+            // something. We do this instead of using the global arena to prevent memory leaks
+            // in case of that unlikely, but possible, scenario.
+            convert_h.SYMBOL_LOOKUP = lookup;
+        } catch (Throwable e) {
+            String errMsg = String.format("Error loading library: %s: %s", libraryPath, e);
+            log.error(errMsg);
+            throw new RuntimeException(errMsg, e);
+        }
     }
 
     /**

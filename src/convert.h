@@ -25,25 +25,29 @@
 /**
  Convert a byte array representation of a J2735 PDU from one encoding to another.
  UPER format is rww bytes, not hex.
- JER and XER are 8-bit text.
+ XER is 8-bit text.
 
- @param pdu_name String with the J2375 PDU, e.g., "MessageFrame", "BasicSafetyMessage".
- @param from_encoding String with the name of the encoding of the input ("JER", "XER", or "UPER").
+ @param pdu_name String with the J2735 PDU, e.g., "MessageFrame", "BasicSafetyMessage".
+ @param from_encoding String with the name of the encoding of the input ("XER", or "UPER").
  @param to_encoding Target encoding for the output ("XER", or "UPER").
  @param ibuf The input byte array in raw UPER, or XER text format.
  @param ibuf_len The length of the input byte array.
  @param obuf The buffer to store the output byte array.
  @param max_obuf_len The maximum length of the output buffer.
- @return The length of the converted output byte array.
+ @param err_buf A buffer to store any error messages, populated with the error if the return value is -1.
+ @param err_buf_len The size of the error buffer.
+ @return The length of the converted output byte array, or -1 if there was an error doing the conversion.
 */
-size_t convert_bytes(
+int convert_bytes(
     const char * pdu_name,
     const char * from_encoding,
     const char * to_encoding,
     const uint8_t * ibuf,
     size_t ibuf_len,
     uint8_t * obuf,
-    size_t max_obuf_len);
+    size_t max_obuf_len,
+    char * err_buf,
+    size_t err_buf_len);
 
 
 

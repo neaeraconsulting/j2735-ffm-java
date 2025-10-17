@@ -7,6 +7,7 @@ build
 .idea/
 
 bin/
+**/bin/
 
 out.log
 

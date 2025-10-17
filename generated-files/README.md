@@ -5,11 +5,15 @@ C files extracted from the zip archive from asn1_codec are extracted here for us
 Not persisted to version control.
 
 To compile for Windows run the script `prepare-for-windows.sh` script to remove files
-related to GeneralizedTime, and edit the file `pdu_collection.c` to remove the lines:
+related to GeneralizedTime, and edit the file `pdu_collection.c` to comment out the lines:
 
 ```c
 extern struct asn_TYPE_descriptor_s asn_DEF_Period;
 extern struct asn_TYPE_descriptor_s asn_DEF_AggregatedSingleTariffClassSession;
 extern struct asn_TYPE_descriptor_s asn_DEF_DetectedChargeObject;
+
+&asn_DEF_AggregatedSingleTariffClassSession,	
+&asn_DEF_DetectedChargeObject,	
+&asn_DEF_Period,
 ```
 

@@ -1,3 +1,21 @@
+# v2.0.2
+
+Use asn1_codec submodule from usdot repository.
+
+Linux library:
+[libasnapplication.so](https://github.com/neaeraconsulting/j2735-ffm-java/blob/v2.0.2/lib/libasnapplication.so)
+
+Windows library:
+[asnapplication.dll](https://github.com/neaeraconsulting/j2735-ffm-java/blob/v2.0.2/lib/asnapplication.dll)
+
+**Changelog**: https://github.com/neaeraconsulting/j2735-ffm-java/compare/v2.0.1...v2.0.2
+
+# v2.0.1
+
+Issues fixed in [internal review](https://github.com/neaeraconsulting/j2735-ffm-java/pull/2)
+
+**Changelog**: https://github.com/neaeraconsulting/j2735-ffm-java/compare/v2.0.0...v2.0.1
+
 # v2.0.0
 
 Refactor to use the existing C codec from asn1_codec, with a new C API, and backwards compatible Java API, except JER support is removed as noted below.

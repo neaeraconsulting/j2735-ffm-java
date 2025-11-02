@@ -3,7 +3,7 @@ services:
   build-container:
     build:
       context: .
-      dockerfile: Dockerfile-build
+      dockerfile: Dockerfile-build-arm64
     image: build-container:latest
     restart: no
     volumes:

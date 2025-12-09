@@ -17,6 +17,7 @@
 package j2735ffm;
 
 import generated.convert_h;
+import java.io.IOException;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SymbolLookup;
@@ -27,6 +28,8 @@ import static generated.convert_h.convert_bytes;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import lombok.extern.slf4j.Slf4j;
 
 import static j2735ffm.AsnEncoding.XER;
@@ -91,16 +94,32 @@ public class MessageFrameCodec {
      * load library with given class loader.
      * @param libraryPath The URI of the library resource
      */
+    @SuppressWarnings("removal")
     private void loadLibrary(Path libraryPath) {
+        log.info("MessageFrameCodec loading library: {}", libraryPath);
         // Load the library into a garbage-collected arena
         if (!Files.exists(libraryPath)) {
             String errMsg = String.format("Library not found at path: %s", libraryPath);
             log.error(errMsg);
             throw new RuntimeException(errMsg);
         }
+        String testPath = null;
+
+        testPath = AccessController.doPrivileged(new PrivilegedAction<>() {
+            public String run() {
+                try {
+                    return libraryPath.toRealPath().toString();
+                } catch (IOException e) {
+                    log.error("Something is wrong with the library path: {}", e.getMessage(), e);
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        log.info("Library path: {}", testPath);
+
         try {
             Arena arena = Arena.ofAuto();
-            SymbolLookup lookup = SymbolLookup.libraryLookup(libraryPath, arena);
+            SymbolLookup lookup = SymbolLookup.libraryLookup(testPath, arena);
             log.info("Loaded library: {}", libraryPath);
             var symbol = lookup.find("convert_bytes");
             if (symbol.isPresent()) {
@@ -118,7 +137,7 @@ public class MessageFrameCodec {
             convert_h.SYMBOL_LOOKUP = lookup;
         } catch (Throwable e) {
             String errMsg = String.format("Error loading library: %s: %s", libraryPath, e);
-            log.error(errMsg);
+            log.error(errMsg, e);
             throw new RuntimeException(errMsg, e);
         }
     }

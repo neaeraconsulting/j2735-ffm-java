@@ -1,0 +1,16 @@
+# Run unit tests on various OS images
+# Ubuntu 22.04 Jammy
+FROM eclipse-temurin:22-jdk-noble
+USER root
+WORKDIR /home/app/j2735-2024-ffm-lib
+
+# lib
+COPY ./j2735-2024-ffm-lib/src               /home/app/j2735-2024-ffm-lib/src
+COPY ./j2735-2024-ffm-lib/build.gradle      /home/app/j2735-2024-ffm-lib
+COPY ./j2735-2024-ffm-lib/settings.gradle   /home/app/j2735-2024-ffm-lib
+COPY ./j2735-2024-ffm-lib/gradle            /home/app/j2735-2024-ffm-lib/gradle
+COPY ./j2735-2024-ffm-lib/gradlew           /home/app/j2735-2024-ffm-lib
+
+#RUN ./gradlew clean test
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]

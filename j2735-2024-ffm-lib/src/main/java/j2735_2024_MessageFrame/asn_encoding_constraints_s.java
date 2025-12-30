@@ -2,9 +2,14 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
+import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
@@ -24,10 +29,10 @@ public class asn_encoding_constraints_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("oer_constraints"),
-        MessageFrame_h.C_POINTER.withName("per_constraints"),
-        MessageFrame_h.C_POINTER.withName("jer_constraints"),
-        MessageFrame_h.C_POINTER.withName("general_constraints")
+        TumData_h.C_POINTER.withName("oer_constraints"),
+        TumData_h.C_POINTER.withName("per_constraints"),
+        TumData_h.C_POINTER.withName("jer_constraints"),
+        TumData_h.C_POINTER.withName("general_constraints")
     ).withName("asn_encoding_constraints_s");
 
     /**

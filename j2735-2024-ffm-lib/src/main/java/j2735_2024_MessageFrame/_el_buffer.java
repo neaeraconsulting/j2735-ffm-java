@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -25,10 +29,10 @@ public class _el_buffer {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("buf"),
-        MessageFrame_h.C_LONG.withName("length"),
-        MessageFrame_h.C_LONG.withName("allocated_size"),
-        MessageFrame_h.C_INT.withName("bits_unused"),
+        TumData_h.C_POINTER.withName("buf"),
+        TumData_h.C_LONG.withName("length"),
+        TumData_h.C_LONG.withName("allocated_size"),
+        TumData_h.C_INT.withName("bits_unused"),
         MemoryLayout.paddingLayout(4)
     ).withName("_el_buffer");
 

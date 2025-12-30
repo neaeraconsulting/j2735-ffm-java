@@ -4,7 +4,10 @@ package j2735_2024_MessageFrame;
 
 import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -33,18 +36,18 @@ public class asn_TYPE_member_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_INT.withName("flags"),
-        MessageFrame_h.C_INT.withName("optional"),
-        MessageFrame_h.C_INT.withName("memb_offset"),
-        MessageFrame_h.C_INT.withName("tag"),
-        MessageFrame_h.C_INT.withName("tag_mode"),
+        TumData_h.C_INT.withName("flags"),
+        TumData_h.C_INT.withName("optional"),
+        TumData_h.C_INT.withName("memb_offset"),
+        TumData_h.C_INT.withName("tag"),
+        TumData_h.C_INT.withName("tag_mode"),
         MemoryLayout.paddingLayout(4),
-        MessageFrame_h.C_POINTER.withName("type"),
-        MessageFrame_h.C_POINTER.withName("type_selector"),
+        TumData_h.C_POINTER.withName("type"),
+        TumData_h.C_POINTER.withName("type_selector"),
         asn_encoding_constraints_s.layout().withName("encoding_constraints"),
-        MessageFrame_h.C_POINTER.withName("default_value_cmp"),
-        MessageFrame_h.C_POINTER.withName("default_value_set"),
-        MessageFrame_h.C_POINTER.withName("name")
+        TumData_h.C_POINTER.withName("default_value_cmp"),
+        TumData_h.C_POINTER.withName("default_value_set"),
+        TumData_h.C_POINTER.withName("name")
     ).withName("asn_TYPE_member_s");
 
     /**
@@ -425,8 +428,8 @@ public class asn_TYPE_member_s {
         }
 
         private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
-            MessageFrame_h.C_INT,
-            MessageFrame_h.C_POINTER
+            TumData_h.C_INT,
+            TumData_h.C_POINTER
         );
 
         /**
@@ -436,13 +439,13 @@ public class asn_TYPE_member_s {
             return $DESC;
         }
 
-        private static final MethodHandle UP$MH = MessageFrame_h.upcallHandle(Function.class, "apply", $DESC);
+        private static final MethodHandle UP$MH = TumData_h.upcallHandle(default_value_cmp.Function.class, "apply", $DESC);
 
         /**
          * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
          * The lifetime of the returned segment is managed by {@code arena}
          */
-        public static MemorySegment allocate(Function fi, Arena arena) {
+        public static MemorySegment allocate(default_value_cmp.Function fi, Arena arena) {
             return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
         }
 
@@ -523,8 +526,8 @@ public class asn_TYPE_member_s {
         }
 
         private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
-            MessageFrame_h.C_INT,
-            MessageFrame_h.C_POINTER
+            TumData_h.C_INT,
+            TumData_h.C_POINTER
         );
 
         /**
@@ -534,13 +537,13 @@ public class asn_TYPE_member_s {
             return $DESC;
         }
 
-        private static final MethodHandle UP$MH = MessageFrame_h.upcallHandle(Function.class, "apply", $DESC);
+        private static final MethodHandle UP$MH = TumData_h.upcallHandle(default_value_set.Function.class, "apply", $DESC);
 
         /**
          * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
          * The lifetime of the returned segment is managed by {@code arena}
          */
-        public static MemorySegment allocate(Function fi, Arena arena) {
+        public static MemorySegment allocate(default_value_set.Function fi, Arena arena) {
             return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
         }
 

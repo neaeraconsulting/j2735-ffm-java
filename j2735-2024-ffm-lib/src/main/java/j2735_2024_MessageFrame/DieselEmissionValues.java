@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -25,7 +29,7 @@ public class DieselEmissionValues {
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
         Particulate.layout().withName("particulate"),
-        MessageFrame_h.C_LONG.withName("absorptionCoeff"),
+        TumData_h.C_LONG.withName("absorptionCoeff"),
         asn_struct_ctx_s.layout().withName("_asn_ctx")
     ).withName("DieselEmissionValues");
 

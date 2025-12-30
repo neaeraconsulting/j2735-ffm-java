@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -29,14 +33,14 @@ public class _stack_el {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_LONG.withName("left"),
-        MessageFrame_h.C_LONG.withName("got"),
-        MessageFrame_h.C_INT.withName("cont_level"),
-        MessageFrame_h.C_INT.withName("want_nulls"),
-        MessageFrame_h.C_INT.withName("bits_chopped"),
-        MessageFrame_h.C_INT.withName("tag"),
-        MessageFrame_h.C_POINTER.withName("prev"),
-        MessageFrame_h.C_POINTER.withName("next")
+        TumData_h.C_LONG.withName("left"),
+        TumData_h.C_LONG.withName("got"),
+        TumData_h.C_INT.withName("cont_level"),
+        TumData_h.C_INT.withName("want_nulls"),
+        TumData_h.C_INT.withName("bits_chopped"),
+        TumData_h.C_INT.withName("tag"),
+        TumData_h.C_POINTER.withName("prev"),
+        TumData_h.C_POINTER.withName("next")
     ).withName("_stack_el");
 
     /**

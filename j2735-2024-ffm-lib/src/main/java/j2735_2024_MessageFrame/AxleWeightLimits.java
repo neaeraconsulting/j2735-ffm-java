@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -27,11 +31,11 @@ public class AxleWeightLimits {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_LONG.withName("maxLadenweightOnAxle1"),
-        MessageFrame_h.C_LONG.withName("maxLadenweightOnAxle2"),
-        MessageFrame_h.C_LONG.withName("maxLadenweightOnAxle3"),
-        MessageFrame_h.C_LONG.withName("maxLadenweightOnAxle4"),
-        MessageFrame_h.C_LONG.withName("maxLadenweightOnAxle5"),
+        TumData_h.C_LONG.withName("maxLadenweightOnAxle1"),
+        TumData_h.C_LONG.withName("maxLadenweightOnAxle2"),
+        TumData_h.C_LONG.withName("maxLadenweightOnAxle3"),
+        TumData_h.C_LONG.withName("maxLadenweightOnAxle4"),
+        TumData_h.C_LONG.withName("maxLadenweightOnAxle5"),
         asn_struct_ctx_s.layout().withName("_asn_ctx")
     ).withName("AxleWeightLimits");
 

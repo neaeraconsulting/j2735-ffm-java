@@ -4,8 +4,12 @@ package j2735_2024_MessageFrame;
 
 import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
+import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
@@ -27,8 +31,8 @@ public class asn_per_constraints_s {
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
         asn_per_constraint_s.layout().withName("value"),
         asn_per_constraint_s.layout().withName("size"),
-        MessageFrame_h.C_POINTER.withName("value2code"),
-        MessageFrame_h.C_POINTER.withName("code2value")
+        TumData_h.C_POINTER.withName("value2code"),
+        TumData_h.C_POINTER.withName("code2value")
     ).withName("asn_per_constraints_s");
 
     /**
@@ -145,8 +149,8 @@ public class asn_per_constraints_s {
         }
 
         private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
-            MessageFrame_h.C_INT,
-            MessageFrame_h.C_INT
+            TumData_h.C_INT,
+            TumData_h.C_INT
         );
 
         /**
@@ -156,13 +160,13 @@ public class asn_per_constraints_s {
             return $DESC;
         }
 
-        private static final MethodHandle UP$MH = MessageFrame_h.upcallHandle(Function.class, "apply", $DESC);
+        private static final MethodHandle UP$MH = TumData_h.upcallHandle(value2code.Function.class, "apply", $DESC);
 
         /**
          * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
          * The lifetime of the returned segment is managed by {@code arena}
          */
-        public static MemorySegment allocate(Function fi, Arena arena) {
+        public static MemorySegment allocate(value2code.Function fi, Arena arena) {
             return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
         }
 
@@ -243,8 +247,8 @@ public class asn_per_constraints_s {
         }
 
         private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
-            MessageFrame_h.C_INT,
-            MessageFrame_h.C_INT
+            TumData_h.C_INT,
+            TumData_h.C_INT
         );
 
         /**
@@ -254,13 +258,13 @@ public class asn_per_constraints_s {
             return $DESC;
         }
 
-        private static final MethodHandle UP$MH = MessageFrame_h.upcallHandle(Function.class, "apply", $DESC);
+        private static final MethodHandle UP$MH = TumData_h.upcallHandle(code2value.Function.class, "apply", $DESC);
 
         /**
          * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
          * The lifetime of the returned segment is managed by {@code arena}
          */
-        public static MemorySegment allocate(Function fi, Arena arena) {
+        public static MemorySegment allocate(code2value.Function fi, Arena arena) {
             return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
         }
 

@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -26,8 +30,8 @@ public class TrailerCharacteristics {
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
         TrailerDetails.layout().withName("trailerDetails"),
-        MessageFrame_h.C_LONG.withName("trailerMaxLadenWeight"),
-        MessageFrame_h.C_LONG.withName("trailerWeightUnladen"),
+        TumData_h.C_LONG.withName("trailerMaxLadenWeight"),
+        TumData_h.C_LONG.withName("trailerWeightUnladen"),
         asn_struct_ctx_s.layout().withName("_asn_ctx")
     ).withName("TrailerCharacteristics");
 

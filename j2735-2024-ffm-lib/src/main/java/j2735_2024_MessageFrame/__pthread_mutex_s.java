@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -29,13 +33,13 @@ public class __pthread_mutex_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_INT.withName("__lock"),
-        MessageFrame_h.C_INT.withName("__count"),
-        MessageFrame_h.C_INT.withName("__owner"),
-        MessageFrame_h.C_INT.withName("__nusers"),
-        MessageFrame_h.C_INT.withName("__kind"),
-        MessageFrame_h.C_SHORT.withName("__spins"),
-        MessageFrame_h.C_SHORT.withName("__elision"),
+        TumData_h.C_INT.withName("__lock"),
+        TumData_h.C_INT.withName("__count"),
+        TumData_h.C_INT.withName("__owner"),
+        TumData_h.C_INT.withName("__nusers"),
+        TumData_h.C_INT.withName("__kind"),
+        TumData_h.C_SHORT.withName("__spins"),
+        TumData_h.C_SHORT.withName("__elision"),
         __pthread_internal_list.layout().withName("__list")
     ).withName("__pthread_mutex_s");
 

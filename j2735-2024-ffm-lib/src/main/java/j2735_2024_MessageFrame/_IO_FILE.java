@@ -4,7 +4,10 @@ package j2735_2024_MessageFrame;
 
 import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -51,37 +54,37 @@ public class _IO_FILE {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_INT.withName("_flags"),
+        TumData_h.C_INT.withName("_flags"),
         MemoryLayout.paddingLayout(4),
-        MessageFrame_h.C_POINTER.withName("_IO_read_ptr"),
-        MessageFrame_h.C_POINTER.withName("_IO_read_end"),
-        MessageFrame_h.C_POINTER.withName("_IO_read_base"),
-        MessageFrame_h.C_POINTER.withName("_IO_write_base"),
-        MessageFrame_h.C_POINTER.withName("_IO_write_ptr"),
-        MessageFrame_h.C_POINTER.withName("_IO_write_end"),
-        MessageFrame_h.C_POINTER.withName("_IO_buf_base"),
-        MessageFrame_h.C_POINTER.withName("_IO_buf_end"),
-        MessageFrame_h.C_POINTER.withName("_IO_save_base"),
-        MessageFrame_h.C_POINTER.withName("_IO_backup_base"),
-        MessageFrame_h.C_POINTER.withName("_IO_save_end"),
-        MessageFrame_h.C_POINTER.withName("_markers"),
-        MessageFrame_h.C_POINTER.withName("_chain"),
-        MessageFrame_h.C_INT.withName("_fileno"),
-        MessageFrame_h.C_INT.withName("_flags2"),
-        MessageFrame_h.C_LONG.withName("_old_offset"),
-        MessageFrame_h.C_SHORT.withName("_cur_column"),
-        MessageFrame_h.C_CHAR.withName("_vtable_offset"),
-        MemoryLayout.sequenceLayout(1, MessageFrame_h.C_CHAR).withName("_shortbuf"),
+        TumData_h.C_POINTER.withName("_IO_read_ptr"),
+        TumData_h.C_POINTER.withName("_IO_read_end"),
+        TumData_h.C_POINTER.withName("_IO_read_base"),
+        TumData_h.C_POINTER.withName("_IO_write_base"),
+        TumData_h.C_POINTER.withName("_IO_write_ptr"),
+        TumData_h.C_POINTER.withName("_IO_write_end"),
+        TumData_h.C_POINTER.withName("_IO_buf_base"),
+        TumData_h.C_POINTER.withName("_IO_buf_end"),
+        TumData_h.C_POINTER.withName("_IO_save_base"),
+        TumData_h.C_POINTER.withName("_IO_backup_base"),
+        TumData_h.C_POINTER.withName("_IO_save_end"),
+        TumData_h.C_POINTER.withName("_markers"),
+        TumData_h.C_POINTER.withName("_chain"),
+        TumData_h.C_INT.withName("_fileno"),
+        TumData_h.C_INT.withName("_flags2"),
+        TumData_h.C_LONG.withName("_old_offset"),
+        TumData_h.C_SHORT.withName("_cur_column"),
+        TumData_h.C_CHAR.withName("_vtable_offset"),
+        MemoryLayout.sequenceLayout(1, TumData_h.C_CHAR).withName("_shortbuf"),
         MemoryLayout.paddingLayout(4),
-        MessageFrame_h.C_POINTER.withName("_lock"),
-        MessageFrame_h.C_LONG.withName("_offset"),
-        MessageFrame_h.C_POINTER.withName("_codecvt"),
-        MessageFrame_h.C_POINTER.withName("_wide_data"),
-        MessageFrame_h.C_POINTER.withName("_freeres_list"),
-        MessageFrame_h.C_POINTER.withName("_freeres_buf"),
-        MessageFrame_h.C_LONG.withName("__pad5"),
-        MessageFrame_h.C_INT.withName("_mode"),
-        MemoryLayout.sequenceLayout(20, MessageFrame_h.C_CHAR).withName("_unused2")
+        TumData_h.C_POINTER.withName("_lock"),
+        TumData_h.C_LONG.withName("_offset"),
+        TumData_h.C_POINTER.withName("_codecvt"),
+        TumData_h.C_POINTER.withName("_wide_data"),
+        TumData_h.C_POINTER.withName("_freeres_list"),
+        TumData_h.C_POINTER.withName("_freeres_buf"),
+        TumData_h.C_LONG.withName("__pad5"),
+        TumData_h.C_INT.withName("_mode"),
+        MemoryLayout.sequenceLayout(20, TumData_h.C_CHAR).withName("_unused2")
     ).withName("_IO_FILE");
 
     /**

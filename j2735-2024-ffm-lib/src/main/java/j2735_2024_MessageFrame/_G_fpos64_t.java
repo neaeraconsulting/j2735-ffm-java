@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -23,7 +27,7 @@ public class _G_fpos64_t {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_LONG.withName("__pos"),
+        TumData_h.C_LONG.withName("__pos"),
         __mbstate_t.layout().withName("__state")
     ).withName("_G_fpos64_t");
 

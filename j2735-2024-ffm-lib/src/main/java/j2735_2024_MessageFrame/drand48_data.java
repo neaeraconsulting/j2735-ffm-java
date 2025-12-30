@@ -4,7 +4,10 @@ package j2735_2024_MessageFrame;
 
 import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -27,11 +30,11 @@ public class drand48_data {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MemoryLayout.sequenceLayout(3, MessageFrame_h.C_SHORT).withName("__x"),
-        MemoryLayout.sequenceLayout(3, MessageFrame_h.C_SHORT).withName("__old_x"),
-        MessageFrame_h.C_SHORT.withName("__c"),
-        MessageFrame_h.C_SHORT.withName("__init"),
-        MessageFrame_h.C_LONG_LONG.withName("__a")
+        MemoryLayout.sequenceLayout(3, TumData_h.C_SHORT).withName("__x"),
+        MemoryLayout.sequenceLayout(3, TumData_h.C_SHORT).withName("__old_x"),
+        TumData_h.C_SHORT.withName("__c"),
+        TumData_h.C_SHORT.withName("__init"),
+        TumData_h.C_LONG_LONG.withName("__a")
     ).withName("drand48_data");
 
     /**

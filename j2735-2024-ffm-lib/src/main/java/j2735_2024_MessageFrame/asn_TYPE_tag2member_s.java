@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -25,10 +29,10 @@ public class asn_TYPE_tag2member_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_INT.withName("el_tag"),
-        MessageFrame_h.C_INT.withName("el_no"),
-        MessageFrame_h.C_INT.withName("toff_first"),
-        MessageFrame_h.C_INT.withName("toff_last")
+        TumData_h.C_INT.withName("el_tag"),
+        TumData_h.C_INT.withName("el_no"),
+        TumData_h.C_INT.withName("toff_first"),
+        TumData_h.C_INT.withName("toff_last")
     ).withName("asn_TYPE_tag2member_s");
 
     /**

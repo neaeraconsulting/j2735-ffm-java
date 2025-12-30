@@ -4,7 +4,10 @@ package j2735_2024_MessageFrame;
 
 import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -29,13 +32,13 @@ public class asn_bit_outp_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("buffer"),
-        MessageFrame_h.C_LONG.withName("nboff"),
-        MessageFrame_h.C_LONG.withName("nbits"),
-        MemoryLayout.sequenceLayout(32, MessageFrame_h.C_CHAR).withName("tmpspace"),
-        MessageFrame_h.C_POINTER.withName("output"),
-        MessageFrame_h.C_POINTER.withName("op_key"),
-        MessageFrame_h.C_LONG.withName("flushed_bytes")
+        TumData_h.C_POINTER.withName("buffer"),
+        TumData_h.C_LONG.withName("nboff"),
+        TumData_h.C_LONG.withName("nbits"),
+        MemoryLayout.sequenceLayout(32, TumData_h.C_CHAR).withName("tmpspace"),
+        TumData_h.C_POINTER.withName("output"),
+        TumData_h.C_POINTER.withName("op_key"),
+        TumData_h.C_LONG.withName("flushed_bytes")
     ).withName("asn_bit_outp_s");
 
     /**
@@ -273,10 +276,10 @@ public class asn_bit_outp_s {
         }
 
         private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
-            MessageFrame_h.C_INT,
-            MessageFrame_h.C_POINTER,
-            MessageFrame_h.C_LONG,
-            MessageFrame_h.C_POINTER
+            TumData_h.C_INT,
+            TumData_h.C_POINTER,
+            TumData_h.C_LONG,
+            TumData_h.C_POINTER
         );
 
         /**
@@ -286,13 +289,13 @@ public class asn_bit_outp_s {
             return $DESC;
         }
 
-        private static final MethodHandle UP$MH = MessageFrame_h.upcallHandle(Function.class, "apply", $DESC);
+        private static final MethodHandle UP$MH = TumData_h.upcallHandle(output.Function.class, "apply", $DESC);
 
         /**
          * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
          * The lifetime of the returned segment is managed by {@code arena}
          */
-        public static MemorySegment allocate(Function fi, Arena arena) {
+        public static MemorySegment allocate(output.Function fi, Arena arena) {
             return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
         }
 

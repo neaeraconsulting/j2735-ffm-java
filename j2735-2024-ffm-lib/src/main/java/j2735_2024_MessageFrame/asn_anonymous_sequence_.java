@@ -4,7 +4,10 @@ package j2735_2024_MessageFrame;
 
 import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -26,10 +29,10 @@ public class asn_anonymous_sequence_ {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("array"),
-        MessageFrame_h.C_INT.withName("count"),
-        MessageFrame_h.C_INT.withName("size"),
-        MessageFrame_h.C_POINTER.withName("free")
+        TumData_h.C_POINTER.withName("array"),
+        TumData_h.C_INT.withName("count"),
+        TumData_h.C_INT.withName("size"),
+        TumData_h.C_POINTER.withName("free")
     ).withName("$anon$44:9");
 
     /**
@@ -190,7 +193,7 @@ public class asn_anonymous_sequence_ {
         }
 
         private static final FunctionDescriptor $DESC = FunctionDescriptor.ofVoid(
-            MessageFrame_h.C_POINTER
+            TumData_h.C_POINTER
         );
 
         /**
@@ -200,13 +203,13 @@ public class asn_anonymous_sequence_ {
             return $DESC;
         }
 
-        private static final MethodHandle UP$MH = MessageFrame_h.upcallHandle(Function.class, "apply", $DESC);
+        private static final MethodHandle UP$MH = TumData_h.upcallHandle(free.Function.class, "apply", $DESC);
 
         /**
          * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
          * The lifetime of the returned segment is managed by {@code arena}
          */
-        public static MemorySegment allocate(Function fi, Arena arena) {
+        public static MemorySegment allocate(free.Function fi, Arena arena) {
             return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
         }
 

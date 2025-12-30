@@ -4,8 +4,12 @@ package j2735_2024_MessageFrame;
 
 import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
+import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
@@ -22,7 +26,7 @@ public class __sigset_t {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MemoryLayout.sequenceLayout(16, MessageFrame_h.C_LONG).withName("__val")
+        MemoryLayout.sequenceLayout(16, TumData_h.C_LONG).withName("__val")
     ).withName("$anon$5:9");
 
     /**

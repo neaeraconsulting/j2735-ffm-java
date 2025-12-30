@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -28,13 +32,13 @@ public class asn_INTEGER_specifics_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("value2enum"),
-        MessageFrame_h.C_POINTER.withName("enum2value"),
-        MessageFrame_h.C_INT.withName("map_count"),
-        MessageFrame_h.C_INT.withName("extension"),
-        MessageFrame_h.C_INT.withName("strict_enumeration"),
-        MessageFrame_h.C_INT.withName("field_width"),
-        MessageFrame_h.C_INT.withName("field_unsigned"),
+        TumData_h.C_POINTER.withName("value2enum"),
+        TumData_h.C_POINTER.withName("enum2value"),
+        TumData_h.C_INT.withName("map_count"),
+        TumData_h.C_INT.withName("extension"),
+        TumData_h.C_INT.withName("strict_enumeration"),
+        TumData_h.C_INT.withName("field_width"),
+        TumData_h.C_INT.withName("field_unsigned"),
         MemoryLayout.paddingLayout(4)
     ).withName("asn_INTEGER_specifics_s");
 

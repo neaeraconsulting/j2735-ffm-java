@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import j2735ffm.MessageFrameCodec;
+import j2735ffm.TumDataCodec;
 import us.dot.its.jpo.ode.api.models.messages.TimestampedMessageFrame;
 import us.dot.its.jpo.ode.api.models.messages.TimestampedMessageFrameList;
 
@@ -30,11 +31,14 @@ import static org.springframework.http.MediaType.*;
 public class ApiController {
 
     MessageFrameCodec codec;
+    TumDataCodec tumDataCodec;
+
     private static final Base64.Decoder base64Decoder = Base64.getDecoder();
 
     @Autowired
-    public ApiController(MessageFrameCodec codec) {
+    public ApiController(MessageFrameCodec codec, TumDataCodec tumDataCodec) {
         this.codec = codec;
+        this.tumDataCodec = tumDataCodec;
     }
 
     @GetMapping("/health")
@@ -164,6 +168,130 @@ public class ApiController {
     )
     public String jerToXer(@RequestBody String jer) {
         return codec.jerToXer(jer);
+    }
+
+        @PostMapping(
+            value = "tum-data/xer/uper/bin",
+            consumes = APPLICATION_XML_VALUE,
+            produces = APPLICATION_OCTET_STREAM_VALUE)
+    public byte[] tumDataXerToUper(@RequestBody String xer) {
+        return tumDataCodec.xerToUper(xer);
+    }
+
+    @PostMapping(
+            value = "tum-data/xer/uper/hex",
+            consumes = APPLICATION_XML_VALUE,
+            produces = TEXT_PLAIN_VALUE
+    )
+    public String tumDataXerToUperHex(@RequestBody String xer) {
+        byte[] bytes = tumDataCodec.xerToUper(xer);
+        return HexFormat.of().formatHex(bytes);
+    }
+
+    @PostMapping(
+            value = "tum-data/jer/uper/bin",
+            consumes = APPLICATION_JSON_VALUE,
+            produces = APPLICATION_OCTET_STREAM_VALUE)
+    public byte[] tumDatJerToUper(@RequestBody String jer) {
+        return tumDataCodec.jerToUper(jer);
+    }
+
+    @PostMapping(
+            value = "tum-data/jer/uper/hex",
+            consumes = APPLICATION_JSON_VALUE,
+            produces = TEXT_PLAIN_VALUE
+    )
+    public String tumDataJerToUperHex(@RequestBody String jer) {
+        byte[] bytes = tumDataCodec.jerToUper(jer);
+        return HexFormat.of().formatHex(bytes);
+    }
+
+    @PostMapping(
+            value = "tum-data/uper/bin/xer",
+            consumes = APPLICATION_OCTET_STREAM_VALUE,
+            produces = APPLICATION_XML_VALUE
+    )
+    public String tumDataUperToXer(HttpServletRequest request) {
+        try (var is = request.getInputStream()) {
+            byte[] bytes = is.readAllBytes();
+            log.info("Read {} bytes", bytes.length);
+            return tumDataCodec.uperToXer(bytes);
+        } catch (IOException ioe) {
+            return ioe.getMessage();
+        }
+    }
+
+    @PostMapping(
+            value = "tum-data/uper/hex/xer",
+            consumes = TEXT_PLAIN_VALUE,
+            produces = APPLICATION_XML_VALUE
+    )
+    public String tumDataUperHexToXer(@RequestBody String uperHex) {
+        byte[] bytes = HexFormat.of().parseHex(uperHex);
+        return tumDataCodec.uperToXer(bytes);
+    }
+
+    @PostMapping(
+            value = "tum-data/uper/b64/xer",
+            consumes = TEXT_PLAIN_VALUE,
+            produces = APPLICATION_XML_VALUE
+    )
+    public String tumDataUperBase64ToXer(@RequestBody String base64) {
+        byte[] bytes = base64Decoder.decode(base64);
+        return tumDataCodec.uperToXer(bytes);
+    }
+
+    @PostMapping(
+            value = "tum-data/uper/bin/jer",
+            consumes = APPLICATION_OCTET_STREAM_VALUE,
+            produces = APPLICATION_JSON_VALUE
+    )
+    public String tumDataUperToJer(HttpServletRequest request) {
+        try (var is = request.getInputStream()) {
+            byte[] bytes = is.readAllBytes();
+            log.info("Read {} bytes", bytes.length);
+            return tumDataCodec.uperToJer(bytes);
+        } catch (IOException ioe) {
+            return ioe.getMessage();
+        }
+    }
+
+    @PostMapping(
+            value = "tum-data/uper/hex/jer",
+            consumes = TEXT_PLAIN_VALUE,
+            produces = APPLICATION_JSON_VALUE
+    )
+    public String tumDataUperHexToJer(@RequestBody String uperHex) {
+        byte[] bytes = HexFormat.of().parseHex(uperHex);
+        return tumDataCodec.uperToJer(bytes);
+    }
+
+    @PostMapping(
+            value = "tum-data/uper/b64/jer",
+            consumes = TEXT_PLAIN_VALUE,
+            produces = APPLICATION_JSON_VALUE
+    )
+    public String tumDataUperBase64ToJer(@RequestBody String base64) {
+        byte[] bytes = base64Decoder.decode(base64);
+        return tumDataCodec.uperToJer(bytes);
+    }
+
+    @PostMapping(
+            value = "tum-data/xer/jer",
+            consumes = APPLICATION_XML_VALUE,
+            produces = APPLICATION_JSON_VALUE
+    )
+    public String tumDataXerToJer(@RequestBody String xer) {
+        return tumDataCodec.xerToJer(xer);
+    }
+
+    @PostMapping(
+            value = "tum-data/jer/xer",
+            consumes = APPLICATION_JSON_VALUE,
+            produces = APPLICATION_XML_VALUE
+    )
+    public String tumDataJerToXer(@RequestBody String jer) {
+        return tumDataCodec.jerToXer(jer);
     }
 
     /**

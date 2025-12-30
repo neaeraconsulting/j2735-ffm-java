@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -31,12 +35,12 @@ public class asn_per_constraint_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_INT.withName("flags"),
-        MessageFrame_h.C_INT.withName("range_bits"),
-        MessageFrame_h.C_INT.withName("effective_bits"),
+        TumData_h.C_INT.withName("flags"),
+        TumData_h.C_INT.withName("range_bits"),
+        TumData_h.C_INT.withName("effective_bits"),
         MemoryLayout.paddingLayout(4),
-        MessageFrame_h.C_LONG.withName("lower_bound"),
-        MessageFrame_h.C_LONG.withName("upper_bound")
+        TumData_h.C_LONG.withName("lower_bound"),
+        TumData_h.C_LONG.withName("upper_bound")
     ).withName("asn_per_constraint_s");
 
     /**

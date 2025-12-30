@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -25,9 +29,9 @@ public class VehicleDimensions {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_LONG.withName("vehicleLengthOverall"),
-        MessageFrame_h.C_LONG.withName("vehicleHeigthOverall"),
-        MessageFrame_h.C_LONG.withName("vehicleWidthOverall"),
+        TumData_h.C_LONG.withName("vehicleLengthOverall"),
+        TumData_h.C_LONG.withName("vehicleHeigthOverall"),
+        TumData_h.C_LONG.withName("vehicleWidthOverall"),
         asn_struct_ctx_s.layout().withName("_asn_ctx")
     ).withName("VehicleDimensions");
 

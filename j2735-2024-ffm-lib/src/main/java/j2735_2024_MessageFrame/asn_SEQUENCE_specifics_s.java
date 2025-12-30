@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -29,15 +33,15 @@ public class asn_SEQUENCE_specifics_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_INT.withName("struct_size"),
-        MessageFrame_h.C_INT.withName("ctx_offset"),
-        MessageFrame_h.C_POINTER.withName("tag2el"),
-        MessageFrame_h.C_INT.withName("tag2el_count"),
+        TumData_h.C_INT.withName("struct_size"),
+        TumData_h.C_INT.withName("ctx_offset"),
+        TumData_h.C_POINTER.withName("tag2el"),
+        TumData_h.C_INT.withName("tag2el_count"),
         MemoryLayout.paddingLayout(4),
-        MessageFrame_h.C_POINTER.withName("oms"),
-        MessageFrame_h.C_INT.withName("roms_count"),
-        MessageFrame_h.C_INT.withName("aoms_count"),
-        MessageFrame_h.C_INT.withName("first_extension"),
+        TumData_h.C_POINTER.withName("oms"),
+        TumData_h.C_INT.withName("roms_count"),
+        TumData_h.C_INT.withName("aoms_count"),
+        TumData_h.C_INT.withName("first_extension"),
         MemoryLayout.paddingLayout(4)
     ).withName("asn_SEQUENCE_specifics_s");
 

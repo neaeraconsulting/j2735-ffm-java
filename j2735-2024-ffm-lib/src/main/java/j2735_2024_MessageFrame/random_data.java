@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -28,14 +32,14 @@ public class random_data {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("fptr"),
-        MessageFrame_h.C_POINTER.withName("rptr"),
-        MessageFrame_h.C_POINTER.withName("state"),
-        MessageFrame_h.C_INT.withName("rand_type"),
-        MessageFrame_h.C_INT.withName("rand_deg"),
-        MessageFrame_h.C_INT.withName("rand_sep"),
+        TumData_h.C_POINTER.withName("fptr"),
+        TumData_h.C_POINTER.withName("rptr"),
+        TumData_h.C_POINTER.withName("state"),
+        TumData_h.C_INT.withName("rand_type"),
+        TumData_h.C_INT.withName("rand_deg"),
+        TumData_h.C_INT.withName("rand_sep"),
         MemoryLayout.paddingLayout(4),
-        MessageFrame_h.C_POINTER.withName("end_ptr")
+        TumData_h.C_POINTER.withName("end_ptr")
     ).withName("random_data");
 
     /**

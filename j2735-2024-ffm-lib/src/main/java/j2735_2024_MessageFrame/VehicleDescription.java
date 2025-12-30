@@ -2,9 +2,14 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
+import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
@@ -38,23 +43,23 @@ public class VehicleDescription {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("vehicleLPNr"),
-        MessageFrame_h.C_POINTER.withName("axles"),
-        MessageFrame_h.C_POINTER.withName("Class"),
-        MessageFrame_h.C_POINTER.withName("dimensions"),
-        MessageFrame_h.C_POINTER.withName("specificCharacteristics"),
-        MessageFrame_h.C_POINTER.withName("ladenWeight"),
-        MessageFrame_h.C_POINTER.withName("weightLimits"),
-        MessageFrame_h.C_POINTER.withName("trailerCharacteristics"),
-        MessageFrame_h.C_POINTER.withName("vehicleCurrentMaxTrainWeight"),
-        MessageFrame_h.C_POINTER.withName("actualNumberOfPassengers"),
-        MessageFrame_h.C_POINTER.withName("axleWeightLimits"),
-        MessageFrame_h.C_POINTER.withName("dieselEmissionValues"),
-        MessageFrame_h.C_POINTER.withName("driverCharacteristics"),
-        MessageFrame_h.C_POINTER.withName("engineDetails"),
-        MessageFrame_h.C_POINTER.withName("exhaustEmissionValues"),
-        MessageFrame_h.C_POINTER.withName("passengerCapacity"),
-        MessageFrame_h.C_POINTER.withName("soundLevel"),
+        TumData_h.C_POINTER.withName("vehicleLPNr"),
+        TumData_h.C_POINTER.withName("axles"),
+        TumData_h.C_POINTER.withName("Class"),
+        TumData_h.C_POINTER.withName("dimensions"),
+        TumData_h.C_POINTER.withName("specificCharacteristics"),
+        TumData_h.C_POINTER.withName("ladenWeight"),
+        TumData_h.C_POINTER.withName("weightLimits"),
+        TumData_h.C_POINTER.withName("trailerCharacteristics"),
+        TumData_h.C_POINTER.withName("vehicleCurrentMaxTrainWeight"),
+        TumData_h.C_POINTER.withName("actualNumberOfPassengers"),
+        TumData_h.C_POINTER.withName("axleWeightLimits"),
+        TumData_h.C_POINTER.withName("dieselEmissionValues"),
+        TumData_h.C_POINTER.withName("driverCharacteristics"),
+        TumData_h.C_POINTER.withName("engineDetails"),
+        TumData_h.C_POINTER.withName("exhaustEmissionValues"),
+        TumData_h.C_POINTER.withName("passengerCapacity"),
+        TumData_h.C_POINTER.withName("soundLevel"),
         asn_struct_ctx_s.layout().withName("_asn_ctx")
     ).withName("VehicleDescription");
 

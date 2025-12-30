@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -32,20 +36,20 @@ public class asn_TYPE_descriptor_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("name"),
-        MessageFrame_h.C_POINTER.withName("xml_tag"),
-        MessageFrame_h.C_POINTER.withName("op"),
-        MessageFrame_h.C_POINTER.withName("tags"),
-        MessageFrame_h.C_INT.withName("tags_count"),
+        TumData_h.C_POINTER.withName("name"),
+        TumData_h.C_POINTER.withName("xml_tag"),
+        TumData_h.C_POINTER.withName("op"),
+        TumData_h.C_POINTER.withName("tags"),
+        TumData_h.C_INT.withName("tags_count"),
         MemoryLayout.paddingLayout(4),
-        MessageFrame_h.C_POINTER.withName("all_tags"),
-        MessageFrame_h.C_INT.withName("all_tags_count"),
+        TumData_h.C_POINTER.withName("all_tags"),
+        TumData_h.C_INT.withName("all_tags_count"),
         MemoryLayout.paddingLayout(4),
         asn_encoding_constraints_s.layout().withName("encoding_constraints"),
-        MessageFrame_h.C_POINTER.withName("elements"),
-        MessageFrame_h.C_INT.withName("elements_count"),
+        TumData_h.C_POINTER.withName("elements"),
+        TumData_h.C_INT.withName("elements_count"),
         MemoryLayout.paddingLayout(4),
-        MessageFrame_h.C_POINTER.withName("specifics")
+        TumData_h.C_POINTER.withName("specifics")
     ).withName("asn_TYPE_descriptor_s");
 
     /**

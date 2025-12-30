@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -24,8 +28,8 @@ public class OCTET_STRING {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("buf"),
-        MessageFrame_h.C_LONG.withName("size"),
+        TumData_h.C_POINTER.withName("buf"),
+        TumData_h.C_LONG.withName("size"),
         asn_struct_ctx_s.layout().withName("_asn_ctx")
     ).withName("OCTET_STRING");
 

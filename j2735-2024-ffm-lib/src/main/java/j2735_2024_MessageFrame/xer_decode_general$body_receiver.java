@@ -4,6 +4,13 @@ package j2735_2024_MessageFrame;
 
 import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
+
+import static java.lang.foreign.ValueLayout.*;
+import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
  * {@snippet lang=c :
@@ -24,11 +31,11 @@ public class xer_decode_general$body_receiver {
     }
 
     private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
-        MessageFrame_h.C_LONG,
-        MessageFrame_h.C_POINTER,
-        MessageFrame_h.C_POINTER,
-        MessageFrame_h.C_LONG,
-        MessageFrame_h.C_INT
+        TumData_h.C_LONG,
+        TumData_h.C_POINTER,
+        TumData_h.C_POINTER,
+        TumData_h.C_LONG,
+        TumData_h.C_INT
     );
 
     /**
@@ -38,13 +45,13 @@ public class xer_decode_general$body_receiver {
         return $DESC;
     }
 
-    private static final MethodHandle UP$MH = MessageFrame_h.upcallHandle(Function.class, "apply", $DESC);
+    private static final MethodHandle UP$MH = TumData_h.upcallHandle(xer_decode_general$body_receiver.Function.class, "apply", $DESC);
 
     /**
      * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
      * The lifetime of the returned segment is managed by {@code arena}
      */
-    public static MemorySegment allocate(Function fi, Arena arena) {
+    public static MemorySegment allocate(xer_decode_general$body_receiver.Function fi, Arena arena) {
         return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
     }
 

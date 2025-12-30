@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -23,8 +27,8 @@ public class asn_type_selector_result_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("type_descriptor"),
-        MessageFrame_h.C_INT.withName("presence_index"),
+        TumData_h.C_POINTER.withName("type_descriptor"),
+        TumData_h.C_INT.withName("presence_index"),
         MemoryLayout.paddingLayout(4)
     ).withName("asn_type_selector_result_s");
 

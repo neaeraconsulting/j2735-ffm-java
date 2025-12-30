@@ -4,7 +4,10 @@ package j2735_2024_MessageFrame;
 
 import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -24,8 +27,8 @@ public class pthread_condattr_t {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.unionLayout(
-        MemoryLayout.sequenceLayout(4, MessageFrame_h.C_CHAR).withName("__size"),
-        MessageFrame_h.C_INT.withName("__align")
+        MemoryLayout.sequenceLayout(4, TumData_h.C_CHAR).withName("__size"),
+        TumData_h.C_INT.withName("__align")
     ).withName("$anon$41:9");
 
     /**

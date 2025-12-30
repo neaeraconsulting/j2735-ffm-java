@@ -2,9 +2,14 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
+import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
@@ -38,24 +43,24 @@ public class asn_TYPE_operation_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("free_struct"),
-        MessageFrame_h.C_POINTER.withName("print_struct"),
-        MessageFrame_h.C_POINTER.withName("compare_struct"),
-        MessageFrame_h.C_POINTER.withName("copy_struct"),
-        MessageFrame_h.C_POINTER.withName("ber_decoder"),
-        MessageFrame_h.C_POINTER.withName("der_encoder"),
-        MessageFrame_h.C_POINTER.withName("xer_decoder"),
-        MessageFrame_h.C_POINTER.withName("xer_encoder"),
-        MessageFrame_h.C_POINTER.withName("jer_decoder"),
-        MessageFrame_h.C_POINTER.withName("jer_encoder"),
-        MessageFrame_h.C_POINTER.withName("oer_decoder"),
-        MessageFrame_h.C_POINTER.withName("oer_encoder"),
-        MessageFrame_h.C_POINTER.withName("uper_decoder"),
-        MessageFrame_h.C_POINTER.withName("uper_encoder"),
-        MessageFrame_h.C_POINTER.withName("aper_decoder"),
-        MessageFrame_h.C_POINTER.withName("aper_encoder"),
-        MessageFrame_h.C_POINTER.withName("random_fill"),
-        MessageFrame_h.C_POINTER.withName("outmost_tag")
+        TumData_h.C_POINTER.withName("free_struct"),
+        TumData_h.C_POINTER.withName("print_struct"),
+        TumData_h.C_POINTER.withName("compare_struct"),
+        TumData_h.C_POINTER.withName("copy_struct"),
+        TumData_h.C_POINTER.withName("ber_decoder"),
+        TumData_h.C_POINTER.withName("der_encoder"),
+        TumData_h.C_POINTER.withName("xer_decoder"),
+        TumData_h.C_POINTER.withName("xer_encoder"),
+        TumData_h.C_POINTER.withName("jer_decoder"),
+        TumData_h.C_POINTER.withName("jer_encoder"),
+        TumData_h.C_POINTER.withName("oer_decoder"),
+        TumData_h.C_POINTER.withName("oer_encoder"),
+        TumData_h.C_POINTER.withName("uper_decoder"),
+        TumData_h.C_POINTER.withName("uper_encoder"),
+        TumData_h.C_POINTER.withName("aper_decoder"),
+        TumData_h.C_POINTER.withName("aper_encoder"),
+        TumData_h.C_POINTER.withName("random_fill"),
+        TumData_h.C_POINTER.withName("outmost_tag")
     ).withName("asn_TYPE_operation_s");
 
     /**

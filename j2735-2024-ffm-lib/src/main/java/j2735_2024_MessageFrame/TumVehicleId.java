@@ -2,9 +2,14 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
+import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
@@ -26,11 +31,11 @@ public class TumVehicleId {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("vehicleIdentity"),
-        MessageFrame_h.C_POINTER.withName("licPlateState"),
-        MessageFrame_h.C_POINTER.withName("licPlateNumVeh"),
-        MessageFrame_h.C_POINTER.withName("licPlateNumTrailer"),
-        MessageFrame_h.C_POINTER.withName("userId"),
+        TumData_h.C_POINTER.withName("vehicleIdentity"),
+        TumData_h.C_POINTER.withName("licPlateState"),
+        TumData_h.C_POINTER.withName("licPlateNumVeh"),
+        TumData_h.C_POINTER.withName("licPlateNumTrailer"),
+        TumData_h.C_POINTER.withName("userId"),
         asn_struct_ctx_s.layout().withName("_asn_ctx")
     ).withName("TumVehicleId");
 

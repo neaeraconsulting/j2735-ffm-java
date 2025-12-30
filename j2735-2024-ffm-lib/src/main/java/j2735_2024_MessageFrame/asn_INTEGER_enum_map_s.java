@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -24,9 +28,9 @@ public class asn_INTEGER_enum_map_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_LONG.withName("nat_value"),
-        MessageFrame_h.C_LONG.withName("enum_len"),
-        MessageFrame_h.C_POINTER.withName("enum_name")
+        TumData_h.C_LONG.withName("nat_value"),
+        TumData_h.C_LONG.withName("enum_len"),
+        TumData_h.C_POINTER.withName("enum_name")
     ).withName("asn_INTEGER_enum_map_s");
 
     /**

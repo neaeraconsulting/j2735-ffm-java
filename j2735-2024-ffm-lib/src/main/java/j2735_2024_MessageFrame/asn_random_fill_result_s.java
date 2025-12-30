@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -27,9 +31,9 @@ public class asn_random_fill_result_s {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_INT.withName("code"),
+        TumData_h.C_INT.withName("code"),
         MemoryLayout.paddingLayout(4),
-        MessageFrame_h.C_LONG.withName("length")
+        TumData_h.C_LONG.withName("length")
     ).withName("asn_random_fill_result_s");
 
     /**

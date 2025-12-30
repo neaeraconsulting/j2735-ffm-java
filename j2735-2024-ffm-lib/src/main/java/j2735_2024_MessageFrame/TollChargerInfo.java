@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -26,8 +30,8 @@ public class TollChargerInfo {
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
         ASN__PRIMITIVE_TYPE_s.layout().withName("tollChargerId"),
-        MessageFrame_h.C_LONG.withName("tollPointId"),
-        MessageFrame_h.C_POINTER.withName("descriptiveName"),
+        TumData_h.C_LONG.withName("tollPointId"),
+        TumData_h.C_POINTER.withName("descriptiveName"),
         asn_struct_ctx_s.layout().withName("_asn_ctx")
     ).withName("TollChargerInfo");
 

@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -26,7 +30,7 @@ public class Lpn {
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
         BIT_STRING_s.layout().withName("countryCode"),
-        MessageFrame_h.C_LONG.withName("alphabetIndicator"),
+        TumData_h.C_LONG.withName("alphabetIndicator"),
         OCTET_STRING.layout().withName("licencePlateNumber"),
         asn_struct_ctx_s.layout().withName("_asn_ctx")
     ).withName("Lpn");

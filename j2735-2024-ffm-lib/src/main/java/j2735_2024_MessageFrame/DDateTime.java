@@ -2,9 +2,14 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
+import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
@@ -28,13 +33,13 @@ public class DDateTime {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_POINTER.withName("year"),
-        MessageFrame_h.C_POINTER.withName("month"),
-        MessageFrame_h.C_POINTER.withName("day"),
-        MessageFrame_h.C_POINTER.withName("hour"),
-        MessageFrame_h.C_POINTER.withName("minute"),
-        MessageFrame_h.C_POINTER.withName("second"),
-        MessageFrame_h.C_POINTER.withName("offset"),
+        TumData_h.C_POINTER.withName("year"),
+        TumData_h.C_POINTER.withName("month"),
+        TumData_h.C_POINTER.withName("day"),
+        TumData_h.C_POINTER.withName("hour"),
+        TumData_h.C_POINTER.withName("minute"),
+        TumData_h.C_POINTER.withName("second"),
+        TumData_h.C_POINTER.withName("offset"),
         asn_struct_ctx_s.layout().withName("_asn_ctx")
     ).withName("DDateTime");
 

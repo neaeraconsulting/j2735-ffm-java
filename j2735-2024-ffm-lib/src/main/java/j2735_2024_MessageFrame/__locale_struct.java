@@ -4,8 +4,12 @@ package j2735_2024_MessageFrame;
 
 import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
+import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
@@ -26,11 +30,11 @@ public class __locale_struct {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MemoryLayout.sequenceLayout(13, MessageFrame_h.C_POINTER).withName("__locales"),
-        MessageFrame_h.C_POINTER.withName("__ctype_b"),
-        MessageFrame_h.C_POINTER.withName("__ctype_tolower"),
-        MessageFrame_h.C_POINTER.withName("__ctype_toupper"),
-        MemoryLayout.sequenceLayout(13, MessageFrame_h.C_POINTER).withName("__names")
+        MemoryLayout.sequenceLayout(13, TumData_h.C_POINTER).withName("__locales"),
+        TumData_h.C_POINTER.withName("__ctype_b"),
+        TumData_h.C_POINTER.withName("__ctype_tolower"),
+        TumData_h.C_POINTER.withName("__ctype_toupper"),
+        MemoryLayout.sequenceLayout(13, TumData_h.C_POINTER).withName("__names")
     ).withName("__locale_struct");
 
     /**

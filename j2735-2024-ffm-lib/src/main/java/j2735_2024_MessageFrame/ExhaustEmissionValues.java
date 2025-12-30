@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -27,11 +31,11 @@ public class ExhaustEmissionValues {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_LONG.withName("unitType"),
-        MessageFrame_h.C_LONG.withName("emissionCo"),
-        MessageFrame_h.C_LONG.withName("emissionHc"),
-        MessageFrame_h.C_LONG.withName("emissionNox"),
-        MessageFrame_h.C_LONG.withName("emissionHcNox"),
+        TumData_h.C_LONG.withName("unitType"),
+        TumData_h.C_LONG.withName("emissionCo"),
+        TumData_h.C_LONG.withName("emissionHc"),
+        TumData_h.C_LONG.withName("emissionNox"),
+        TumData_h.C_LONG.withName("emissionHcNox"),
         asn_struct_ctx_s.layout().withName("_asn_ctx")
     ).withName("ExhaustEmissionValues");
 

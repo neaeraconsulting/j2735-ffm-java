@@ -4,7 +4,10 @@ package j2735_2024_MessageFrame;
 
 import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -34,18 +37,18 @@ public class __pthread_rwlock_arch_t {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_INT.withName("__readers"),
-        MessageFrame_h.C_INT.withName("__writers"),
-        MessageFrame_h.C_INT.withName("__wrphase_futex"),
-        MessageFrame_h.C_INT.withName("__writers_futex"),
-        MessageFrame_h.C_INT.withName("__pad3"),
-        MessageFrame_h.C_INT.withName("__pad4"),
-        MessageFrame_h.C_INT.withName("__cur_writer"),
-        MessageFrame_h.C_INT.withName("__shared"),
-        MessageFrame_h.C_CHAR.withName("__rwelision"),
-        MemoryLayout.sequenceLayout(7, MessageFrame_h.C_CHAR).withName("__pad1"),
-        MessageFrame_h.C_LONG.withName("__pad2"),
-        MessageFrame_h.C_INT.withName("__flags"),
+        TumData_h.C_INT.withName("__readers"),
+        TumData_h.C_INT.withName("__writers"),
+        TumData_h.C_INT.withName("__wrphase_futex"),
+        TumData_h.C_INT.withName("__writers_futex"),
+        TumData_h.C_INT.withName("__pad3"),
+        TumData_h.C_INT.withName("__pad4"),
+        TumData_h.C_INT.withName("__cur_writer"),
+        TumData_h.C_INT.withName("__shared"),
+        TumData_h.C_CHAR.withName("__rwelision"),
+        MemoryLayout.sequenceLayout(7, TumData_h.C_CHAR).withName("__pad1"),
+        TumData_h.C_LONG.withName("__pad2"),
+        TumData_h.C_INT.withName("__flags"),
         MemoryLayout.paddingLayout(4)
     ).withName("__pthread_rwlock_arch_t");
 

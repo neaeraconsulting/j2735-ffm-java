@@ -2,8 +2,12 @@
 
 package j2735_2024_MessageFrame;
 
+import java.lang.invoke.*;
 import java.lang.foreign.*;
+import java.nio.ByteOrder;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static java.lang.foreign.ValueLayout.*;
 import static java.lang.foreign.MemoryLayout.PathElement.*;
@@ -23,7 +27,7 @@ public class max_align_t {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        MessageFrame_h.C_LONG_LONG.withName("__clang_max_align_nonce1"),
+        TumData_h.C_LONG_LONG.withName("__clang_max_align_nonce1"),
         MemoryLayout.paddingLayout(24)
     ).withName("$anon$19:9");
 

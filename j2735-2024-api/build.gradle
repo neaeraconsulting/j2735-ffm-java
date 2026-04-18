@@ -55,6 +55,7 @@ test {
 
 sonar {
     properties {
+        // test
         property "sonar.projectKey", "neaeraconsulting_j2735-ffm-java"
         property "sonar.organization", "neaeraconsulting"
     }

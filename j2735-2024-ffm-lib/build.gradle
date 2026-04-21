@@ -4,10 +4,11 @@ plugins {
     id 'java'
     id "maven-publish"
     id "org.sonarqube" version "7.2.3.7755"
+    id "org.jreleaser" version "1.23.0"
 }
 
 group = 'usdot.jpo.ode'
-version = '2.0.2'
+version = '2.0.2-SNAPSHOT'
 
 
 
@@ -28,22 +29,78 @@ dependencies {
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/" + System.getenv("GITHUB_REPOSITORY_OWNER") + "/j2735-ffm-java")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.neaeraconsulting'
+            artifactId = project.name
+            from components.java
+            pom {
+                name = project.name
+                description = 'J2735 codec in C with Java interface via Java the Foreign Function and Memory API'
+                url = 'https://github.com/neaeraconsulting/j2735-ffm-java'
+                inceptionYear = '2025'
+                licenses {
+                    license {
+                        name = 'Apache 2.0 License'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'iyourshaw'
+                        name = 'Ivan Yourshaw'
+                        email = '39739503+iyourshaw@users.noreply.github.com'
+                        organization = 'Neaera Consulting'
+                        organizationUrl = 'https://neaeraconsulting.com/'
+                    }
+                }
+                contributors {
+                    name = 'Michael English'
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/neaeraconsulting/j2735-ffm-java'
+                    developerConnection = 'scm:git:https://github.com/neaeraconsulting/j2735-ffm-java'
+                    url = 'https://github.com/neaeraconsulting/j2735-ffm-java'
+                }
             }
         }
     }
-    publications {
-        maven(MavenPublication) {
-            groupId = group
-            artifactId = project.name
-            version = version
-            from components.java
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+}
+
+jreleaser {
+    signing {
+        pgp {
+            active = 'ALWAYS'
+            armored = true
+        }
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                'release-deploy' {
+                    active = 'RELEASE'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('target/staging-deploy')
+                }
+            }
+            nexus2 {
+                'snapshot-deploy' {
+                    active = 'SNAPSHOT'
+                    snapshotUrl = 'https://central.sonatype.com/repository/maven-snapshots/'
+                    applyMavenCentralRules = true
+                    snapshotSupported = true
+                    closeRepository = true
+                    releaseRepository = true
+                    stagingRepository('target/staging-deploy')
+                }
+            }
         }
     }
 }
@@ -53,6 +110,8 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(22)
     }
+    withSourcesJar()
+    withJavadocJar()
 }
 
 test {
@@ -69,3 +128,4 @@ sonar {
         property "sonar.organization", "neaeraconsulting"
     }
 }
+

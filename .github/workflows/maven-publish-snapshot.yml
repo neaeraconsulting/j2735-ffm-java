@@ -22,7 +22,7 @@ jobs:
         with:
           gradle-version: '8.13'
 
-      - name: Test Library
+      - name: Publish Snapshot to Maven Central
         run: |
           chmod +x gradlew
           ./gradlew build jreleaserConfig jreleaserPublish

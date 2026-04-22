@@ -22,7 +22,22 @@ jobs:
         with:
           gradle-version: '8.13'
 
+      - name: Get Version
+        id: get_version
+        run: |
+          echo "VERSION=$(./gradlew -q properties | grep '^version' | sed 's/version: //')" >> $GITHUB_OUTPUT
+          if [ "${{ endsWith(steps.get_version.outputs.VERSION, '-SNAPSHOT' ) }}" ]; then
+            echo "IS_SNAPSHOT=true" >> $GITHUB_OUTPUT
+          else
+            echo "IS_SNAPSHOT=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Echo Version
+        run: |
+          echo "The library version is ${{ steps.get_version.outputs.VERSION }} IS_SNAPSHOT: ${{ steps.get_version.outputs.IS_SNAPSHOT }}"
+
       - name: Publish Snapshot to Maven Central
+        if: ${{ steps.get_version.outputs.IS_SNAPSHOT }}
         run: |
           chmod +x gradlew
           ./gradlew jreleaserConfig

@@ -77,6 +77,13 @@ publishing {
 }
 
 jreleaser {
+    release {
+        github {
+            // Release to Maven Central only, don't write to github
+            enabled = false
+        }
+    }
+    gitRootSearch = true
     signing {
         pgp {
             active = 'ALWAYS'
@@ -105,7 +112,6 @@ jreleaser {
             }
         }
     }
-    gitRootSearch = true
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

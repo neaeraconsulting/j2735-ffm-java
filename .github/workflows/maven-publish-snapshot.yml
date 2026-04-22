@@ -25,7 +25,7 @@ jobs:
       - name: Get Version
         id: get_version
         run: |
-          echo "VERSION=$(./gradlew -q properties | grep '^version' | sed 's/version: //')" >> $GITHUB_OUTPUT
+          echo "VERSION=$(./gradlew -q getVersion)" >> $GITHUB_OUTPUT
           if [ "${{ endsWith(steps.get_version.outputs.VERSION, '-SNAPSHOT' ) }}" ]; then
             echo "IS_SNAPSHOT=true" >> $GITHUB_OUTPUT
           else
@@ -36,18 +36,18 @@ jobs:
         run: |
           echo "The library version is ${{ steps.get_version.outputs.VERSION }} IS_SNAPSHOT: ${{ steps.get_version.outputs.IS_SNAPSHOT }}"
 
-      - name: Publish Snapshot to Maven Central
-        if: ${{ steps.get_version.outputs.IS_SNAPSHOT }}
-        run: |
-          chmod +x gradlew
-          ./gradlew jreleaserConfig
-          ./gradlew publish
-          ./gradlew jreleaserDeploy
-        working-directory: j2735-2024-ffm-lib
-        env:
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
-          JRELEASER_NEXUS2_USERNAME: ${{ secrets.JRELEASER_NEXUS2_USERNAME }}
-          JRELEASER_NEXUS2_TOKEN: ${{ secrets.JRELEASER_NEXUS2_TOKEN }}
-          JRELEASER_GITHUB_TOKEN: 'dummy-github-token-dont-release-to-github'
+#      - name: Publish Snapshot to Maven Central
+#        if: ${{ steps.get_version.outputs.IS_SNAPSHOT }}
+#        run: |
+#          chmod +x gradlew
+#          ./gradlew jreleaserConfig
+#          ./gradlew publish
+#          ./gradlew jreleaserDeploy
+#        working-directory: j2735-2024-ffm-lib
+#        env:
+#          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
+#          JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
+#          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
+#          JRELEASER_NEXUS2_USERNAME: ${{ secrets.JRELEASER_NEXUS2_USERNAME }}
+#          JRELEASER_NEXUS2_TOKEN: ${{ secrets.JRELEASER_NEXUS2_TOKEN }}
+#          JRELEASER_GITHUB_TOKEN: 'dummy-github-token-dont-release-to-github'

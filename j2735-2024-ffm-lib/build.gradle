@@ -149,3 +149,7 @@ sonar {
     }
 }
 
+tasks.register('getVersion') {
+    doLast { println(project.version) }
+}
+

@@ -37,11 +37,11 @@ Convert an UPER encoded MessageFrame to XER
 ```java
 // Initialize the library
 MessageFrameCodec codec;
-String libResource = System.getProperty("os.name").toLowerCase().contains("win") 
+String libResource = System.getProperty("os.name").toLowerCase().contains("win")
     ? "C:/Users/spongebob/app/asnapplication.dll"       // Use windows library
     : "/home/app/libasnapplication.so";                 // Use Linux library
 Path libPath = Paths.get(libResource);
-MessageFrameCodec codec = new MessageFrameCodec(262144L, 8192L, libPath);
+codec = new MessageFrameCodec(262144L, 8192L, 512L, libPath);
 
 // Convert XER to UPER
 byte[] uper = codec.xerToUper("<MessageFrame><messageId>19</messageId><value><SPAT><intersections><IntersectionState><id><id>12111</id></id><revision>0</revision><status>0000000000000000</status><timeStamp>35176</timeStamp><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime></timing></MovementEvent></state-time-speed></MovementState><MovementState><signalGroup>4</signalGroup><state-time-speed><MovementEvent><eventState><stop-And-Remain/></eventState><timing><minEndTime>22181</minEndTime><maxEndTime>22181</maxEndTime></timing></MovementEvent></state-time-speed></MovementState><MovementState><signalGroup>6</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime></timing></MovementEvent></state-time-speed></MovementState><MovementState><signalGroup>8</signalGroup><state-time-speed><MovementEvent><eventState><stop-And-Remain/></eventState><timing><minEndTime>21852</minEndTime><maxEndTime>21852</maxEndTime></timing></MovementEvent></state-time-speed></MovementState><MovementState><signalGroup>1</signalGroup><state-time-speed><MovementEvent><eventState><stop-And-Remain/></eventState><timing><minEndTime>21852</minEndTime><maxEndTime>21852</maxEndTime></timing></MovementEvent></state-time-speed></MovementState><MovementState><signalGroup>5</signalGroup><state-time-speed><MovementEvent><eventState><stop-And-Remain/></eventState><timing><minEndTime>21852</minEndTime><maxEndTime>21852</maxEndTime></timing></MovementEvent></state-time-speed></MovementState></states></IntersectionState></intersections></SPAT></value></MessageFrame>");

@@ -28,6 +28,9 @@ dependencies {
     testImplementation 'commons-io:commons-io:2.20.0'
 }
 
+def linuxArtifactPath = "$project.rootDir/lib/libasnapplication.so"
+def windowsArtifactPath = "$project.rootDir/lib/asnapplication.dll"
+
 publishing {
 
     publications {
@@ -35,6 +38,14 @@ publishing {
             groupId = group
             artifactId = project.name
             from components.java
+            artifact(linuxArtifactPath) {
+                classifier = 'linux-x86_64'
+                extension = 'so'
+            }
+            artifact(windowsArtifactPath) {
+                classifier = 'windows-x86_64'
+                extension = 'dll'
+            }
             pom {
                 name = project.name
                 description = 'J2735 codec in C with Java interface via Java the Foreign Function and Memory API'

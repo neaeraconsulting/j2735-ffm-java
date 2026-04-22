@@ -26,16 +26,16 @@ jobs:
         id: get_version
         run: |
           echo "LIB_VERSION=$(./gradlew -q getVersion)" >> $GITHUB_OUTPUT
-          if [ "${{ endsWith(steps.get_version.outputs.LIB_VERSION, '-SNAPSHOT' ) }}" ]; then
-            echo "IS_SNAPSHOT=true" >> $GITHUB_OUTPUT
-          else
-            echo "IS_SNAPSHOT=false" >> $GITHUB_OUTPUT
-          fi
+#          if [ "${{ endsWith(steps.get_version.outputs.LIB_VERSION, '-SNAPSHOT' ) }}" ]; then
+#            echo "IS_SNAPSHOT=true" >> $GITHUB_OUTPUT
+#          else
+#            echo "IS_SNAPSHOT=false" >> $GITHUB_OUTPUT
+#          fi
 
       - name: Echo Version
         run: |
           echo "LIB_VERSION ${{ steps.get_version.outputs.LIB_VERSION }}"
-          echo "IS_SNAPSHOT: ${{ steps.get_version.outputs.IS_SNAPSHOT }}"
+#          echo "IS_SNAPSHOT: ${{ steps.get_version.outputs.IS_SNAPSHOT }}"
 
 #      - name: Publish Snapshot to Maven Central
 #        if: ${{ steps.get_version.outputs.IS_SNAPSHOT }}

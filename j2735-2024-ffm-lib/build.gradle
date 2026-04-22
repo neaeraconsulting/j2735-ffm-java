@@ -31,18 +31,6 @@ dependencies {
 def linuxArtifactPath = "$project.rootDir/lib/libasnapplication.so"
 def windowsArtifactPath = "$project.rootDir/lib/asnapplication.dll"
 
-// Create separate JARs to go with each version of the native library.
-// The JARs are identical, but are needed to go with each native classifier.
-tasks.register('JarLinux_x86_64', Jar) {
-    archiveClassifier = 'linux-x86_64'
-    from sourceSets.main.output
-}
-
-tasks.register('JarWindows_x86_64', Jar) {
-    archiveClassifier = 'windows-x86_64'
-    from sourceSets.main.output
-}
-
 publishing {
 
     publications {
@@ -50,8 +38,6 @@ publishing {
             groupId = group
             artifactId = project.name
             from components.java
-            artifact JarWindows_x86_64
-            artifact JarLinux_x86_64
             artifact(linuxArtifactPath) {
                 classifier = 'linux-x86_64'
                 extension = 'so'

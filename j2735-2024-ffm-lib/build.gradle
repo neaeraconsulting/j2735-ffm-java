@@ -56,7 +56,9 @@ publishing {
                     }
                 }
                 contributors {
-                    name = 'Michael English'
+                    contributor {
+                        name = 'Michael English'
+                    }
                 }
                 scm {
                     connection = 'scm:git:https://github.com/neaeraconsulting/j2735-ffm-java'

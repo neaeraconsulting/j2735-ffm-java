@@ -1,4 +1,4 @@
-# Publish a snapshot that follows all PRs or pushes to the 'develop' branch
+# Publish a snapshot that follows all PRs or pushes to the 'snapshot' branch
 name: Publish JARs to the Maven Central Repository (Snapshots)
 on:
   push:

@@ -8,7 +8,7 @@ on:
     branches:
       - main
       - develop
-      - "**"
+      - snapshot
 jobs:
   test:
     runs-on: ubuntu-latest

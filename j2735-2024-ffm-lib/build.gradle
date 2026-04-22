@@ -80,7 +80,7 @@ jreleaser {
     release {
         github {
             // Release to Maven Central only, don't write to github
-            enabled = false
+            skipRelease = true
         }
     }
     gitRootSearch = true

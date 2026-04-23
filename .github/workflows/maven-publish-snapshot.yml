@@ -37,7 +37,7 @@ jobs:
           echo "IS_SNAPSHOT: ${{ steps.get_version.outputs.IS_SNAPSHOT }}"
 
       - name: Publish Snapshot to Maven Central
-        if: ${{ steps.get_version.outputs.IS_SNAPSHOT }}
+        if: ${{ steps.get_version.outputs.IS_SNAPSHOT == 'true' }}
         run: |
           chmod +x gradlew
           ./gradlew jreleaserConfig

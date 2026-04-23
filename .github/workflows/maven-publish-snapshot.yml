@@ -26,6 +26,7 @@ jobs:
         id: get_version
         run: |
           echo "LIB_VERSION=$(./gradlew -q getVersion)" >> $GITHUB_OUTPUT
+          echo EOF >> $GITHUB_OUTPUT
 #          if [ "${{ endsWith(steps.get_version.outputs.LIB_VERSION, '-SNAPSHOT' ) }}" ]; then
 #            echo "IS_SNAPSHOT=true" >> $GITHUB_OUTPUT
 #          else

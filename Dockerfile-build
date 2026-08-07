@@ -14,13 +14,20 @@
 
 #
 #  Dockerfile to build the shared library and generate java bindings with jextract
+#  Supports multiple architectures via build arguments
 #
+#  Build arguments:
+#    TARGETARCH - Target architecture (amd64, arm64, etc.) - automatically set by Docker buildx
+#    JEXTRACT_ARCH - Architecture suffix for jextract download (x64, aarch64) - defaults based on TARGETARCH
+#    LIBRARY_SUFFIX - Suffix for output library name (empty for amd64, -arm64 for arm64, etc.)
 
 ####################################################################################################
 #
 # Build container for shared library
 #
 FROM debian:trixie-slim AS build-shared
+ARG TARGETARCH=amd64
+ARG LIBRARY_SUFFIX=
 USER root
 WORKDIR /build
 
@@ -30,14 +37,21 @@ COPY ./src                                                  /build/src/
 
 ENV CC=/usr/bin/clang
 
-# Install prereqs
-RUN apt update && \
-    apt install -y clang && \
-    apt install -y cmake && \
-    cmake . && \
-    cmake --build . --verbose && \
-    mkdir out && \
-    cp libasnapplication.so.1.0.0 out/libasnapplication.so
+# Set library suffix based on architecture if not provided
+RUN if [ -z "$LIBRARY_SUFFIX" ]; then \
+  if [ "$TARGETARCH" = "arm64" ]; then \
+  export LIBRARY_SUFFIX=-arm64; \
+  else \
+  export LIBRARY_SUFFIX=; \
+  fi; \
+  fi && \
+  apt update && \
+  apt install -y clang && \
+  apt install -y cmake && \
+  cmake . && \
+  cmake --build . --verbose && \
+  mkdir out && \
+  cp libasnapplication.so.1.0.0 out/libasnapplication${LIBRARY_SUFFIX}.so
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
@@ -48,6 +62,9 @@ RUN apt update && \
 # Build container for jextract
 #
 FROM openjdk:22-jdk-slim AS jextract
+ARG TARGETARCH=amd64
+ARG JEXTRACT_ARCH=x64
+ARG LIBRARY_SUFFIX=
 USER root
 WORKDIR /build
 
@@ -60,23 +77,29 @@ COPY --from=build-shared ./build/out                        /build/out/
 
 ENV JEXTRACT="/jextract/jextract-22/bin/jextract"
 
-RUN apt update && \
-     apt install -y build-essential libncurses5 wget && \
-     mkdir /jextract && \
-     wget -nc -O /jextract/jextract.tar.gz --show-progress https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz && \
-     mkdir java-src && \
-     cd /jextract && \
-     tar -xzvf jextract.tar.gz && \
-     chmod gu+x $JEXTRACT && \
-     cd /build && \
-     $JEXTRACT --include-dir /build/headers \
-       --output /build/java-src \
-       --target-package generated \
-       --library asnapplication \
-       /build/src/convert.h
+# Set jextract architecture based on TARGETARCH if not explicitly provided
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+  export JEXTRACT_ARCH=aarch64; \
+  elif [ "$TARGETARCH" = "amd64" ]; then \
+  export JEXTRACT_ARCH=x64; \
+  fi && \
+  apt update && \
+  apt install -y build-essential libncurses5 wget && \
+  mkdir /jextract && \
+  wget -nc -O /jextract/jextract.tar.gz --show-progress https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-${JEXTRACT_ARCH}_bin.tar.gz && \
+  mkdir java-src && \
+  cd /jextract && \
+  tar -xzvf jextract.tar.gz && \
+  chmod gu+x $JEXTRACT && \
+  cd /build && \
+  $JEXTRACT --include-dir /build/headers \
+  --output /build/java-src \
+  --target-package generated \
+  --library asnapplication \
+  /build/src/convert.h
 
 
- ## Entrypoint for debugging
+## Entrypoint for debugging
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
 CMD ["/build/run-jextract.sh"]
 

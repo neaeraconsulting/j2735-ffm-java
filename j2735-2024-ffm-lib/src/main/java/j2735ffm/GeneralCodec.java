@@ -27,6 +27,8 @@ import static generated.convert_h.convert_bytes;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 import static j2735ffm.AsnEncoding.XER;
@@ -124,22 +126,9 @@ public class GeneralCodec {
      */
     public byte[] convertGeneral(byte[] inputBytes, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding) {
         log.debug("convertGeneral PDU: {}, {} -> {}", pdu, fromEncoding, toEncoding);
-        if (!fromEncoding.isSupported()) {
-            String errMsg = String.format("Unsupported fromEncoding: %s", fromEncoding);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
-        if (!toEncoding.isSupported()) {
-            String errMsg = String.format("Unsupported toEncoding: %s", toEncoding);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
+        validateSupportedEncoding(fromEncoding, toEncoding);
         final long inputBufferSize = fromEncoding.isBinary() ? binaryBufferSize : textBufferSize;
-        if (inputBytes.length > inputBufferSize) {
-            String errMsg = String.format("Input message too large: %d > %d", inputBytes.length, inputBufferSize);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
+        validateInputSize(inputBytes, inputBufferSize);
         final long outputBufferSize = toEncoding.isBinary() ? binaryBufferSize : textBufferSize;
         try (var arena = Arena.ofConfined()) {
             MemorySegment inputBuffer = arena.allocate(inputBufferSize);
@@ -153,6 +142,46 @@ public class GeneralCodec {
         }
     }
 
+    /**
+     * Batch conversion reusing the input and output buffers
+     * @param inputBytesList List of encoded messages
+     * @param pdu The PDU to convert
+     * @param fromEncoding The input encoding: xer, oer, or uper
+     * @param toEncoding The output encoding: xer, oer, or uper
+     * @return List of decoded messages
+     */
+    public List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding) {
+        log.debug("convertBatch PDU: {}, {} -> {}", pdu, fromEncoding, toEncoding);
+        validateSupportedEncoding(fromEncoding, toEncoding);
+        final long inputBufferSize = fromEncoding.isBinary() ? binaryBufferSize : textBufferSize;
+        final long outputBufferSize = toEncoding.isBinary() ? binaryBufferSize : textBufferSize;
+        List<byte[]> outputBytesList = new ArrayList<>();
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment inputBuffer = arena.allocate(inputBufferSize);
+            MemorySegment outputBuffer = arena.allocate(outputBufferSize);
+            MemorySegment errorBuffer = arena.allocate(errorBufferSize);
+            for (byte[] inputBytes : inputBytesList) {
+                if (inputBytes.length > inputBufferSize) {
+                    String errMsg = String.format("One batched input message is too large: %d > %d",
+                        inputBytes.length, inputBufferSize);
+                    log.error(errMsg);
+                    continue;
+                }
+                try {
+                    byte[] outputBytes = convert(arena, inputBytes, fromEncoding.getName(),
+                        toEncoding.getName(), inputBuffer, outputBuffer, outputBufferSize,
+                        errorBuffer,
+                        errorBufferSize, pdu);
+                    outputBytesList.add(outputBytes);
+                } catch (ConvertException ce) {
+                    log.error("error converting one batched item", ce);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return outputBytesList;
+    }
 
     /**
      * Convert an XER encoded MessageFrame to UPER
@@ -161,11 +190,7 @@ public class GeneralCodec {
      */
     public byte[] xerToUper(String pdu, String xer) {
         log.debug("xerToUper: {}", xer);
-        if (xer.length() > textBufferSize) {
-            String errMsg = String.format("Input XER message too large: %d > %d", xer.length(), textBufferSize);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
+        validateXerSize(xer);
         try (var arena = Arena.ofConfined()) {
             MemorySegment inputBuffer = arena.allocate(textBufferSize);
             MemorySegment outputBuffer = arena.allocate(binaryBufferSize);
@@ -185,12 +210,7 @@ public class GeneralCodec {
      */
     public String uperToXer(String pdu, byte[] uper) {
         log.trace("Received {} bytes", uper.length);
-        if (uper.length > binaryBufferSize) {
-            String errMsg = String.format("Input UPER message too large: %d > %d", uper.length,
-                binaryBufferSize);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
+        validateInputSize(uper, binaryBufferSize);
         try (var arena = Arena.ofConfined()) {
             MemorySegment inputBuffer = arena.allocate(binaryBufferSize);
             MemorySegment outputBuffer = arena.allocate(textBufferSize);
@@ -206,22 +226,18 @@ public class GeneralCodec {
 
     /**
      * Convert an XER encoded PDU to OER
-     * @param oer The XER encoded PDU
+     * @param xer The XER encoded PDU
      * @param pdu The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
      * @return Byte array with the OER encoding
      */
-    public byte[] xerToOer(String pdu, String oer) {
-        log.debug("xerToUper: {}", oer);
-        if (oer.length() > textBufferSize) {
-            String errMsg = String.format("Input XER message too large: %d > %d", oer.length(), textBufferSize);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
+    public byte[] xerToOer(String pdu, String xer) {
+        log.debug("xerToOer: {}", xer);
+        validateXerSize(xer);
         try (var arena = Arena.ofConfined()) {
             MemorySegment inputBuffer = arena.allocate(textBufferSize);
             MemorySegment outputBuffer = arena.allocate(binaryBufferSize);
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
-            return convert(arena, oer.getBytes(StandardCharsets.UTF_8), XER.getName(),
+            return convert(arena, xer.getBytes(StandardCharsets.UTF_8), XER.getName(),
                 OER.getName(), inputBuffer, outputBuffer, binaryBufferSize, errorBuffer,
                 errorBufferSize, pdu);
         } catch (Exception e) {
@@ -237,12 +253,7 @@ public class GeneralCodec {
      */
     public String oerToXer(String pdu, byte[] oer) {
         log.trace("Received {} bytes", oer.length);
-        if (oer.length > binaryBufferSize) {
-            String errMsg = String.format("Input OER message too large: %d > %d", oer.length,
-                binaryBufferSize);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
+        validateInputSize(oer, binaryBufferSize);
         try (var arena = Arena.ofConfined()) {
             MemorySegment inputBuffer = arena.allocate(binaryBufferSize);
             MemorySegment outputBuffer = arena.allocate(textBufferSize);
@@ -261,7 +272,7 @@ public class GeneralCodec {
             final String fromEncoding, final String toEncoding, MemorySegment inputBuffer,
             MemorySegment outputBuffer, long outputBufferSize, MemorySegment errorBuffer,
             long errorBufferSize, final String pdu)
-            throws ConvertException{
+            throws ConvertException {
         log.debug("convert: {} {}", fromEncoding, toEncoding);
         byte[] outputArray = null;
 
@@ -292,6 +303,35 @@ public class GeneralCodec {
         MemorySegment.copy(outputBuffer, 0, heapOutput, 0, numOut);
 
         return outputArray;
+    }
+
+    private void validateSupportedEncoding(AsnEncoding fromEncoding, AsnEncoding toEncoding) {
+        if (!fromEncoding.isSupported()) {
+            String errMsg = String.format("Unsupported fromEncoding: %s", fromEncoding);
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
+        }
+        if (!toEncoding.isSupported()) {
+            String errMsg = String.format("Unsupported toEncoding: %s", toEncoding);
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
+        }
+    }
+
+    private void validateXerSize(String xer) {
+        if (xer.length() > textBufferSize) {
+            String errMsg = String.format("Input XER message too large: %d > %d", xer.length(), textBufferSize);
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
+        }
+    }
+
+    private void validateInputSize(byte[] inputBytes, long inputBufferSize) {
+        if (inputBytes.length > inputBufferSize) {
+            String errMsg = String.format("Input message too large: %d > %d", inputBytes.length, inputBufferSize);
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
+        }
     }
 
 }

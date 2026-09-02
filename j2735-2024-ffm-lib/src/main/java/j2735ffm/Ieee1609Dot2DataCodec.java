@@ -18,9 +18,9 @@ public class Ieee1609Dot2DataCodec extends GeneralCodec {
   }
 
   /**
-   * Convert an XER encoded Ieee1609Dot2Data to UPER
+   * Convert an XER encoded Ieee1609Dot2Data to OER
    * @param xer The XER encoded Ieee1609Dot2Data
-   * @return Byte array with the UPER encoding
+   * @return Byte array with the OER encoding
    */
   public byte[] xerToOer(String xer) {
     return super.xerToOer(IEEE1609_DOT2_DATA_PDU, xer);

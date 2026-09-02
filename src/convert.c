@@ -36,6 +36,9 @@ static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev, char * err
     if (strcmp("uper", abbrev) == 0) {
         return ATS_UNALIGNED_BASIC_PER;
     }
+    if (strcmp("oer", abbrev) == 0) {
+    	return ATS_CANONICAL_OER;
+    }
     snprintf(err_buf, err_buf_len, "Unknown encoding: %s  Expect 'xer' or 'uper'.\n", abbrev);
     return ATS_INVALID;
 }

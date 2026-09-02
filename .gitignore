@@ -23,3 +23,7 @@ out.log
 # Visual Studio
 .vs/
 
+# AI Tools
+.claude/
+CLAUDE.md
+

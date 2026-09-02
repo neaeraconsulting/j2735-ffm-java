@@ -1,3 +1,9 @@
+# v2.1.0
+
+* Adds publishing to Maven Central.
+* Adds support for OER (Octet Encoding Rules).
+* Adds `GeneralCodec` and `Ieee1609Dot2DataCodec` classes.
+
 # v2.0.2
 
 Use asn1_codec submodule from usdot repository.

@@ -40,7 +40,7 @@ jobs:
           echo "LIB_VERSION ${{ steps.get_version.outputs.LIB_VERSION }}"
           echo "IS_SNAPSHOT: ${{ steps.get_version.outputs.IS_SNAPSHOT }}"
 
-      - name: Publish Snapshot to Maven Central
+      - name: Publish Release to Maven Central
         if: ${{ steps.get_version.outputs.IS_SNAPSHOT == 'false' }}
         run: |
           chmod +x gradlew

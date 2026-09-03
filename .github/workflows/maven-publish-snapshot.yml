@@ -1,4 +1,4 @@
-# Publish a snapshot that follows all PRs or pushes to the 'snapshot' branch
+# Publish a snapshot on pushes to the 'snapshot' branch
 name: Publish JARs and native libraries to the Maven Central Repository (Snapshots)
 on:
   push:
@@ -26,8 +26,13 @@ jobs:
         id: get_version
         run: |
           chmod +x gradlew
-          echo "LIB_VERSION=$(./gradlew -q getVersion)" >> $GITHUB_OUTPUT
-          echo "IS_SNAPSHOT=${{ endsWith(steps.get_version.outputs.LIB_VERSION, '-SNAPSHOT' ) }}" >> $GITHUB_OUTPUT
+          LIB_VERSION="$(./gradlew -q getVersion)"
+          echo "LIB_VERSION=$LIB_VERSION" >> "$GITHUB_OUTPUT"
+          if [[ "$LIB_VERSION" == *-SNAPSHOT ]]; then
+            echo "IS_SNAPSHOT=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "IS_SNAPSHOT=false" >> "$GITHUB_OUTPUT"
+          fi
         working-directory: j2735-2024-ffm-lib
 
 

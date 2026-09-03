@@ -48,7 +48,7 @@ publishing {
             }
             pom {
                 name = project.name
-                description = 'J2735 codec in C with Java interface via Java the Foreign Function and Memory API'
+                description = 'J2735 codec in C with Java interface via the Java Foreign Function and Memory API'
                 url = 'https://github.com/neaeraconsulting/j2735-ffm-java'
                 inceptionYear = '2025'
                 licenses {

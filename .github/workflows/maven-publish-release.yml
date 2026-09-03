@@ -25,8 +25,13 @@ jobs:
         id: get_version
         run: |
           chmod +x gradlew
-          echo "LIB_VERSION=$(./gradlew -q getVersion)" >> $GITHUB_OUTPUT
-          echo "IS_SNAPSHOT=${{ endsWith(steps.get_version.outputs.LIB_VERSION, '-SNAPSHOT' ) }}" >> $GITHUB_OUTPUT
+          LIB_VERSION="$(./gradlew -q getVersion)"
+          echo "LIB_VERSION=$LIB_VERSION" >> "$GITHUB_OUTPUT"
+          if [[ "$LIB_VERSION" == *-SNAPSHOT ]]; then
+           echo "IS_SNAPSHOT=true" >> "$GITHUB_OUTPUT"
+          else
+           echo "IS_SNAPSHOT=false" >> "$GITHUB_OUTPUT"
+          fi
         working-directory: j2735-2024-ffm-lib
 
 

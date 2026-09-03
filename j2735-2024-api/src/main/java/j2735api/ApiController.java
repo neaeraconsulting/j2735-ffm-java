@@ -22,6 +22,7 @@ import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -156,7 +157,7 @@ public class ApiController {
         consumes = APPLICATION_XML_VALUE,
         produces = TEXT_PLAIN_VALUE
     )
-    public String xerToUperHexAnyPdu(@RequestBody String xer, @RequestParam("pdu") String pdu) {
+    public String xerToUperHexAnyPdu(@RequestBody String xer, @PathVariable String pdu) {
         byte[] bytes = generalCodec.xerToUper(pdu, xer);
         return HexFormat.of().formatHex(bytes);
     }
@@ -166,7 +167,7 @@ public class ApiController {
         consumes = TEXT_PLAIN_VALUE,
         produces = APPLICATION_XML_VALUE
     )
-    public String uperHexToXerAnyPdu(@RequestBody String uperHex, @RequestParam("pdu") String pdu) {
+    public String uperHexToXerAnyPdu(@RequestBody String uperHex, @PathVariable String pdu) {
         byte[] bytes = HexFormat.of().parseHex(uperHex);
         return generalCodec.uperToXer(pdu, bytes);
     }

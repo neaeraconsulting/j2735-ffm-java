@@ -119,7 +119,7 @@ The `j2735-2024-ffm-lib` project is a Java library that exposes three codec clas
 
 Converts an XER encoded MessageFrame to UPER
 
-* Parameter **xer** - The XER encoded MessageFrame
+* **xer** - The XER encoded MessageFrame
 * **returns** Byte array with the UPER encoding
 
 
@@ -127,7 +127,7 @@ Converts an XER encoded MessageFrame to UPER
 
 Convert an UPER encoded MessageFrame to XER
 
-* Parameter **uper** - The UPER encoded MessageFrame
+* **uper** - The UPER encoded MessageFrame
 * Returns the XER encoded result
 
 ## Ieee1609Dot2DataCodec methods include:
@@ -136,14 +136,14 @@ Convert an UPER encoded MessageFrame to XER
 
 Convert an XER encoded Ieee1609Dot2Data to OER
 
-* Parameter **xer** - The XER encoded Ieee1609Dot2Data
+* **xer** - The XER encoded Ieee1609Dot2Data
 * **returns** Byte array with the OER encoding
 
 ### *String oerToXer(byte[] oer)*
 
 Convert an OER encoded Ieee1609Dot2Data to XER
 
-* Parameter **oer** - The OER encoded Ieee1609Dot2Data
+* **oer** - The OER encoded Ieee1609Dot2Data
 * **returns** XER encoded result
 
 ## GeneralCodec methods include:
@@ -152,52 +152,52 @@ Convert an OER encoded Ieee1609Dot2Data to XER
 
 General purpose conversion function that can convert any PDU to or from any encoding
 
-* Parameter **inputBytes** - Input byte array: XER, or UPER or OER binary
-* Parameter **pdu** - The name of the PDU, e.g. "MessageFrame", "Ieee1609Dot2Data", "VehicleEventFlags", etc.
-* Parameter **fromEncoding** - Input encoding, one of `XER`, `UPER`, or `OER`
-* Parameter **toEncoding** - Output encoding, one of `XER`, `UPER`, or `OER`
+* **inputBytes** - Input byte array: XER, or UPER or OER binary
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame", "Ieee1609Dot2Data", "VehicleEventFlags", etc.
+* **fromEncoding** - Input encoding, one of `XER`, `UPER`, or `OER`
+* **toEncoding** - Output encoding, one of `XER`, `UPER`, or `OER`
 * **returns** The encoded message as bytes (XER results should be converted to a UTF-8 string by the caller)
 
 ### *List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding)*
 
 Batch conversion of a list of messages of the same PDU and encodings, reusing the input and output buffers for efficiency
 
-* Parameter **inputBytesList** - List of encoded messages
-* Parameter **pdu** - The PDU to convert
-* Parameter **fromEncoding** - The input encoding: `XER`, `OER`, or `UPER`
-* Parameter **toEncoding** - The output encoding: `XER`, `OER`, or `UPER`
+* **inputBytesList** - List of encoded messages
+* **pdu** - The PDU to convert
+* **fromEncoding** - The input encoding: `XER`, `OER`, or `UPER`
+* **toEncoding** - The output encoding: `XER`, `OER`, or `UPER`
 * **returns** List of converted messages. Any input message that fails to convert is logged and omitted from the result rather than aborting the batch.
 
 ### *byte[] xerToUper(String pdu, String xer)*
 
 Converts an XER encoded PDU to UPER
 
-* Parameter **pdu** - The Protocol Data Unit, e.g. "MessageFrame"
-* Parameter **xer** - The XER encoded PDU
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame"
+* **xer** - The XER encoded PDU
 * **returns** Byte array with the UPER encoding
 
 ### *String uperToXer(String pdu, byte[] uper)*
 
 Convert a UPER encoded PDU to XER
 
-* Parameter **pdu** - The Protocol Data Unit, e.g. "MessageFrame"
-* Parameter **uper** - The UPER encoded PDU
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame"
+* **uper** - The UPER encoded PDU
 * **returns** The XER encoded result
 
 ### *byte[] xerToOer(String pdu, String xer)*
 
 Convert an XER encoded PDU to OER
 
-* Parameter **pdu** - The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
-* Parameter **xer** - The XER encoded PDU
+* **pdu** - The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
+* **xer** - The XER encoded PDU
 * **returns** Byte array with the OER encoding
 
 ### *String oerToXer(String pdu, byte[] oer)*
 
 Convert an OER encoded PDU to XER
 
-* Parameter **pdu** - The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
-* Parameter **oer** - The OER encoded PDU
+* **pdu** - The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
+* **oer** - The OER encoded PDU
 * **returns** The XER encoded result
 
 ### Usage example

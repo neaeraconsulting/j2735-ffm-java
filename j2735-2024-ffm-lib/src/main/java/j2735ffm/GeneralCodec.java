@@ -26,7 +26,6 @@ import static generated.convert_h.convert_bytes;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -58,8 +57,6 @@ public class GeneralCodec {
      * Buffer size for error messages returned from the native library.
      */
     public final long errorBufferSize;
-
-    private final static Path DEFAULT_LIBRARY_PATH = Paths.get("/usr/lib/libasnapplication.so");
 
     /**
      * Constructor.  Configures the library and loads the underlying native library

@@ -1,5 +1,5 @@
-# Publish a snapshot that follows all PRs or pushes to the 'snapshot' branch
-name: Publish JARs and native libraries to the Maven Central Repository (Snapshots)
+# Publish a release when a GitHub release is created
+name: Publish JARs and native libraries to the Maven Central Repository
 on:
   release:
     types: [ created ]

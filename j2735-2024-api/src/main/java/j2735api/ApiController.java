@@ -15,13 +15,16 @@
 */
 package j2735api;
 
+import j2735ffm.GeneralCodec;
 import j2735ffm.Ieee1609Dot2DataCodec;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import j2735ffm.MessageFrameCodec;
@@ -44,10 +47,14 @@ public class ApiController {
 
     MessageFrameCodec codec;
     Ieee1609Dot2DataCodec dot2Codec;
+    GeneralCodec generalCodec;
 
     @Autowired
-    public ApiController(MessageFrameCodec codec) {
+    public ApiController(MessageFrameCodec codec, Ieee1609Dot2DataCodec dot2Codec,
+        GeneralCodec generalCodec) {
         this.codec = codec;
+        this.dot2Codec = dot2Codec;
+        this.generalCodec = generalCodec;
     }
 
     @GetMapping("/health")
@@ -142,5 +149,25 @@ public class ApiController {
     public String xerToOerHex(@RequestBody String xer) {
         byte[] bytes = dot2Codec.xerToOer(xer);
         return HexFormat.of().formatHex(bytes);
+    }
+
+    @PostMapping(
+        value = "/uper/hex/xer/{pdu}",
+        consumes = APPLICATION_XML_VALUE,
+        produces = TEXT_PLAIN_VALUE
+    )
+    public String xerToUperHexAnyPdu(@RequestBody String xer, @RequestParam("pdu") String pdu) {
+        byte[] bytes = generalCodec.xerToUper(pdu, xer);
+        return HexFormat.of().formatHex(bytes);
+    }
+
+    @PostMapping(
+        value = "/xer/uper/hex/{pdu}",
+        consumes = TEXT_PLAIN_VALUE,
+        produces = APPLICATION_XML_VALUE
+    )
+    public String uperHexToXerAnyPdu(@RequestBody String uperHex, @RequestParam("pdu") String pdu) {
+        byte[] bytes = HexFormat.of().parseHex(uperHex);
+        return generalCodec.uperToXer(pdu, bytes);
     }
 }

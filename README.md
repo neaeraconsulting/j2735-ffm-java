@@ -9,7 +9,98 @@ It enables converting between these ASN.1 encodings:
 * XER - XML Encoding Rules
 * UPER - Unaligned Packed Encoding Rules
 
+## Using the Library
 
+The library is available in Maven Central.  The repository includes both the Java JAR and native libraries for Linux and Windows.  Consuming the native libraries from Maven Central requires some extra configuration for clients.  To use the library from a Gradle project, add a `configurations` section to `build.gradle`:
+
+```groovy
+configurations {
+    nativeLibraryArtifact_windows_x86_64
+    nativeLibraryArtifact_linux_x86_64
+}
+```
+
+Add the Java dependency to the `dependencies` section in the normal way, and also include the native library dependencies as shown:
+
+```groovy
+dependencies {
+    ...
+    implementation 'com.neaeraconsulting:j2735-2024-ffm-lib:2.1.0-beta1'
+    
+    nativeLibraryArtifact_windows_x86_64 (
+            group: 'com.neaeraconsulting',
+            name: 'j2735-2024-ffm-lib',
+            version: '2.1.0-beta1',
+            classifier: 'windows-x86_64',
+            ext: 'dll',
+            transitive: false
+    )
+    
+    nativeLibraryArtifact_linux_x86_64 (
+            group: 'com.neaeraconsulting',
+            name: 'j2735-2024-ffm-lib',
+            version: '2.1.0-beta1',
+            classifier: 'linux-x86_64',
+            ext: 'so',
+            transitive: false
+    )
+}
+```
+
+**Note the "classifier", "ext", and "transitive: false" tags.**
+
+Register tasks to copy the native libraries to the build/libs directory of the client:
+
+```groovy
+def buildDir = project.layout.buildDirectory.get()
+
+// Copy the native library to the build directory - Windows
+tasks.register('copyNativeLibrary_windows_x86_64', Copy) {
+    from configurations.nativeLibraryArtifact_windows_x86_64
+    into "$buildDir/libs"
+    rename { libFileName -> 'asnapplication.dll' }
+}
+
+// Copy the native library to the build directory - Linux
+tasks.register('copyNativeLibrary_linux_x86_64', Copy) {
+    from configurations.nativeLibraryArtifact_linux_x86_64
+    into "$buildDir/libs"
+    rename { libFileName -> 'libasnapplication.so' }
+}
+
+tasks.register('copyDependencies', Copy) {
+    from configurations.runtimeClasspath
+    into "$buildDir/libs"
+}
+```
+
+Add the copy tasks to the build task:
+
+```groovy
+build {
+    dependsOn copyNativeLibrary_linux_x86_64
+    dependsOn copyNativeLibrary_windows_x86_64
+    finalizedBy copyDependencies
+}
+```
+
+Finally, add the native access flag to the client JAR's MANIFEST:
+
+```gradle
+jar {
+    manifest {
+        attributes (
+                'Main-Class': 'org.example.Main',
+                'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' '),
+                'Enable-Native-Access': 'ALL-UNNAMED'
+        )
+    }
+}
+```
+
+to prevent native access warnings when running the client.
+
+Instructions for consuming from a Maven POM are similar, writeup TBD.
 
 ## Usage
 
@@ -37,11 +128,11 @@ Convert an UPER encoded MessageFrame to XER
 ```java
 // Initialize the library
 MessageFrameCodec codec;
-String libResource = System.getProperty("os.name").toLowerCase().contains("win") 
+String libResource = System.getProperty("os.name").toLowerCase().contains("win")
     ? "C:/Users/spongebob/app/asnapplication.dll"       // Use windows library
     : "/home/app/libasnapplication.so";                 // Use Linux library
 Path libPath = Paths.get(libResource);
-MessageFrameCodec codec = new MessageFrameCodec(262144L, 8192L, libPath);
+codec = new MessageFrameCodec(262144L, 8192L, 512L, libPath);
 
 // Convert XER to UPER
 byte[] uper = codec.xerToUper("<MessageFrame><messageId>19</messageId><value><SPAT><intersections><IntersectionState><id><id>12111</id></id><revision>0</revision><status>0000000000000000</status><timeStamp>35176</timeStamp><states><MovementState><signalGroup>2</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime></timing></MovementEvent></state-time-speed></MovementState><MovementState><signalGroup>4</signalGroup><state-time-speed><MovementEvent><eventState><stop-And-Remain/></eventState><timing><minEndTime>22181</minEndTime><maxEndTime>22181</maxEndTime></timing></MovementEvent></state-time-speed></MovementState><MovementState><signalGroup>6</signalGroup><state-time-speed><MovementEvent><eventState><protected-Movement-Allowed/></eventState><timing><minEndTime>22120</minEndTime><maxEndTime>22121</maxEndTime></timing></MovementEvent></state-time-speed></MovementState><MovementState><signalGroup>8</signalGroup><state-time-speed><MovementEvent><eventState><stop-And-Remain/></eventState><timing><minEndTime>21852</minEndTime><maxEndTime>21852</maxEndTime></timing></MovementEvent></state-time-speed></MovementState><MovementState><signalGroup>1</signalGroup><state-time-speed><MovementEvent><eventState><stop-And-Remain/></eventState><timing><minEndTime>21852</minEndTime><maxEndTime>21852</maxEndTime></timing></MovementEvent></state-time-speed></MovementState><MovementState><signalGroup>5</signalGroup><state-time-speed><MovementEvent><eventState><stop-And-Remain/></eventState><timing><minEndTime>21852</minEndTime><maxEndTime>21852</maxEndTime></timing></MovementEvent></state-time-speed></MovementState></states></IntersectionState></intersections></SPAT></value></MessageFrame>");

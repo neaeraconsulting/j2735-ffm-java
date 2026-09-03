@@ -1,0 +1,57 @@
+# Publish a release when a GitHub release is created
+name: Publish JARs and native libraries to the Maven Central Repository
+on:
+  release:
+    types: [ created ]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '22'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '8.13'
+
+      - name: Get Version
+        id: get_version
+        run: |
+          chmod +x gradlew
+          LIB_VERSION="$(./gradlew -q getVersion)"
+          echo "LIB_VERSION=$LIB_VERSION" >> "$GITHUB_OUTPUT"
+          if [[ "$LIB_VERSION" == *-SNAPSHOT ]]; then
+            echo "IS_SNAPSHOT=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "IS_SNAPSHOT=false" >> "$GITHUB_OUTPUT"
+          fi
+        working-directory: j2735-2024-ffm-lib
+
+
+      - name: Echo Version
+        run: |
+          echo "LIB_VERSION ${{ steps.get_version.outputs.LIB_VERSION }}"
+          echo "IS_SNAPSHOT: ${{ steps.get_version.outputs.IS_SNAPSHOT }}"
+
+      - name: Publish Release to Maven Central
+        if: ${{ steps.get_version.outputs.IS_SNAPSHOT == 'false' }}
+        run: |
+          chmod +x gradlew
+          ./gradlew jreleaserConfig
+          ./gradlew publish
+          ./gradlew jreleaserDeploy
+        working-directory: j2735-2024-ffm-lib
+        env:
+          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
+          JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
+          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
+          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.JRELEASER_MAVENCENTRAL_USERNAME }}
+          JRELEASER_MAVENCENTRAL_TOKEN: ${{ secrets.JRELEASER_MAVENCENTRAL_TOKEN }}
+          JRELEASER_GITHUB_TOKEN: 'dummy-github-token-dont-release-to-github'

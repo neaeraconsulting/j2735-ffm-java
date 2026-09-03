@@ -8,6 +8,7 @@ It includes the same complete implementation of J2735 (2024) as the [USDOT asn1_
 It enables converting between these ASN.1 encodings:
 * XER - XML Encoding Rules
 * UPER - Unaligned Packed Encoding Rules
+* OER - Octed Encoding Rules
 
 ## Using the Library
 
@@ -106,22 +107,98 @@ Instructions for consuming from a Maven POM are similar, writeup TBD.
 
 ### Java Library JAR
 
-The `j2735-2024-ffm-lib` project is a Java library that exposes the [MessageFrameCodec](j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java) class which has two methods:
+The `j2735-2024-ffm-lib` project is a Java library that exposes three codec classes:
 
-## `byte[] xerToUper(String xer)`
+* **`GeneralCodec`** - Methods to interconvert any PDU within the J2735, IEEE 1609.2, or SEMI specifications between XER, UPER, and OER.
+* **`MessageFrameCodec`** - Convenience methods for converting J2735 Message Frames between UPER and XER.
+* **`Ieee1609Dot2DataCodec`** - Convenience methods for converting IEEE 1609.2 Data between OER and XER.
+
+## MessageFrameCodec Methods include:
+
+### *byte[] xerToUper(String xer)*
 
 Converts an XER encoded MessageFrame to UPER
 
-* Parameter **xer** The XER encoded MessageFrame
+* **xer** - The XER encoded MessageFrame
 * **returns** Byte array with the UPER encoding
 
 
-## `String uperToXer(byte[] uper)`
+###  *String uperToXer(byte[] uper)*
 
 Convert an UPER encoded MessageFrame to XER
 
-* Parameter **uper** - The UPER encoded MessageFrame
+* **uper** - The UPER encoded MessageFrame
 * Returns the XER encoded result
+
+## Ieee1609Dot2DataCodec methods include:
+
+### *byte[] xerToOer(String xer)*
+
+Convert an XER encoded Ieee1609Dot2Data to OER
+
+* **xer** - The XER encoded Ieee1609Dot2Data
+* **returns** Byte array with the OER encoding
+
+### *String oerToXer(byte[] oer)*
+
+Convert an OER encoded Ieee1609Dot2Data to XER
+
+* **oer** - The OER encoded Ieee1609Dot2Data
+* **returns** XER encoded result
+
+## GeneralCodec methods include:
+
+### *byte[] convertGeneral(byte[] inputBytes, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding)*
+
+General purpose conversion function that can convert any PDU to or from any encoding
+
+* **inputBytes** - Input byte array: XER, or UPER or OER binary
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame", "Ieee1609Dot2Data", "VehicleEventFlags", etc.
+* **fromEncoding** - Input encoding, one of `XER`, `UPER`, or `OER`
+* **toEncoding** - Output encoding, one of `XER`, `UPER`, or `OER`
+* **returns** The encoded message as bytes (XER results should be converted to a UTF-8 string by the caller)
+
+### *List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding)*
+
+Batch conversion of a list of messages of the same PDU and encodings, reusing the input and output buffers for efficiency
+
+* **inputBytesList** - List of encoded messages
+* **pdu** - The PDU to convert
+* **fromEncoding** - The input encoding: `XER`, `OER`, or `UPER`
+* **toEncoding** - The output encoding: `XER`, `OER`, or `UPER`
+* **returns** List of converted messages. Any input message that fails to convert is logged and omitted from the result rather than aborting the batch.
+
+### *byte[] xerToUper(String pdu, String xer)*
+
+Converts an XER encoded PDU to UPER
+
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame"
+* **xer** - The XER encoded PDU
+* **returns** Byte array with the UPER encoding
+
+### *String uperToXer(String pdu, byte[] uper)*
+
+Convert a UPER encoded PDU to XER
+
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame"
+* **uper** - The UPER encoded PDU
+* **returns** The XER encoded result
+
+### *byte[] xerToOer(String pdu, String xer)*
+
+Convert an XER encoded PDU to OER
+
+* **pdu** - The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
+* **xer** - The XER encoded PDU
+* **returns** Byte array with the OER encoding
+
+### *String oerToXer(String pdu, byte[] oer)*
+
+Convert an OER encoded PDU to XER
+
+* **pdu** - The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
+* **oer** - The OER encoded PDU
+* **returns** The XER encoded result
 
 ### Usage example
 
@@ -193,6 +270,8 @@ After regenerating the native libraries to the `lib` folder, also be sure to cop
 
 ```bash
 cd lib
+cp libasnapplication.so ../j2735-2024-ffm-lib/lib/
+cp asnapplication.dll ../j2735-2024-ffm-lib/lib/
 cp libasnapplication.so ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
 cp asnapplication.dll ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
 ```
@@ -226,12 +305,14 @@ IntelliJ IDE, or in VSCode with the REST Client extension.
 The following translation methods are available at base URL https://localhost:4000 
 All methods are POSTs.
 
-| Method        | Description            |
-|---------------|------------------------|
-| /uper/bin/xer | UPER binary to XER     |
-| /uper/hex/xer | UPER hex string to XER |
-| /xer/uper/bin | XER to UPER binary     |
-| /xer/uper/hex | XER to UPER hex string |
+| Method         | Description            |
+|----------------|------------------------|
+| /uper/bin/xer  | UPER binary to XER     |
+| /uper/hex/xer  | UPER hex string to XER |
+| /xer/uper/bin  | XER to UPER binary     |
+| /xer/uper/hex  | XER to UPER hex string |
+| /xer/oer/hex   | XER to OER hex string  |
+| /oer/hex/xer   | OER hex string to XER  |
 
 Content types are:
 
@@ -240,6 +321,7 @@ Content types are:
 | UPER binary | application/octet-stream |
 | UPER hex    | text/plain               |
 | XER         | application/xml          |
+| OER hex     | text/plain               |
 
 ### Demo API Open API Documentation
 

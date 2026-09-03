@@ -9,6 +9,7 @@ on:
       - main
       - develop
       - snapshot
+      - "*"
 jobs:
   test:
     runs-on: ubuntu-latest

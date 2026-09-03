@@ -60,19 +60,18 @@ public class convert_h {
 //    static final SymbolLookup SYMBOL_LOOKUP = SymbolLookup.libraryLookup(System.mapLibraryName("asnapplication"), LIBRARY_ARENA)
 //            .or(SymbolLookup.loaderLookup())
 //            .or(Linker.nativeLinker().defaultLookup());
-    // Make symbol lookup
     public static SymbolLookup SYMBOL_LOOKUP;
 
-    public static final ValueLayout.OfBoolean C_BOOL = ValueLayout.JAVA_BOOLEAN;
-    public static final ValueLayout.OfByte C_CHAR = ValueLayout.JAVA_BYTE;
-    public static final ValueLayout.OfShort C_SHORT = ValueLayout.JAVA_SHORT;
-    public static final ValueLayout.OfInt C_INT = ValueLayout.JAVA_INT;
-    public static final ValueLayout.OfLong C_LONG_LONG = ValueLayout.JAVA_LONG;
-    public static final ValueLayout.OfFloat C_FLOAT = ValueLayout.JAVA_FLOAT;
-    public static final ValueLayout.OfDouble C_DOUBLE = ValueLayout.JAVA_DOUBLE;
+    public static final OfBoolean C_BOOL = ValueLayout.JAVA_BOOLEAN;
+    public static final OfByte C_CHAR = ValueLayout.JAVA_BYTE;
+    public static final OfShort C_SHORT = ValueLayout.JAVA_SHORT;
+    public static final OfInt C_INT = ValueLayout.JAVA_INT;
+    public static final OfLong C_LONG_LONG = ValueLayout.JAVA_LONG;
+    public static final OfFloat C_FLOAT = ValueLayout.JAVA_FLOAT;
+    public static final OfDouble C_DOUBLE = ValueLayout.JAVA_DOUBLE;
     public static final AddressLayout C_POINTER = ValueLayout.ADDRESS
-            .withTargetLayout(MemoryLayout.sequenceLayout(java.lang.Long.MAX_VALUE, JAVA_BYTE));
-    public static final ValueLayout.OfLong C_LONG = ValueLayout.JAVA_LONG;
+            .withTargetLayout(MemoryLayout.sequenceLayout(Long.MAX_VALUE, JAVA_BYTE));
+    public static final OfLong C_LONG = ValueLayout.JAVA_LONG;
     private static final int _STDINT_H = (int)1L;
     /**
      * {@snippet lang=c :

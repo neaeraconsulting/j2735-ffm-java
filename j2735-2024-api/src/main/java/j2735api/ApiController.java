@@ -15,6 +15,7 @@
 */
 package j2735api;
 
+import j2735ffm.Ieee1609Dot2DataCodec;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 public class ApiController {
 
     MessageFrameCodec codec;
+    Ieee1609Dot2DataCodec dot2Codec;
 
     @Autowired
     public ApiController(MessageFrameCodec codec) {
@@ -122,6 +124,23 @@ public class ApiController {
         return codec.uperToXer(bytes);
     }
 
+    @PostMapping(
+        value = "/oer/hex/xer",
+        consumes = TEXT_PLAIN_VALUE,
+        produces = APPLICATION_XML_VALUE
+    )
+    public String oerHexToXer(@RequestBody String oerHex) {
+        byte[] bytes = HexFormat.of().parseHex(oerHex);
+        return dot2Codec.oerToXer(bytes);
+    }
 
-
+    @PostMapping(
+        value = "/xer/oer/hex",
+        consumes = APPLICATION_XML_VALUE,
+        produces = TEXT_PLAIN_VALUE
+    )
+    public String xerToOerHex(@RequestBody String xer) {
+        byte[] bytes = dot2Codec.xerToOer(xer);
+        return HexFormat.of().formatHex(bytes);
+    }
 }

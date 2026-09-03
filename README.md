@@ -8,6 +8,7 @@ It includes the same complete implementation of J2735 (2024) as the [USDOT asn1_
 It enables converting between these ASN.1 encodings:
 * XER - XML Encoding Rules
 * UPER - Unaligned Packed Encoding Rules
+* OER - Octed Encoding Rules
 
 ## Using the Library
 
@@ -193,6 +194,8 @@ After regenerating the native libraries to the `lib` folder, also be sure to cop
 
 ```bash
 cd lib
+cp libasnapplication.so ../j2735-2024-ffm-lib/lib/
+cp asnapplication.dll ../j2735-2024-ffm-lib/lib/
 cp libasnapplication.so ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
 cp asnapplication.dll ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
 ```
@@ -226,12 +229,14 @@ IntelliJ IDE, or in VSCode with the REST Client extension.
 The following translation methods are available at base URL https://localhost:4000 
 All methods are POSTs.
 
-| Method        | Description            |
-|---------------|------------------------|
-| /uper/bin/xer | UPER binary to XER     |
-| /uper/hex/xer | UPER hex string to XER |
-| /xer/uper/bin | XER to UPER binary     |
-| /xer/uper/hex | XER to UPER hex string |
+| Method         | Description            |
+|----------------|------------------------|
+| /uper/bin/xer  | UPER binary to XER     |
+| /uper/hex/xer  | UPER hex string to XER |
+| /xer/uper/bin  | XER to UPER binary     |
+| /xer/uper/hex  | XER to UPER hex string |
+| /xer/oer/hex   | XER to OER hex string  |
+| /oer/hex/xer   | OER hex string to XER  |
 
 Content types are:
 
@@ -240,6 +245,7 @@ Content types are:
 | UPER binary | application/octet-stream |
 | UPER hex    | text/plain               |
 | XER         | application/xml          |
+| OER hex     | text/plain               |
 
 ### Demo API Open API Documentation
 

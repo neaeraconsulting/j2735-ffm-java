@@ -33,17 +33,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HexFormat;
 import java.util.stream.Stream;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-@Slf4j
 public class MessageFrameCodecTest {
 
+  private static final Logger log = LoggerFactory.getLogger(MessageFrameCodecTest.class);
   static MessageFrameCodec codec;
   final static HexFormat hexFormat = HexFormat.of();
 

@@ -1,15 +1,15 @@
 
 plugins {
-    id "io.freefair.lombok" version "8.10.2"
     id 'java'
     id "maven-publish"
     id "org.sonarqube" version "7.2.3.7755"
 }
 
 group = 'usdot.jpo.ode'
-version = '2.0.2'
+version = '3.0.0'
 
-
+def nativeAbiVersion = '1'
+def asn1CodecCommit = '3615085e993f44bacb810a1ac3671977057e0b82'
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -25,6 +25,13 @@ dependencies {
     testImplementation 'org.slf4j:slf4j-simple:2.0.16'
     testImplementation 'org.hamcrest:hamcrest:3.0'
     testImplementation 'commons-io:commons-io:2.20.0'
+}
+
+def linuxX86_64Jar = tasks.register('linuxX86_64Jar', Jar) {
+    archiveClassifier.set('linux-x86_64')
+    from('../lib/libasnapplication.so') {
+        into 'native/linux-x86_64'
+    }
 }
 
 publishing {
@@ -44,20 +51,31 @@ publishing {
             artifactId = project.name
             version = version
             from components.java
+            artifact linuxX86_64Jar
         }
+    }
+}
+
+tasks.withType(Jar).configureEach {
+    manifest {
+        attributes(
+            'Implementation-Title': 'J2735 2024 FFM ASN.1 codec',
+            'Implementation-Version': project.version,
+            'Asn1-Native-ABI-Version': nativeAbiVersion,
+            'Asn1-Codec-Commit': asn1CodecCommit
+        )
     }
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(22)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
 test {
     jvmArgs(["--enable-native-access=ALL-UNNAMED"])
-    systemProperty("jextract.trace.downcalls", "true")
     useJUnitPlatform()
     testLogging.showStandardStreams = true
 }

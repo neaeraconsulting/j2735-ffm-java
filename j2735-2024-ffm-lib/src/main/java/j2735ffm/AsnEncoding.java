@@ -1,13 +1,11 @@
 package j2735ffm;
 
-import lombok.Getter;
-
-@Getter
 public enum AsnEncoding {
   UPER("uper", true, true),
   XER("xer", true, false),
   JER("jer", false, false),
-  OER("oer", false, true),
+  OER("oer", true, true),
+  COER("coer", true, true),
   INVALID("invalid", false, false);
 
   private final String name;
@@ -18,6 +16,18 @@ public enum AsnEncoding {
     this.name = name;
     this.supported = supported;
     this.binary = binary;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public boolean isSupported() {
+    return supported;
+  }
+
+  public boolean isBinary() {
+    return binary;
   }
 
   public static AsnEncoding fromName(String name) {

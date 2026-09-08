@@ -15,8 +15,9 @@
  */
 #include "convert.h"
 #include "../generated-files/2024/asn_application.h"
-#include <stdlib.h>    /* for atoi(3) */
-#include <string.h>    /* for strerror(3) */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 #define PDU_Type_Ptr    NULL
@@ -25,9 +26,8 @@ extern asn_TYPE_descriptor_t *asn_pdu_collection[];
 
 const int RETURN_ERROR = -1;
 
-static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev, char * err_buf, size_t err_buf_len) {
+static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev) {
     if (!abbrev) {
-        snprintf(err_buf, err_buf_len, "Error: NULL encoding parameter\n");
         return ATS_INVALID;
     }
     if (strcmp("xer", abbrev) == 0) {
@@ -36,7 +36,12 @@ static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev, char * err
     if (strcmp("uper", abbrev) == 0) {
         return ATS_UNALIGNED_BASIC_PER;
     }
-    snprintf(err_buf, err_buf_len, "Unknown encoding: %s  Expect 'xer' or 'uper'.\n", abbrev);
+    if (strcmp("oer", abbrev) == 0) {
+        return ATS_BASIC_OER;
+    }
+    if (strcmp("coer", abbrev) == 0) {
+        return ATS_CANONICAL_OER;
+    }
     return ATS_INVALID;
 }
 
@@ -53,6 +58,16 @@ int convert_bytes(const char * pdu_name,
             char * err_buf,
             size_t err_buf_len) {
 
+    if (!err_buf || err_buf_len == 0) {
+        return RETURN_ERROR;
+    }
+    err_buf[0] = '\0';
+    if (!pdu_name || !from_encoding || !to_encoding || !ibuf || !obuf) {
+        snprintf(err_buf, err_buf_len,
+            "INVALID_ARGUMENT: PDU, encodings, input, and output must be non-NULL");
+        return RETURN_ERROR;
+    }
+
     asn_TYPE_descriptor_t *pduType = PDU_Type_Ptr;
 
     asn_TYPE_descriptor_t **pdu = asn_pdu_collection;
@@ -60,18 +75,22 @@ int convert_bytes(const char * pdu_name,
     if(*pdu) {
         pduType = *pdu;
     } else {
-        snprintf(err_buf, err_buf_len, "Unrecognized PDU: %s\n", pdu_name);
+        snprintf(err_buf, err_buf_len, "UNKNOWN_PDU: %s", pdu_name);
         return RETURN_ERROR;
     }
 
-    enum asn_transfer_syntax osyntax = abbrev_to_syntax(to_encoding, err_buf, err_buf_len);
+    enum asn_transfer_syntax osyntax = abbrev_to_syntax(to_encoding);
     if (osyntax == ATS_INVALID) {
-        snprintf(err_buf, err_buf_len, "Unknown output encoding: %s  Expect 'xer' or 'uper'.\n", to_encoding);
+        snprintf(err_buf, err_buf_len,
+            "INVALID_ENCODING: unknown output encoding '%s'; expected xer, uper, oer, or coer",
+            to_encoding);
         return RETURN_ERROR;
     }
-    enum asn_transfer_syntax isyntax = abbrev_to_syntax(from_encoding, err_buf, err_buf_len);
+    enum asn_transfer_syntax isyntax = abbrev_to_syntax(from_encoding);
     if (isyntax == ATS_INVALID) {
-        snprintf(err_buf, err_buf_len, "Unknown input encoding: %s  Expect 'xer' or 'uper'.\n", from_encoding);
+        snprintf(err_buf, err_buf_len,
+            "INVALID_ENCODING: unknown input encoding '%s'; expected xer, uper, oer, or coer",
+            from_encoding);
         return RETURN_ERROR;
     }
 
@@ -81,9 +100,18 @@ int convert_bytes(const char * pdu_name,
     // Decode
     asn_dec_rval_t rval = asn_decode(opt_codec_ctx, isyntax, pduType, &structure, ibuf, ibuf_len);
 
+    if (rval.code == RC_WMORE) {
+        ASN_STRUCT_FREE(*pduType, structure);
+        snprintf(err_buf, err_buf_len,
+            "TRUNCATED_INPUT: %s needs more data after consuming %zu of %zu bytes",
+            pduType->name, rval.consumed, ibuf_len);
+        return RETURN_ERROR;
+    }
     if (rval.code != RC_OK) {
         ASN_STRUCT_FREE(*pduType, structure);
-        snprintf(err_buf, err_buf_len, "%s: Error decoding PDU\n", pduType->name);
+        snprintf(err_buf, err_buf_len,
+            "MALFORMED_INPUT: failed decoding %s after consuming %zu of %zu bytes",
+            pduType->name, rval.consumed, ibuf_len);
         return RETURN_ERROR;
     }
 
@@ -92,7 +120,9 @@ int convert_bytes(const char * pdu_name,
     size_t errlen = sizeof(errbuff);
     int constraint_result = asn_check_constraints(pduType, structure, errbuff, &errlen);
     if (constraint_result != 0) {
-        snprintf(err_buf, err_buf_len, "Decoding was successful, but constraint check failed, can't re-encode: %s\n", errbuff);
+        snprintf(err_buf, err_buf_len,
+            "CONSTRAINT_INVALID: %s decoded but failed constraints: %s",
+            pduType->name, errbuff);
         ASN_STRUCT_FREE(*pduType, structure);
         return RETURN_ERROR;
     }
@@ -101,7 +131,9 @@ int convert_bytes(const char * pdu_name,
     asn_encode_to_new_buffer_result_t enc_result = {NULL, 0, NULL};
     enc_result = asn_encode_to_new_buffer(opt_codec_ctx, osyntax, pduType, structure);
     if (!enc_result.buffer) {
-        snprintf(err_buf, err_buf_len, "Error encoding to %d\n", osyntax);
+        snprintf(err_buf, err_buf_len,
+            "ENCODE_FAILED: failed encoding %s using transfer syntax %d",
+            pduType->name, osyntax);
         ASN_STRUCT_FREE(*pduType, structure);
         return RETURN_ERROR;
     }
@@ -110,8 +142,9 @@ int convert_bytes(const char * pdu_name,
     const size_t num_encoded_bytes = enc_result.result.encoded;
 
     if (num_encoded_bytes > max_obuf_len) {
-        memcpy(obuf, enc_result.buffer, max_obuf_len);
-        snprintf(err_buf, err_buf_len, "Error, truncating output.  Max buffer size %ld is too small\n", max_obuf_len);
+        snprintf(err_buf, err_buf_len,
+            "OUTPUT_LIMIT: %s output requires %zu bytes but limit is %zu",
+            pduType->name, num_encoded_bytes, max_obuf_len);
         free(enc_result.buffer);
         return RETURN_ERROR;
     } else {

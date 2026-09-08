@@ -20,7 +20,7 @@
 #
 # Build container for Java app
 #
-FROM gradle:8.10-jdk22 AS builder
+FROM gradle:9.1.0-jdk25-noble AS builder
 USER root
 WORKDIR /home/app
 
@@ -44,7 +44,7 @@ RUN cd j2735-2024-api && gradle clean build
 #
 # Run container
 #
-FROM eclipse-temurin:22-jre-noble
+FROM eclipse-temurin:25-jre-noble
 WORKDIR /home
 USER root
 

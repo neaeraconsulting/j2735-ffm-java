@@ -1,3 +1,18 @@
+# v3.0.0
+
+Introduces the generic, thread-safe `Asn1Codec` API with XER, UPER, OER, and COER
+conversion. `MessageFrameCodec` remains as a deprecated adapter.
+
+Adds signed `Ieee1609Dot2Data` COER support and direct
+`AdvisorySituationData` UPER support, including the SEMI 16-region maximum.
+Malformed, truncated, constraint, unknown-PDU, output-limit, and native-loading
+errors now have stable categories and Java operation context.
+
+Targets Java 25 and publishes `usdot.jpo.ode:j2735-2024-ffm-lib:3.0.0` plus an
+Ubuntu Noble `linux-x86_64` classifier JAR. Artifact manifests record native ABI
+version `1` and `asn1_codec` commit
+`3615085e993f44bacb810a1ac3671977057e0b82`.
+
 # v2.0.2
 
 Use asn1_codec submodule from usdot repository.

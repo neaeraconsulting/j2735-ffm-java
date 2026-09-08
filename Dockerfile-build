@@ -20,7 +20,7 @@
 #
 # Build container for shared library
 #
-FROM debian:trixie-slim AS build-shared
+FROM ubuntu:24.04 AS build-shared
 USER root
 WORKDIR /build
 
@@ -31,9 +31,8 @@ COPY ./src                                                  /build/src/
 ENV CC=/usr/bin/clang
 
 # Install prereqs
-RUN apt update && \
-    apt install -y clang && \
-    apt install -y cmake && \
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y clang cmake make && \
     cmake . && \
     cmake --build . --verbose && \
     mkdir out && \
@@ -47,7 +46,7 @@ RUN apt update && \
 #
 # Build container for jextract
 #
-FROM openjdk:22-jdk-slim AS jextract
+FROM eclipse-temurin:25-jdk-noble AS jextract
 USER root
 WORKDIR /build
 

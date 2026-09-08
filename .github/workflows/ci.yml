@@ -16,22 +16,31 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v5
+        with:
+          submodules: recursive
       - uses: actions/setup-java@v4
         with:
-          java-version: '22'
+          java-version: '25'
           distribution: 'temurin'
       - name: Print env
         run: env | sort
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5 
         with:
-          gradle-version: '8.13'
+          gradle-version: '9.1.0'
+      - name: Build Ubuntu Noble native library
+        run: |
+          tar -xzf asn1_codec/asn1c_combined/generated-files/2024.tar.gz
+          cmake -S . -B build-native -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-native --parallel
+          cp -L build-native/libasnapplication.so lib/libasnapplication.so
+          cp -L build-native/libasnapplication.so j2735-2024-ffm-lib/src/test/resources/j2735ffm/libasnapplication.so
       - name: Test Library
         run: |
           chmod +x gradlew
-          ./gradlew build test
+          ./gradlew clean build test linuxX86_64Jar
+          jar tf build/libs/j2735-2024-ffm-lib-3.0.0-linux-x86_64.jar | grep native/linux-x86_64/libasnapplication.so
         working-directory: j2735-2024-ffm-lib
-
 
 
 

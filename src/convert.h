@@ -23,18 +23,18 @@
 
 
 /**
- Convert a byte array representation of a J2735 PDU from one encoding to another.
+ Convert a byte array representation of an ASN.1 PDU from one encoding to another.
  UPER format is rww bytes, not hex.
  XER is 8-bit text.
 
  @param pdu_name String with the J2735 PDU, e.g., "MessageFrame", "BasicSafetyMessage".
- @param from_encoding String with the name of the encoding of the input ("XER", or "UPER").
- @param to_encoding Target encoding for the output ("XER", or "UPER").
- @param ibuf The input byte array in raw UPER, or XER text format.
+ @param from_encoding Input encoding: "xer", "uper", "oer", or "coer".
+ @param to_encoding Target encoding: "xer", "uper", "oer", or "coer".
+ @param ibuf The input byte array in the specified encoding.
  @param ibuf_len The length of the input byte array.
  @param obuf The buffer to store the output byte array.
  @param max_obuf_len The maximum length of the output buffer.
- @param err_buf A buffer to store any error messages, populated with the error if the return value is -1.
+ @param err_buf A buffer populated with a stable error category and details when the return value is -1.
  @param err_buf_len The size of the error buffer.
  @return The length of the converted output byte array, or -1 if there was an error doing the conversion.
 */

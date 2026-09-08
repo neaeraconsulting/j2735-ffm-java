@@ -17,7 +17,7 @@ repositories {
 
 
 dependencies {
-    api 'usdot.jpo.ode:j2735-2024-ffm-lib'
+    api 'usdot.jpo.ode:j2735-2024-ffm-lib:3.0.0'
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
     implementation 'commons-io:commons-io:2.18.0'
@@ -43,7 +43,7 @@ dependencies {
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(22)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
@@ -60,7 +60,6 @@ sonar {
         property "sonar.organization", "neaeraconsulting"
     }
 }
-
 
 
 

@@ -3,6 +3,7 @@ plugins {
     id "io.freefair.lombok" version "8.10.2"
     id 'java'
     id "maven-publish"
+    id "org.sonarqube" version "7.2.3.7755"
 }
 
 group = 'usdot.jpo.ode'
@@ -61,3 +62,10 @@ test {
     testLogging.showStandardStreams = true
 }
 
+sonar {
+    properties {
+        // test
+        property "sonar.projectKey", "neaeraconsulting_j2735-ffm-java"
+        property "sonar.organization", "neaeraconsulting"
+    }
+}

@@ -1,0 +1,102 @@
+#   Copyright 2025 Neaera Consulting LLC
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
+#
+#  Windows-container equivalent of Dockerfile-build: builds the shared library as a
+#  Windows DLL and generates java bindings with the windows-x64 jextract build.
+#
+#  Requires a Windows Docker daemon (Windows Server / Docker Desktop in "Windows
+#  containers" mode / a windows-latest GitHub Actions runner). This will NOT build
+#  on a Linux or macOS Docker host.
+#
+#  Host OS build must match (or exceed, with matching isolation) the base image tag
+#  below. Swap ltsc2022 for ltsc2025 if your host is newer.
+#
+
+####################################################################################################
+#
+# Build container for shared library (Windows DLL)
+#
+FROM mcr.microsoft.com/windows/servercore:ltsc2022 AS build-shared
+SHELL ["powershell", "-NoLogo", "-NonInteractive", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+WORKDIR C:\\build
+
+ARG CMAKE_VERSION=4.2.3
+ARG LLVM_MINGW_VERSION=20260908
+ARG NINJA_VERSION=1.13.1
+
+# Self-contained toolchain: llvm-mingw bundles clang/lld/mingw-w64 headers+libs, so no
+# separate Visual Studio Build Tools / Windows SDK install is required. On x86_64 Windows
+# the calling convention is the same for MSVC- and MinGW-built DLLs, so this is ABI-safe
+# for the plain C entry points jextract binds against. Ninja is added because llvm-mingw
+# does not bundle a make.
+RUN Invoke-WebRequest -Uri "https://github.com/Kitware/CMake/releases/download/v$($env:CMAKE_VERSION)/cmake-$($env:CMAKE_VERSION)-windows-x86_64.zip" -OutFile cmake.zip ; \
+    Expand-Archive cmake.zip -DestinationPath C:\\ ; \
+    Rename-Item "C:\\cmake-$($env:CMAKE_VERSION)-windows-x86_64" C:\\cmake ; \
+    Invoke-WebRequest -Uri "https://github.com/mstorsjo/llvm-mingw/releases/download/$($env:LLVM_MINGW_VERSION)/llvm-mingw-$($env:LLVM_MINGW_VERSION)-ucrt-x86_64.zip" -OutFile llvm-mingw.zip ; \
+    Expand-Archive llvm-mingw.zip -DestinationPath C:\\ ; \
+    Rename-Item "C:\\llvm-mingw-$($env:LLVM_MINGW_VERSION)-ucrt-x86_64" C:\\llvm-mingw ; \
+    Invoke-WebRequest -Uri "https://github.com/ninja-build/ninja/releases/download/v$($env:NINJA_VERSION)/ninja-win.zip" -OutFile ninja.zip ; \
+    Expand-Archive ninja.zip -DestinationPath C:\\ninja ; \
+    Remove-Item cmake.zip, llvm-mingw.zip, ninja.zip
+
+ENV PATH="C:\\cmake\\bin;C:\\llvm-mingw\\bin;C:\\ninja;${PATH}"
+
+ADD ./asn1_codec/asn1c_combined/generated-files/2024.tar.gz C:/build/
+COPY ./CMakeLists.txt C:/build/
+COPY ./src            C:/build/src/
+
+# Build the DLL
+RUN cmake -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Release . ; \
+    cmake --build . --verbose ; \
+    New-Item -ItemType Directory -Force out | Out-Null ; \
+    Copy-Item libasnapplication.dll out\\asnapplication.dll
+
+## Entrypoint for debugging
+#ENTRYPOINT ["powershell", "-Command", "while ($true) { Start-Sleep -Seconds 3600 }"]
+
+
+####################################################################################################
+#
+# Build container for jextract
+#
+FROM eclipse-temurin:25-jdk-windowsservercore-ltsc2022 AS jextract
+SHELL ["powershell", "-NoLogo", "-NonInteractive", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+WORKDIR C:\\build
+
+ARG JEXTRACT_VERSION=25
+ARG JEXTRACT_EA=2
+ARG JEXTRACT_BUILD=2-4
+
+ADD ./j2735-2024-ffm-lib                              C:/build/lib
+COPY --from=build-shared C:/build/generated-files/2024 C:/build/generated-files/2024/
+COPY --from=build-shared C:/build/src/*.h              C:/build/src/
+ADD ./run-jextract.ps1                                C:/build/
+COPY --from=build-shared C:/build/out                  C:/build/out/
+
+ENV JEXTRACT="C:\\jextract\\jextract-25\\bin\\jextract.bat"
+
+RUN Invoke-WebRequest -Uri "https://download.java.net/java/early_access/jextract/$($env:JEXTRACT_VERSION)/$($env:JEXTRACT_EA)/openjdk-$($env:JEXTRACT_VERSION)-jextract+$($env:JEXTRACT_BUILD)_windows-x64_bin.tar.gz" -OutFile jextract.tar.gz ; \
+    New-Item -ItemType Directory -Force C:\\jextract | Out-Null ; \
+    tar -xzf jextract.tar.gz -C C:\\jextract ; \
+    Remove-Item jextract.tar.gz ; \
+    & $env:JEXTRACT --include-dir C:\\build\\headers `
+        --output C:\\build\\java-src `
+        --target-package generated `
+        --library asnapplication `
+        C:\\build\\src\\convert.h
+
+## Entrypoint for debugging
+#ENTRYPOINT ["powershell", "-Command", "while ($true) { Start-Sleep -Seconds 3600 }"]
+CMD ["powershell", "-File", "C:\\build\\run-jextract.ps1"]

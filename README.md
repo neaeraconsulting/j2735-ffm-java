@@ -163,7 +163,7 @@ Prerequisites:
 
 * Java 25 is required to build and use version 3.x of the library.
 * The build scripts require Docker.
-* Visual Studio 2022 is required to rebuild for Windows.
+* Windows Pro 11 with Docker Desktop is required to run the Windows build scripts.
 
 To get started check out the repository with submodules
 
@@ -183,11 +183,40 @@ which pulls in the generated C files from asn1_codec, compiles them with the C A
 
 The unzipped C files are copied to the `generated-files` folder.  They are not persisted to the repo since they are identical to the files from asn1_codec, but it can be useful to have the unzipped files for debugging the `src/convert.h` API in an IDE.  
 
-The compiled shared library for Linux is copied to the `lib` folder.
+The compiled shared library is copied to the `lib` folder.
 
-The Java source code from jextract is copied to the `generated-jextract` folder.
+The Java source code for Linux from jextract is copied to the `generated-jextract` folder.
 
-The Windows library doesn't have an automated build process.  It can be recreated using Visual Studio 2022 (not VSCode) with the Clang compiler for Windows.  Some edits to the generated C files are required to build for Windows.  Follow the instructions here: [C codec edits for Windows](generated-files/README.md).  And then build via CMake in Visual Studio.  The `CMakeSettings.json` file contains the Visual Studio configuration to use CMake with the clang compiler.
+The Windows images can only be build on a Windows machine.
+To rebuild the Windows DLL, switch Docker Desktop to Windows Containers, and run:
+
+```powershell
+docker compose -f docker-compose-build-windows.yml up --build -d
+```
+
+The DLL will be copied to the `/lib` folder, and Windows-specific jextract Java code is copied to `/generated-jextract-windows`.  Copy the generated code to:
+
+* folder: `/j2735-2024-ffm-lib/src/main/java/generated`
+  * linux code in subfolder: `/linux`
+  * windows code in subfolder: `/windows`
+
+Edit both copies of `convert_h.java`.  Replace this generated code:
+
+```java
+    static final SymbolLookup SYMBOL_LOOKUP = SymbolLookup.libraryLookup(System.mapLibraryName("asnapplication"), LIBRARY_ARENA)
+            .or(SymbolLookup.loaderLookup())
+            .or(Linker.nativeLinker().defaultLookup());
+```
+
+with this:
+
+```java
+    // Manual project customization: MessageFrameCodec supplies the lookup for
+    // the caller-selected native library path before invoking a downcall.
+    public static SymbolLookup SYMBOL_LOOKUP;
+```
+
+to facilitate the method this library uses for loading the library, instead of the default lookup code.
 
 After regenerating the native libraries to the `lib` folder, also be sure to copy them to the [j2735-2024-ffm-lib/src/test/resources/j2735ffm](j2735-2024-ffm-lib/src/test/resources/j2735ffm) folder since they are required for the unit tests in that Java project via:
 
@@ -196,6 +225,8 @@ cd lib
 cp libasnapplication.so ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
 cp asnapplication.dll ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
 ```
+
+
 
 ## Unit Tests
 

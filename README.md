@@ -30,7 +30,7 @@ dependencies {
     nativeLibraryArtifact_windows_x86_64 (
             group: 'com.neaeraconsulting',
             name: 'j2735-2024-ffm-lib',
-            version: '3.0.0',
+            version: '3.0.0-beta',
             classifier: 'windows-x86_64',
             ext: 'dll',
             transitive: false
@@ -39,7 +39,7 @@ dependencies {
     nativeLibraryArtifact_linux_x86_64 (
             group: 'com.neaeraconsulting',
             name: 'j2735-2024-ffm-lib',
-            version: '3.0.0',
+            version: '3.0.0-beta',
             classifier: 'linux-x86_64',
             ext: 'so',
             transitive: false

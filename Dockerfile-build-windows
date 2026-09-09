@@ -91,10 +91,10 @@ RUN Invoke-WebRequest -Uri "https://download.java.net/java/early_access/jextract
     New-Item -ItemType Directory -Force C:\\jextract | Out-Null ; \
     tar -xzf jextract.tar.gz -C C:\\jextract ; \
     Remove-Item jextract.tar.gz ; \
-    & $env:JEXTRACT --include-dir C:\\build\\headers `
-        --output C:\\build\\java-src `
-        --target-package generated `
-        --library asnapplication `
+    & $env:JEXTRACT --include-dir C:\\build\\headers \
+        --output C:\\build\\java-src \
+        --target-package generated \
+        --library asnapplication \
         C:\\build\\src\\convert.h
 
 ## Entrypoint for debugging

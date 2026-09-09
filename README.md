@@ -8,7 +8,7 @@ It includes the same complete implementation of J2735 (2024) as the [USDOT asn1_
 It enables converting between these ASN.1 encodings:
 * XER - XML Encoding Rules
 * UPER - Unaligned Packed Encoding Rules
-* OER - Octed Encoding Rules
+* OER - Octet Encoding Rules
 
 ## Using the Library
 

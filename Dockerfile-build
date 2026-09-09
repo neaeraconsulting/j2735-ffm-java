@@ -47,7 +47,7 @@ RUN apt update && \
 #
 # Build container for jextract
 #
-FROM openjdk:22-jdk-slim AS jextract
+FROM eclipse-temurin:25-jdk-noble AS jextract
 USER root
 WORKDIR /build
 
@@ -58,12 +58,12 @@ ADD ./run-jextract.sh                                       /build
 COPY --from=build-shared ./build/out                        /build/out/
 
 
-ENV JEXTRACT="/jextract/jextract-22/bin/jextract"
+ENV JEXTRACT="/jextract/jextract-25/bin/jextract"
 
-RUN apt update && \
-     apt install -y build-essential libncurses5 wget && \
+RUN apt-get update && \
+     apt-get install -y --no-install-recommends wget && \
      mkdir /jextract && \
-     wget -nc -O /jextract/jextract.tar.gz --show-progress https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz && \
+     wget -nc -O /jextract/jextract.tar.gz --show-progress https://download.java.net/java/early_access/jextract/25/2/openjdk-25-jextract+2-4_linux-x64_bin.tar.gz && \
      mkdir java-src && \
      cd /jextract && \
      tar -xzvf jextract.tar.gz && \

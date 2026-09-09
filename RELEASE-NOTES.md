@@ -1,3 +1,11 @@
+# v3.0.0
+
+Upgrade the Java library, demo API, CI, and container images from JDK 22 to JDK 25.
+
+Regenerate the Foreign Function and Memory API bindings with the JDK 25 version of jextract.
+
+Java 25 is now the minimum supported build and runtime version.
+
 # v2.0.2
 
 Use asn1_codec submodule from usdot repository.

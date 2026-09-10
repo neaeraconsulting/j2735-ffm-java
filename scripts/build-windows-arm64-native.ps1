@@ -156,8 +156,9 @@ Ensure-Directory $LibDir
 
 Push-Location $RepoRoot
 try {
-    Write-Host "Configuring CMake in $BuildDir"
-    & cmake -G Ninja -S $RepoRoot -B $BuildDir -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Release
+    $compiler = if ((Get-HostCpuArch) -eq 'arm64') { 'clang' } else { 'aarch64-w64-mingw32-clang' }
+    Write-Host "Configuring CMake in $BuildDir (compiler: $compiler)"
+    & cmake -G Ninja -S $RepoRoot -B $BuildDir "-DCMAKE_C_COMPILER=$compiler" -DCMAKE_BUILD_TYPE=Release
     if ($LASTEXITCODE -ne 0) { throw "cmake configure failed with exit code $LASTEXITCODE" }
 
     Write-Host "Building native ARM64 DLL"

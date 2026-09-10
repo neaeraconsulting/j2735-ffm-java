@@ -196,7 +196,7 @@ Prerequisites:
 * Java 25 is required to build and use version 3.x of the library.
 * Docker is required for Linux library builds and for generating C sources.
 * Windows x86_64 with Docker Desktop (Windows containers) is required for the Windows Docker build scripts.
-* Windows ARM64 (Surface) can build the ARM64 DLL natively via [`scripts/build-windows-arm64-native.ps1`](scripts/build-windows-arm64-native.ps1).
+* Windows ARM64 can build the ARM64 DLL natively via [`scripts/build-windows-arm64-native.ps1`](scripts/build-windows-arm64-native.ps1).
 
 To get started check out the repository with submodules
 
@@ -226,7 +226,7 @@ docker compose -f docker-compose-build-arm64.yml up --build -d
 
 Build scripts live in [`scripts/`](scripts/).
 
-#### Native build on Windows ARM64 (Surface / WoA — recommended)
+#### Native build on Windows ARM64
 
 Docker Desktop on Windows ARM64 does **not** support Windows containers. Use the native host build instead (no emulation):
 

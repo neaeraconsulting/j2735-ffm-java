@@ -18,7 +18,7 @@ Set-PSDebug -Trace 1
 # Copy the native library out to the shared volume
 Copy-Item C:\build\out\* C:\build-lib\
 
-# Copy the generated Java code to the shared volume. -Force merges into an
+# Copy the generated C files to the shared volume. -Force merges into an
 # already-populated destination instead of erroring (this folder is likely
 # already populated from a prior Linux build).
 New-Item -ItemType Directory -Force C:\generated-files | Out-Null

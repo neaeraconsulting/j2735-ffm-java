@@ -71,7 +71,7 @@ RUN apt-get update && \
      cd /build && \
      $JEXTRACT --include-dir /build/headers \
        --output /build/java-src \
-       --target-package generated \
+       --target-package generated.linux \
        --library asnapplication \
        /build/src/convert.h
 

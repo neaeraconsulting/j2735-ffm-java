@@ -6,6 +6,8 @@ Regenerate the Foreign Function and Memory API bindings with the JDK 25 version 
 
 Java 25 is now the minimum supported build and runtime version.
 
+Adds dockerfiles to be able to automatically build the Windows dll, and generate correct jextract wrapper code for Windows. 
+
 # v2.0.2
 
 Use asn1_codec submodule from usdot repository.

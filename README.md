@@ -187,7 +187,7 @@ The compiled shared library is copied to the `lib` folder.
 
 The Java source code for Linux from jextract is copied to the `generated-jextract` folder.
 
-The Windows images can only be build on a Windows machine.
+The Windows images can only be built on a Windows machine.
 To rebuild the Windows DLL, switch Docker Desktop to Windows Containers, and run:
 
 ```powershell

@@ -4,14 +4,15 @@ on:
     types:
       - opened
       - edited
+      - synchronize
   push:
     branches:
       - main
       - develop
       - snapshot
-      - "*"
+      - "**"
 jobs:
-  test:
+  test-windows:
     runs-on: windows-2022
     permissions:
       contents: read
@@ -25,6 +26,6 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
         with:
           gradle-version: '9.1.0'
-      - name: Test Library
+      - name: Test Library on Windows
         working-directory: j2735-2024-ffm-lib
         run: .\gradlew.bat build test

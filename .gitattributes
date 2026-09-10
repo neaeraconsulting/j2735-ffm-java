@@ -1,7 +1,8 @@
 #
 # https://help.github.com/articles/dealing-with-line-endings/
 #
-# Linux start script should use lf
+# Linux shell scripts must use lf (CRLF breaks shebang in Docker on Windows)
+*.sh            text eol=lf
 /gradlew        text eol=lf
 
 # These are Windows script files and should use crlf

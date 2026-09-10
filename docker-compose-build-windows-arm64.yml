@@ -1,0 +1,23 @@
+name: build-container-windows-arm64
+services:
+  build-container-windows-arm64:
+    build:
+      context: .
+      dockerfile: Dockerfile-build-windows
+      args:
+        LLVM_MINGW_ARCH: aarch64
+        LIBRARY_SUFFIX: -arm64
+        JEXTRACT_ARCH: x64
+        GENERATE_JEXTRACT: "false"
+    image: build-container-windows-arm64:latest
+    restart: no
+    volumes:
+      - type: bind
+        source: ./j2735-2024-ffm-lib/lib
+        target: C:\build-lib\
+      - type: bind
+        source: ./generated-jextract-windows
+        target: C:\generated-jextract-windows\
+      - type: bind
+        source: ./generated-files
+        target: C:\generated-files\

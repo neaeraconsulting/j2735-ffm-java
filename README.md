@@ -16,7 +16,9 @@ The library is available in Maven Central.  The repository includes both the Jav
 ```groovy
 configurations {
     nativeLibraryArtifact_windows_x86_64
+    nativeLibraryArtifact_windows_aarch64
     nativeLibraryArtifact_linux_x86_64
+    nativeLibraryArtifact_linux_aarch64
 }
 ```
 
@@ -44,6 +46,24 @@ dependencies {
             ext: 'so',
             transitive: false
     )
+
+    nativeLibraryArtifact_linux_aarch64 (
+            group: 'com.neaeraconsulting',
+            name: 'j2735-2024-ffm-lib',
+            version: '3.0.0-beta',
+            classifier: 'linux-aarch64',
+            ext: 'so',
+            transitive: false
+    )
+
+    nativeLibraryArtifact_windows_aarch64 (
+            group: 'com.neaeraconsulting',
+            name: 'j2735-2024-ffm-lib',
+            version: '3.0.0-beta',
+            classifier: 'windows-aarch64',
+            ext: 'dll',
+            transitive: false
+    )
 }
 ```
 
@@ -66,6 +86,18 @@ tasks.register('copyNativeLibrary_linux_x86_64', Copy) {
     from configurations.nativeLibraryArtifact_linux_x86_64
     into "$buildDir/libs"
     rename { libFileName -> 'libasnapplication.so' }
+}
+
+tasks.register('copyNativeLibrary_linux_aarch64', Copy) {
+    from configurations.nativeLibraryArtifact_linux_aarch64
+    into "$buildDir/libs"
+    rename { libFileName -> 'libasnapplication-arm64.so' }
+}
+
+tasks.register('copyNativeLibrary_windows_aarch64', Copy) {
+    from configurations.nativeLibraryArtifact_windows_aarch64
+    into "$buildDir/libs"
+    rename { libFileName -> 'asnapplication-arm64.dll' }
 }
 
 tasks.register('copyDependencies', Copy) {
@@ -163,7 +195,7 @@ Prerequisites:
 
 * Java 25 is required to build and use version 3.x of the library.
 * The build scripts require Docker.
-* Visual Studio 2022 is required to rebuild for Windows.
+* Windows Pro 11 with Docker Desktop is required to run the Windows build scripts.
 
 To get started check out the repository with submodules
 
@@ -189,7 +221,45 @@ docker compose -f docker-compose-build-arm64.yml up --build -d
 
 **Note:** If you're building ARM64 libraries on an x86 CPU, you'll need to use Docker buildx with platform emulation. See the [Cross-Platform Builds](#cross-platform-builds) section below.
 
-### Cross-Platform Builds
+### Building Windows Libraries (Docker)
+
+Windows images can only be built on a Windows machine with Docker Desktop in **Windows containers** mode.
+
+**For windows/amd64 (x86_64):**
+```powershell
+docker compose -f docker-compose-build-windows.yml up --build -d
+```
+
+**For windows/arm64 (aarch64):**
+```powershell
+docker compose -f docker-compose-build-windows-arm64.yml up --build -d
+```
+
+The ARM64 build cross-compiles from an x86_64 Windows container using llvm-mingw. On native Windows ARM64 hardware you can also build via Visual Studio — see [Windows Library (Visual Studio)](#windows-library-visual-studio) below.
+
+The DLL is copied to `j2735-2024-ffm-lib/lib`. Windows-specific jextract Java code is copied to `generated-jextract-windows`. Copy the generated code into the library project:
+
+* folder: `j2735-2024-ffm-lib/src/main/java/generated`
+  * linux code in subfolder: `linux`
+  * windows code in subfolder: `windows`
+
+Edit both copies of `convert_h.java`. Replace this generated code:
+
+```java
+    static final SymbolLookup SYMBOL_LOOKUP = SymbolLookup.libraryLookup(System.mapLibraryName("asnapplication"), LIBRARY_ARENA)
+            .or(SymbolLookup.loaderLookup())
+            .or(Linker.nativeLinker().defaultLookup());
+```
+
+with this:
+
+```java
+    // Manual project customization: MessageFrameCodec supplies the lookup for
+    // the caller-selected native library path before invoking a downcall.
+    public static SymbolLookup SYMBOL_LOOKUP;
+```
+
+### Cross-Platform Linux Builds
 
 When building ARM64 libraries on an x86 CPU (or vice versa), Docker Compose may not work directly due to architecture mismatches. Use Docker buildx instead, which supports cross-platform builds through QEMU emulation.
 
@@ -325,14 +395,16 @@ docker run --rm \
 The build process generates:
 
 - **Native libraries** - Copied to the `j2735-2024-ffm-lib/lib` folder:
-  - `j2735-2024-ffm-lib/lib/libasnapplication.so` (amd64)
-  - `j2735-2024-ffm-lib/lib/libasnapplication-arm64.so` (arm64)
+  - `libasnapplication.so` (linux amd64)
+  - `libasnapplication-arm64.so` (linux arm64)
+  - `asnapplication.dll` (windows amd64)
+  - `asnapplication-arm64.dll` (windows arm64)
 - **Generated C files** - Copied to the `generated-files` folder (useful for debugging the `src/convert.h` API in an IDE)
-- **Java bindings** - Copied to the `generated-jextract` folder (architecture-independent)
+- **Java bindings** - Linux bindings copied to `generated-jextract`; Windows bindings copied to `generated-jextract-windows` (architecture-independent on each OS)
 
-### Windows Library
+### Windows Library (Visual Studio)
 
-The Windows library (`asnapplication.dll`) doesn't have an automated build process. It can be recreated using Visual Studio 2022 (not VSCode) with the Clang compiler for Windows. Some edits to the generated C files are required to build for Windows. Follow the instructions here: [C codec edits for Windows](generated-files/README.md). Then build via CMake in Visual Studio. The `CMakeSettings.json` file contains the Visual Studio configuration to use CMake with the clang compiler.
+As an alternative to the Docker Windows build, the DLL can be recreated using Visual Studio 2022 (not VSCode) with the Clang compiler for Windows. Some edits to the generated C files are required to build for Windows. Follow the instructions here: [C codec edits for Windows](generated-files/README.md). Then build via CMake in Visual Studio. The [CMakeSettings.json](CMakeSettings.json) file contains configurations for x64 and ARM64 (`x64-Clang-Release`, `arm64-Clang-Release`).
 
 ### Copying Libraries for Unit Tests
 
@@ -344,9 +416,12 @@ cd j2735-2024-ffm-lib/lib
 cp libasnapplication.so ../src/test/resources/j2735ffm/
 # Copy arm64 library (if built)
 cp libasnapplication-arm64.so ../src/test/resources/j2735ffm/ 2>/dev/null || true
-# Copy Windows library (if available)
+# Copy Windows libraries (if available)
 cp asnapplication.dll ../src/test/resources/j2735ffm/
+cp asnapplication-arm64.dll ../src/test/resources/j2735ffm/ 2>/dev/null || true
 ```
+
+
 
 ## Unit Tests
 

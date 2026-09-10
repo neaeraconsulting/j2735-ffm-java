@@ -14,3 +14,4 @@ j2735.api:
   error-buffer-size: 256
   library-path: /home/libasnapplication.so
   windows-library-path: C:/temp/asnapplication.dll
+  windows-arm64-library-path: C:/temp/asnapplication-arm64.dll

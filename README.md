@@ -200,15 +200,27 @@ When building ARM64 libraries on an x86 CPU (or vice versa), Docker Compose may 
    docker buildx version
    ```
 
-2. **Set up QEMU emulation** (if not already configured):
+2. **Set up emulation** — steps differ by host OS:
+
+   **Docker Desktop on Windows or macOS** (recommended):
+
+   Docker Desktop ships with ARM64 emulation built in. Switch to the Linux engine before building — do **not** run the `multiarch/qemu-user-static` command (it requires `--privileged`, which is not supported on the Windows container engine and is unnecessary here):
+
    ```bash
-   # For Linux
-   docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-   
-   # Docker Desktop on Windows/macOS includes QEMU automatically
+   docker context use desktop-linux
+   docker buildx use desktop-linux
+   docker buildx inspect --bootstrap
    ```
 
-3. **Create a buildx builder** (if needed):
+   Confirm `linux/arm64` appears in the Platforms list. To switch back to Windows containers later: `docker context use default`.
+
+   **Native Linux** (Docker Engine without Docker Desktop):
+
+   ```bash
+   docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+   ```
+
+3. **Create a buildx builder** (only if `docker buildx inspect --bootstrap` does not list your target platform):
    ```bash
    docker buildx create --name multiarch-builder --use
    docker buildx inspect --bootstrap
@@ -240,6 +252,14 @@ docker run --rm \
 ```
 
 **Windows PowerShell:**
+
+First switch to the Linux engine (see [Prerequisites](#prerequisites) above):
+```powershell
+docker context use desktop-linux
+docker buildx use desktop-linux
+```
+
+Then build and extract artifacts:
 ```powershell
 # Build for ARM64 on x86 CPU
 docker buildx build `

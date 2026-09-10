@@ -126,7 +126,7 @@ ARG GENERATE_JEXTRACT=true
 ADD ./j2735-2024-ffm-lib                              C:/build/lib
 COPY --from=build-shared C:/build/generated-files/2024 C:/build/generated-files/2024/
 COPY --from=build-shared C:/build/src                  C:/build/src/
-ADD ./run-jextract.ps1                                C:/build/
+ADD ./scripts/run-jextract.ps1                          C:/build/
 COPY --from=build-shared C:/build/out                  C:/build/out/
 
 ENV JEXTRACT="C:\\jextract\\jextract-25\\bin\\jextract.bat"

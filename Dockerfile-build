@@ -71,7 +71,7 @@ WORKDIR /build
 ADD ./j2735-2024-ffm-lib                                    /build/lib
 COPY --from=build-shared ./build/generated-files/2024       /build/generated-files/2024/
 COPY --from=build-shared ./build/src/*.h                    /build/src/
-ADD ./run-jextract.sh                                       /build
+ADD ./scripts/run-jextract.sh                                       /build
 COPY --from=build-shared ./build/out                        /build/out/
 
 

@@ -26,11 +26,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HexFormat;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
@@ -55,20 +52,14 @@ public class MessageFrameCodecTest {
   @BeforeAll
   public static void setup() {
 
-    String libResource = isWindows() ? "j2735ffm/asnapplication.dll" : "j2735ffm/libasnapplication.so";
-    URL url = MessageFrameCodecTest.class.getClassLoader().getResource(libResource);
-    log.info("Loading library {}", libResource);
+    Path libPath = LibraryDetector.findLibraryFromResource("j2735ffm", "asnapplication");
+    log.info("Loading library {}", libPath);
 
-    if (url == null) {
+    if (libPath == null) {
       throw new RuntimeException("libasnapplication not found");
     }
-    try {
-      Path libPath = Paths.get(url.toURI());
-      codec = new MessageFrameCodec(262144L, 8192L, 256L, libPath);
-      log.info("Created codec");
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
-    }
+    codec = new MessageFrameCodec(262144L, 8192L, 256L, libPath);
+    log.info("Created codec");
 
   }
 

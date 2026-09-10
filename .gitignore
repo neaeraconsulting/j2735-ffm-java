@@ -5,6 +5,7 @@
 build
 
 .idea/
+.profileconfig.json
 
 bin/
 **/bin/
@@ -21,3 +22,4 @@ out.log
 
 # Visual Studio
 .vs/
+

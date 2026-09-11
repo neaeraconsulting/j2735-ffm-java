@@ -220,7 +220,7 @@ docker compose -f docker-compose-build.yml up --build -d
 docker compose -f docker-compose-build-arm64.yml up --build -d
 ```
 
-**Note:** If you're building ARM64 libraries on an x86 CPU, you'll need to use Docker buildx with platform emulation. See the [Cross-Platform Builds](#cross-platform-builds) section below.
+**Note:** If you're building ARM64 libraries on an x86 CPU, you'll need to use Docker buildx with platform emulation. See the [Cross-Platform Linux Builds](#cross-platform-linux-builds) section below.
 
 ### Building Windows Libraries
 
@@ -276,6 +276,8 @@ with this:
     // the caller-selected native library path before invoking a downcall.
     public static SymbolLookup SYMBOL_LOOKUP;
 ```
+
+to facilitate the method this library uses for loading the library, instead of the default lookup code.
 
 ### Cross-Platform Linux Builds
 
@@ -384,7 +386,7 @@ docker compose -f docker-compose-build.yml up --build -d
 docker compose -f docker-compose-build-arm64.yml up --build -d
 ```
 
-**If building ARM64 on an x86 CPU**, use Docker buildx for the ARM64 build (see [Cross-Platform Builds](#cross-platform-builds) above):
+**If building ARM64 on an x86 CPU**, use Docker buildx for the ARM64 build (see [Cross-Platform Linux Builds](#cross-platform-linux-builds) above):
 ```bash
 # Build for amd64 (native)
 docker compose -f docker-compose-build.yml up --build -d

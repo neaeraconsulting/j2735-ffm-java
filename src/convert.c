@@ -56,7 +56,8 @@ int convert_bytes(const char * pdu_name,
             uint8_t * obuf,
             size_t max_obuf_len,
             char * err_buf,
-            size_t err_buf_len) {
+            size_t err_buf_len,
+            int check_constraints) {
 
     asn_TYPE_descriptor_t *pduType = PDU_Type_Ptr;
 
@@ -97,12 +98,14 @@ int convert_bytes(const char * pdu_name,
     // Check constraints
     char errbuff[256];
     size_t errlen = sizeof(errbuff);
-    int constraint_result = asn_check_constraints(pduType, structure, errbuff, &errlen);
-    if (constraint_result != 0) {
-        snprintf(err_buf, err_buf_len,
-          "Decoding was successful, but constraint check failed, can't re-encode: %s\n", errbuff);
-        ASN_STRUCT_FREE(*pduType, structure);
-        return RETURN_ERROR;
+    if (check_constraints) {
+      int constraint_result = asn_check_constraints(pduType, structure, errbuff, &errlen);
+      if (constraint_result != 0) {
+          snprintf(err_buf, err_buf_len,
+            "Decoding was successful, but constraint check failed, can't re-encode: %s\n", errbuff);
+          ASN_STRUCT_FREE(*pduType, structure);
+          return RETURN_ERROR;
+      }
     }
 
     // Encode
@@ -131,6 +134,8 @@ int convert_bytes(const char * pdu_name,
     return num_encoded_bytes;
 
 }
+
+
 
 
 

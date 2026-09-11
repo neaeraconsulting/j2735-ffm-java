@@ -103,7 +103,17 @@ public class GeneralCodecTest {
   @MethodSource("ieee1609OerHex")
   public void convertGeneral_oerToXer_and_back_ieee1609(final String oerHex) {
     byte[] oer = hexNoWs(oerHex);
-    byte[] xerBytes = codec.convertGeneral(oer, IEEE_1609_PDU, OER, XER);
+    byte[] xerBytes = null;
+    try {
+      xerBytes = codec.convertGeneral(oer, IEEE_1609_PDU, OER, XER);
+    } catch (Throwable e) {
+      // Try again without constraint check in the event of error to log output
+      xerBytes = codec.convertGeneral(oer, IEEE_1609_PDU, OER, XER, false);
+      assertThat("xer is null", xerBytes, notNullValue());
+      String xer = new String(xerBytes, StandardCharsets.UTF_8);
+      log.info("xer: {}", xer);
+      throw e;
+    }
     assertThat("xer is null", xerBytes, notNullValue());
     String xer = new String(xerBytes, StandardCharsets.UTF_8);
     log.info("xer: {}", xer);

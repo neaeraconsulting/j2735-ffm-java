@@ -124,7 +124,7 @@ public class GeneralCodec {
 
     /**
      * General purpose conversion function that can convert any PDU to or from
-     * any encoding.
+     * any encoding.  Includes constraint check.
      * @param inputBytes Input byte array: XER, or UPER or OER binary
      * @param pdu The name of the PDU, e.g., "MessageFrame", "MessageFrame", "VehicleEventFlags", etc.
      * @param fromEncoding Input encoding, may be "xer", "uper", or "oer"
@@ -132,6 +132,21 @@ public class GeneralCodec {
      * @return The encoded message as bytes or UTF-8 string
      */
     public byte[] convertGeneral(byte[] inputBytes, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding) {
+        return convertGeneral(inputBytes, pdu, fromEncoding, toEncoding, true);
+    }
+
+    /**
+     * General purpose conversion function that can convert any PDU to or from
+     * any encoding.
+     * @param inputBytes Input byte array: XER, or UPER or OER binary
+     * @param pdu The name of the PDU, e.g., "MessageFrame", "MessageFrame", "VehicleEventFlags", etc.
+     * @param fromEncoding Input encoding, may be "xer", "uper", or "oer"
+     * @param toEncoding Output encoding, may be "xer", "uper", or "oer"
+     * @param checkConstraints whether to check constraints
+     * @return The encoded message as bytes or UTF-8 string
+     */
+    public byte[] convertGeneral(byte[] inputBytes, String pdu, AsnEncoding fromEncoding,
+            AsnEncoding toEncoding, boolean checkConstraints) {
         log.debug("convertGeneral PDU: {}, {} -> {}", pdu, fromEncoding, toEncoding);
         validateSupportedEncoding(fromEncoding, toEncoding);
         final long inputBufferSize = fromEncoding.isBinary() ? binaryBufferSize : textBufferSize;
@@ -143,10 +158,23 @@ public class GeneralCodec {
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
             return convert(arena, inputBytes, fromEncoding.getName(),
                 toEncoding.getName(), inputBuffer, outputBuffer, outputBufferSize, errorBuffer,
-                errorBufferSize, pdu);
+                errorBufferSize, pdu, checkConstraints);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Batch conversion reusing the input and output buffers.  Includes constraint check.
+     * @param inputBytesList List of encoded messages
+     * @param pdu The PDU to convert
+     * @param fromEncoding The input encoding: xer, oer, or uper
+     * @param toEncoding The output encoding: xer, oer, or uper
+     * @return List of decoded messages
+     */
+    public List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu,
+        AsnEncoding fromEncoding, AsnEncoding toEncoding) {
+        return convertBatch(inputBytesList, pdu, fromEncoding, toEncoding, true);
     }
 
     /**
@@ -155,9 +183,11 @@ public class GeneralCodec {
      * @param pdu The PDU to convert
      * @param fromEncoding The input encoding: xer, oer, or uper
      * @param toEncoding The output encoding: xer, oer, or uper
+     * @param checkConstraints Whether to check constraints
      * @return List of decoded messages
      */
-    public List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding) {
+    public List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu,
+        AsnEncoding fromEncoding, AsnEncoding toEncoding, boolean checkConstraints) {
         log.debug("convertBatch PDU: {}, {} -> {}", pdu, fromEncoding, toEncoding);
         validateSupportedEncoding(fromEncoding, toEncoding);
         final long inputBufferSize = fromEncoding.isBinary() ? binaryBufferSize : textBufferSize;
@@ -178,7 +208,7 @@ public class GeneralCodec {
                     byte[] outputBytes = convert(arena, inputBytes, fromEncoding.getName(),
                         toEncoding.getName(), inputBuffer, outputBuffer, outputBufferSize,
                         errorBuffer,
-                        errorBufferSize, pdu);
+                        errorBufferSize, pdu, checkConstraints);
                     outputBytesList.add(outputBytes);
                 } catch (ConvertException ce) {
                     log.error("error converting one batched item", ce);
@@ -191,7 +221,8 @@ public class GeneralCodec {
     }
 
     /**
-     * Convert an XER encoded MessageFrame to UPER
+     * Convert an XER encoded MessageFrame to UPER.
+     * Always check constraints going to UPER.
      * @param xer The XER encoded MessageFrame
      * @return Byte array with the UPER encoding
      */
@@ -204,18 +235,30 @@ public class GeneralCodec {
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
             return convert(arena, xer.getBytes(StandardCharsets.UTF_8), XER.getName(),
                 UPER.getName(), inputBuffer, outputBuffer, binaryBufferSize, errorBuffer,
-                errorBufferSize, pdu);
+                errorBufferSize, pdu, true);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
-     * Convert an UPER encoded MessageFrame to XER
+     * Convert an UPER encoded MessageFrame to XER.  Includes constraint check.
+     * @param pdu The PDU to encode
      * @param uper The UPER encoded MessageFrame
      * @return XER encoded result
      */
     public String uperToXer(String pdu, byte[] uper) {
+        return uperToXer(pdu, uper, true);
+    }
+
+    /**
+     * Convert an UPER encoded MessageFrame to XER
+     * @param pdu The PDU to encode
+     * @param uper The UPER encoded MessageFrame
+     * @param checkConstraints Whether to check constraints.
+     * @return XER encoded result
+     */
+    public String uperToXer(String pdu, byte[] uper, boolean checkConstraints) {
         log.trace("Received {} bytes", uper.length);
         validateInputSize(uper, binaryBufferSize);
         try (var arena = Arena.ofConfined()) {
@@ -224,7 +267,7 @@ public class GeneralCodec {
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
             byte[] xerBytes = convert(arena, uper, UPER.getName(), XER.getName(),
                 inputBuffer, outputBuffer, textBufferSize, errorBuffer, errorBufferSize,
-                pdu);
+                pdu, checkConstraints);
             return new String(xerBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -232,7 +275,8 @@ public class GeneralCodec {
     }
 
     /**
-     * Convert an XER encoded PDU to OER
+     * Convert an XER encoded PDU to OER.
+     * Always check constraints going to OER.
      * @param xer The XER encoded PDU
      * @param pdu The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
      * @return Byte array with the OER encoding
@@ -246,19 +290,30 @@ public class GeneralCodec {
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
             return convert(arena, xer.getBytes(StandardCharsets.UTF_8), XER.getName(),
                 OER.getName(), inputBuffer, outputBuffer, binaryBufferSize, errorBuffer,
-                errorBufferSize, pdu);
+                errorBufferSize, pdu, true);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
-     * Convert an OER encoded PDU to XER
+     * Convert an OER encoded PDU to XER. Includes constraint check.
      * @param oer The OER encoded PDU
      * @param pdu The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
      * @return XER encoded result
      */
     public String oerToXer(String pdu, byte[] oer) {
+        return oerToXer(pdu, oer, true);
+    }
+
+    /**
+     * Convert an OER encoded PDU to XER
+     * @param oer The OER encoded PDU
+     * @param pdu The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
+     * @param checkConstraints Whether to check constraints
+     * @return XER encoded result
+     */
+    public String oerToXer(String pdu, byte[] oer, boolean checkConstraints) {
         log.trace("Received {} bytes", oer.length);
         validateInputSize(oer, binaryBufferSize);
         try (var arena = Arena.ofConfined()) {
@@ -267,7 +322,7 @@ public class GeneralCodec {
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
             byte[] xerBytes = convert(arena, oer, OER.getName(), XER.getName(),
                 inputBuffer, outputBuffer, textBufferSize, errorBuffer, errorBufferSize,
-                pdu);
+                pdu, checkConstraints);
             return new String(xerBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -278,9 +333,9 @@ public class GeneralCodec {
     private byte[] convert(Arena arena, final byte[] bytes,
             final String fromEncoding, final String toEncoding, MemorySegment inputBuffer,
             MemorySegment outputBuffer, long outputBufferSize, MemorySegment errorBuffer,
-            long errorBufferSize, final String pdu)
+            long errorBufferSize, final String pdu, boolean checkConstraints)
             throws ConvertException {
-        log.debug("convert: {} {}", fromEncoding, toEncoding);
+        log.debug("convert: {} {}, check constraints: {}", fromEncoding, toEncoding, checkConstraints);
         byte[] outputArray = null;
 
         MemorySegment heapBytes = MemorySegment.ofArray(bytes);
@@ -291,15 +346,18 @@ public class GeneralCodec {
         MemorySegment toEncodingSeg = arena.allocateFrom(toEncoding, StandardCharsets.UTF_8);
         log.debug("calling convert_bytes");
         long numOut = 0;
+        int iCheckConstraints = checkConstraints ? 1 : 0;
         try {
             if (IS_WINDOWS) {
                 numOut = generated.windows.convert_h.convert_bytes(pduName, fromEncodingSeg,
                     toEncodingSeg, inputBuffer,
-                    bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize);
+                    bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize,
+                    iCheckConstraints);
             } else {
                 numOut = generated.linux.convert_h.convert_bytes(pduName, fromEncodingSeg,
                     toEncodingSeg, inputBuffer,
-                    bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize);
+                    bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize,
+                    iCheckConstraints);
             }
         } catch (Throwable ex) {
             log.error("error converting",ex);
@@ -333,8 +391,10 @@ public class GeneralCodec {
     }
 
     private void validateXerSize(String xer) {
-        if (xer.length() > textBufferSize) {
-            String errMsg = String.format("Input XER message too large: %d > %d", xer.length(), textBufferSize);
+        final int xerByteLength = xer.getBytes(StandardCharsets.UTF_8).length;
+        if (xerByteLength > textBufferSize) {
+            String errMsg = String.format("Input XER message too large: %d > %d", xerByteLength,
+                textBufferSize);
             log.error(errMsg);
             throw new IllegalArgumentException(errMsg);
         }

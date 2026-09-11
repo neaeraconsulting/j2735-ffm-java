@@ -86,6 +86,7 @@ public class Ieee1609Dot2DataCodecTest {
   @Test
   public void oerToXer_signed() {
     String xer = codec.oerToXer(hexNoWs(loadResource("Ieee1609Dot2Data_signed.hex")));
+    log.info("xer from oer: {}", xer);
     assertThat(xer, notNullValue());
     assertThat(xer, containsString("<signedData>"));
   }

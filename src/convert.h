@@ -36,6 +36,12 @@
  @param max_obuf_len The maximum length of the output buffer.
  @param err_buf A buffer to store any error messages, populated with the error if the return value is -1.
  @param err_buf_len The size of the error buffer.
+ @param check_constraints Whether to check constraints.  1 = check constraints, 0 = don't check.
+ Generally it is good to check constraints but it can be useful to disable the check to see
+ the re-encoded output in case of violation.  The encoding with constraint violations is more likely to succeed if the
+ target encoding is textual (e.g. XER).  If the target is a binary format it may or may not be
+ possible to encode messages with constraint violations in which case a more cryptic error message
+ would be produced without the constraint check.
  @return The length of the converted output byte array, or -1 if there was an error doing the conversion.
 */
 int convert_bytes(
@@ -47,7 +53,8 @@ int convert_bytes(
     uint8_t * obuf,
     size_t max_obuf_len,
     char * err_buf,
-    size_t err_buf_len);
+    size_t err_buf_len,
+    int check_constraints);
 
 
 

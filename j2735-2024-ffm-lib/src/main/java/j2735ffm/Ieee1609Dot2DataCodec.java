@@ -35,4 +35,15 @@ public class Ieee1609Dot2DataCodec extends GeneralCodec {
     return super.oerToXer(IEEE1609_DOT2_DATA_PDU, oer);
   }
 
+  /**
+   * Convert an OER encoded Ieee1609Dot2Data to XER. Allows producing
+   * XER with constraint violations.  This is usually not recommended but can be useful for
+   * diagnostic purposes.
+   * @param oer The OER encoded Ieee1609Dot2Data
+   * @return XER encoded result
+   */
+  public String oerToXerNoConstraintCheck(byte[] oer) {
+    return super.oerToXer(IEEE1609_DOT2_DATA_PDU, oer);
+  }
+
 }

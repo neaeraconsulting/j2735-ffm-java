@@ -59,4 +59,15 @@ public class MessageFrameCodec extends GeneralCodec {
         return super.uperToXer(MESSAGE_FRAME_PDU, uper);
     }
 
+    /**
+     * Convert an UPER encoded MessageFrame to XER without checking constraints.  Allows producing
+     * XER with constraint violations.  This is usually not recommended but can be useful for
+     * diagnostic purposes.
+     * @param uper The UPER encoded MessageFrame
+     * @return XER encoded result
+     */
+    public String uperToXerNoConstraintCheck(byte[] uper) {
+        return super.uperToXer(MESSAGE_FRAME_PDU, uper);
+    }
+
 }

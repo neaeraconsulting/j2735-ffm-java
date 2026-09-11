@@ -61,13 +61,27 @@ ADD ./asn1_codec/asn1c_combined/generated-files/2024.tar.gz C:/build/
 COPY ./CMakeLists.txt C:/build/
 COPY ./src            C:/build/src/
 
-# Windows-specific asn1c workaround, per generated-files/README.md /
+# Windows-specific asn1c workarounds:
+#
+# Time.h fix:
+#
+# See generated-files/README.md /
 # prepare-for-windows.sh: NTFS is case-insensitive, so the project's own
 # generated-files/2024/Time.h collides with <time.h> when GeneralizedTime.c
 # does #include <time.h>, silently shadowing the real system header (struct
 # tm never gets fully defined, localtime/gmtime/mktime/setenv all end up
 # undeclared). The project's documented fix is to drop GeneralizedTime and
 # its dependents entirely rather than reference the real time.h.
+#
+# Windows 64-bit fix for Ieee 1609.2 Uint64 and Time64 INTEGER types:
+#
+# The genrated constraint checking code for these types represents the value as "long" and uses the
+# "asn_INTEGER2long() method in the contraint check, which converts them to 32 bit
+# values on Windows, so we substitute:
+#   long value -> int64_t value
+#   asn_INTEGER2long() -> asn_INTEGER2int64()
+# in those files.
+#
 RUN $filesToRemove = @( \
         'GeneralizedTime.h', 'GeneralizedTime.c', 'GeneralizedTime_ber.c', \
         'GeneralizedTime_print.c', 'GeneralizedTime_rfill.c', 'GeneralizedTime_xer.c', \
@@ -84,7 +98,15 @@ RUN $filesToRemove = @( \
         -replace '&asn_DEF_Period,', '// &asn_DEF_Period,' \
         -replace '&asn_DEF_AggregatedSingleTariffClassSession,', '// &asn_DEF_AggregatedSingleTariffClassSession,' \
         -replace '&asn_DEF_DetectedChargeObject,', '// &asn_DEF_DetectedChargeObject,' \
-        | Set-Content $pduPath
+        | Set-Content $pduPath ; \
+    $pduPath = 'C:\build\generated-files\2024\Uint64.c' ; \
+    (Get-Content $pduPath) -replace 'long value;', 'int64_t value;' \
+        -replace 'asn_INTEGER2long', 'asn_INTEGER2int64' \
+        | Set-Content $pduPath ; \
+    $pduPath = 'C:\build\generated-files\2024\Time64.c' ; \
+    (Get-Content $pduPath) -replace 'long value;', 'int64_t value;' \
+            -replace 'asn_INTEGER2long', 'asn_INTEGER2int64' \
+            | Set-Content $pduPath ; \
 
 # Build the DLL. $ErrorActionPreference only catches PowerShell-terminating
 # errors, not a non-zero exit code from a native process, so check explicitly

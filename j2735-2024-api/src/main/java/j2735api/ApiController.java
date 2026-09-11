@@ -153,7 +153,7 @@ public class ApiController {
     }
 
     @PostMapping(
-        value = "/uper/hex/xer/{pdu}",
+        value = "/xer/uper/hex/{pdu}",
         consumes = APPLICATION_XML_VALUE,
         produces = TEXT_PLAIN_VALUE
     )

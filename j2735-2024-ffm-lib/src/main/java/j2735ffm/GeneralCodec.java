@@ -16,13 +16,10 @@
 
 package j2735ffm;
 
-import generated.convert_h;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SymbolLookup;
 import java.nio.charset.StandardCharsets;
-
-import static generated.convert_h.convert_bytes;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -57,6 +54,15 @@ public class GeneralCodec {
      * Buffer size for error messages returned from the native library.
      */
     public final long errorBufferSize;
+
+    /**
+     * jextract-generated bindings are platform-specific (e.g. C {@code long} is
+     * 8 bytes on Linux/macOS but 4 bytes on Windows), so two pre-generated
+     * binding sets are shipped ({@code generated.linux}, {@code generated.windows})
+     * and selected at runtime based on the running OS.
+     */
+    private static final boolean IS_WINDOWS =
+        System.getProperty("os.name").toLowerCase().contains("win");
 
     /**
      * Constructor.  Configures the library and loads the underlying native library
@@ -104,7 +110,11 @@ public class GeneralCodec {
             // loaded dynamically by a custom class loader or is used in the context of OSGI or
             // something. We do this instead of using the global arena to prevent memory leaks
             // in case of that unlikely, but possible, scenario.
-            convert_h.SYMBOL_LOOKUP = lookup;
+            if (IS_WINDOWS) {
+                generated.windows.convert_h.SYMBOL_LOOKUP = lookup;
+            } else {
+                generated.linux.convert_h.SYMBOL_LOOKUP = lookup;
+            }
         } catch (Throwable e) {
             String errMsg = String.format("Error loading library: %s: %s", libraryPath, e);
             log.error(errMsg);
@@ -282,8 +292,15 @@ public class GeneralCodec {
         log.debug("calling convert_bytes");
         long numOut = 0;
         try {
-            numOut = convert_bytes(pduName, fromEncodingSeg, toEncodingSeg, inputBuffer,
-                bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize);
+            if (IS_WINDOWS) {
+                numOut = generated.windows.convert_h.convert_bytes(pduName, fromEncodingSeg,
+                    toEncodingSeg, inputBuffer,
+                    bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize);
+            } else {
+                numOut = generated.linux.convert_h.convert_bytes(pduName, fromEncodingSeg,
+                    toEncodingSeg, inputBuffer,
+                    bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize);
+            }
         } catch (Throwable ex) {
             log.error("error converting",ex);
             throw ex;

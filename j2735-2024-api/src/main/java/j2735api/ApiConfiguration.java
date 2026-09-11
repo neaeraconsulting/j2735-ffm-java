@@ -28,4 +28,5 @@ public class ApiConfiguration {
     long errorBufferSize;
     String libraryPath;
     String windowsLibraryPath;
+    String windowsArm64LibraryPath;
 }

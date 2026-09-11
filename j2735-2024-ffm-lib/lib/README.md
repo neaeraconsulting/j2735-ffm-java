@@ -6,4 +6,5 @@ After regenerating the native libraries to here, also be sure to copy them to th
 cp libasnapplication.so ../src/test/resources/j2735ffm/
 cp libasnapplication-arm64.so ../src/test/resources/j2735ffm/ 2>/dev/null || true
 cp asnapplication.dll ../src/test/resources/j2735ffm/
+cp asnapplication-arm64.dll ../src/test/resources/j2735ffm/ 2>/dev/null || true
 ```

@@ -71,6 +71,9 @@ public class LibraryDetector {
         String arch = detectArchitecture();
         
         if (os.equals("windows")) {
+            if (arch.equals("arm64")) {
+                return baseName + "-arm64.dll";
+            }
             return baseName + ".dll";
         } else if (os.equals("macos")) {
             return "lib" + baseName + ".dylib";
@@ -95,8 +98,9 @@ public class LibraryDetector {
         String arch = detectArchitecture();
         
         // Try architecture-specific subdirectory first (e.g., lib/linux-amd64/)
-        if (os.equals("linux")) {
-            Path archSpecificPath = baseDirectory.resolve("linux-" + arch)
+        if (os.equals("linux") || os.equals("windows")) {
+            String platformPrefix = os.equals("linux") ? "linux" : "windows";
+            Path archSpecificPath = baseDirectory.resolve(platformPrefix + "-" + arch)
                 .resolve(getLibraryFilename(libraryName));
             if (Files.exists(archSpecificPath)) {
                 log.info("Found library in architecture-specific directory: {}", archSpecificPath);
@@ -136,8 +140,9 @@ public class LibraryDetector {
         String libraryFilename = getLibraryFilename(libraryName);
         
         // Try architecture-specific resource path first
-        if (os.equals("linux")) {
-            String archResourcePath = resourceBasePath + "/linux-" + arch + "/" + libraryFilename;
+        if (os.equals("linux") || os.equals("windows")) {
+            String platformPrefix = os.equals("linux") ? "linux" : "windows";
+            String archResourcePath = resourceBasePath + "/" + platformPrefix + "-" + arch + "/" + libraryFilename;
             java.net.URL url = LibraryDetector.class.getClassLoader().getResource(archResourcePath);
             if (url != null) {
                 try {

@@ -23,6 +23,13 @@
 #  Host OS build must match (or exceed, with matching isolation) the base image tag
 #  below. Swap ltsc2022 for ltsc2025 if your host is newer.
 #
+#  Build arguments:
+#    LLVM_MINGW_ARCH - llvm-mingw *host* package to install (x86_64 or aarch64).
+#                      Use x86_64 in Windows x86 containers even when LIBRARY_SUFFIX
+#                      is -arm64; the cross-compiler is aarch64-w64-mingw32-clang.
+#    LIBRARY_SUFFIX  - Output DLL name suffix (empty for amd64, -arm64 for arm64)
+#    JEXTRACT_ARCH   - jextract download suffix (x64, aarch64)
+#
 
 ####################################################################################################
 #
@@ -35,31 +42,26 @@ WORKDIR C:\\build
 ARG CMAKE_VERSION=4.2.3
 ARG LLVM_MINGW_VERSION=20260908
 ARG NINJA_VERSION=1.13.1
+ARG LLVM_MINGW_ARCH=x86_64
+ARG LIBRARY_SUFFIX=
+ENV CMAKE_VERSION=$CMAKE_VERSION
+ENV LLVM_MINGW_VERSION=$LLVM_MINGW_VERSION
+ENV NINJA_VERSION=$NINJA_VERSION
+ENV LLVM_MINGW_ARCH=$LLVM_MINGW_ARCH
+ENV LIBRARY_SUFFIX=$LIBRARY_SUFFIX
 
 # Self-contained toolchain: llvm-mingw bundles clang/lld/mingw-w64 headers+libs, so no
 # separate Visual Studio Build Tools / Windows SDK install is required. On x86_64 Windows
 # the calling convention is the same for MSVC- and MinGW-built DLLs, so this is ABI-safe
 # for the plain C entry points jextract binds against. Ninja is added because llvm-mingw
 # does not bundle a make.
-RUN Invoke-WebRequest -Uri "https://github.com/Kitware/CMake/releases/download/v$($env:CMAKE_VERSION)/cmake-$($env:CMAKE_VERSION)-windows-x86_64.zip" -OutFile cmake.zip ; \
-    Expand-Archive cmake.zip -DestinationPath C:\\ ; \
-    Rename-Item "C:\\cmake-$($env:CMAKE_VERSION)-windows-x86_64" C:\\cmake ; \
-    Invoke-WebRequest -Uri "https://github.com/mstorsjo/llvm-mingw/releases/download/$($env:LLVM_MINGW_VERSION)/llvm-mingw-$($env:LLVM_MINGW_VERSION)-ucrt-x86_64.zip" -OutFile llvm-mingw.zip ; \
-    Expand-Archive llvm-mingw.zip -DestinationPath C:\\ ; \
-    Rename-Item "C:\\llvm-mingw-$($env:LLVM_MINGW_VERSION)-ucrt-x86_64" C:\\llvm-mingw ; \
-    Invoke-WebRequest -Uri "https://github.com/ninja-build/ninja/releases/download/v$($env:NINJA_VERSION)/ninja-win.zip" -OutFile ninja.zip ; \
-    Expand-Archive ninja.zip -DestinationPath C:\\ninja ; \
-    Remove-Item cmake.zip, llvm-mingw.zip, ninja.zip
-
-# Docker's ENV instruction can't reference the base image's real system PATH
-# (${PATH} only expands ARG/ENV values set earlier in *this* Dockerfile, so it
-# resolves to empty and would overwrite PATH instead of extending it). Use the
-# Machine-scope registry value instead, which subsequent RUN steps pick up.
-RUN [Environment]::SetEnvironmentVariable('PATH', 'C:\\cmake\\bin;C:\\llvm-mingw\\bin;C:\\ninja;' + [Environment]::GetEnvironmentVariable('PATH', 'Machine'), 'Machine')
+COPY ./scripts/docker-install-windows-toolchain.ps1 C:/build/
+RUN ["powershell", "-NoLogo", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "C:\\build\\docker-install-windows-toolchain.ps1"]
 
 ADD ./asn1_codec/asn1c_combined/generated-files/2024.tar.gz C:/build/
 COPY ./CMakeLists.txt C:/build/
 COPY ./src            C:/build/src/
+COPY ./scripts/docker-build-windows-dll.ps1      C:/build/
 
 # Windows-specific asn1c workaround, per generated-files/README.md /
 # prepare-for-windows.sh: NTFS is case-insensitive, so the project's own
@@ -86,15 +88,8 @@ RUN $filesToRemove = @( \
         -replace '&asn_DEF_DetectedChargeObject,', '// &asn_DEF_DetectedChargeObject,' \
         | Set-Content $pduPath
 
-# Build the DLL. $ErrorActionPreference only catches PowerShell-terminating
-# errors, not a non-zero exit code from a native process, so check explicitly
-# after each cmake invocation instead of silently falling through to Copy-Item.
-RUN cmake -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Release . ; \
-    if ($LASTEXITCODE -ne 0) { throw "cmake configure failed with exit code $LASTEXITCODE" } ; \
-    cmake --build . --verbose ; \
-    if ($LASTEXITCODE -ne 0) { throw "cmake build failed with exit code $LASTEXITCODE" } ; \
-    New-Item -ItemType Directory -Force out | Out-Null ; \
-    Copy-Item libasnapplication.dll out\\asnapplication.dll
+# Build the DLL in a script file so Docker RUN does not mangle PowerShell $variables.
+RUN ["powershell", "-NoLogo", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "C:\\build\\docker-build-windows-dll.ps1"]
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["powershell", "-Command", "while ($true) { Start-Sleep -Seconds 3600 }"]
@@ -111,24 +106,30 @@ WORKDIR C:\\build
 ARG JEXTRACT_VERSION=25
 ARG JEXTRACT_EA=2
 ARG JEXTRACT_BUILD=2-4
+ARG JEXTRACT_ARCH=x64
+ARG GENERATE_JEXTRACT=true
 
 ADD ./j2735-2024-ffm-lib                              C:/build/lib
 COPY --from=build-shared C:/build/generated-files/2024 C:/build/generated-files/2024/
 COPY --from=build-shared C:/build/src                  C:/build/src/
-ADD ./run-jextract.ps1                                C:/build/
+ADD ./scripts/run-jextract.ps1                          C:/build/
 COPY --from=build-shared C:/build/out                  C:/build/out/
 
 ENV JEXTRACT="C:\\jextract\\jextract-25\\bin\\jextract.bat"
 
-RUN Invoke-WebRequest -Uri "https://download.java.net/java/early_access/jextract/$($env:JEXTRACT_VERSION)/$($env:JEXTRACT_EA)/openjdk-$($env:JEXTRACT_VERSION)-jextract+$($env:JEXTRACT_BUILD)_windows-x64_bin.tar.gz" -OutFile jextract.tar.gz ; \
-    New-Item -ItemType Directory -Force C:\\jextract | Out-Null ; \
-    tar -xzf jextract.tar.gz -C C:\\jextract ; \
-    Remove-Item jextract.tar.gz ; \
-    & $env:JEXTRACT --include-dir C:\\build\\headers \
-        --output C:\\build\\java-src \
-        --target-package generated.windows \
-        --library asnapplication \
-        C:\\build\\src\\convert.h
+RUN if ($env:GENERATE_JEXTRACT -ne 'true') { \
+        New-Item -ItemType Directory -Force C:\\build\\java-src | Out-Null ; \
+    } else { \
+        Invoke-WebRequest -Uri "https://download.java.net/java/early_access/jextract/$($env:JEXTRACT_VERSION)/$($env:JEXTRACT_EA)/openjdk-$($env:JEXTRACT_VERSION)-jextract+$($env:JEXTRACT_BUILD)_windows-$($env:JEXTRACT_ARCH)_bin.tar.gz" -OutFile jextract.tar.gz ; \
+        New-Item -ItemType Directory -Force C:\\jextract | Out-Null ; \
+        tar -xzf jextract.tar.gz -C C:\\jextract ; \
+        Remove-Item jextract.tar.gz ; \
+        & $env:JEXTRACT --include-dir C:\\build\\headers \
+            --output C:\\build\\java-src \
+            --target-package generated.windows \
+            --library asnapplication \
+            C:\\build\\src\\convert.h ; \
+    }
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["powershell", "-Command", "while ($true) { Start-Sleep -Seconds 3600 }"]

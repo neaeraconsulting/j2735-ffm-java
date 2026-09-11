@@ -15,6 +15,7 @@
 */
 package j2735api;
 
+import j2735ffm.LibraryDetector;
 import j2735ffm.MessageFrameCodec;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,16 +33,25 @@ public class CodecConfig {
 
     @Bean
     public MessageFrameCodec messageFrameCodec() {
-      String libResource = System.getProperty("os.name").toLowerCase().contains("win")
-          ? config.getWindowsLibraryPath()
-          : config.getLibraryPath();
-      Path libPath = Paths.get(libResource);
-          return new MessageFrameCodec(
-              config.getTextBufferSize(),
-              config.getUperBufferSize(),
-              config.getErrorBufferSize(),
-              libPath
-          );
+      Path libPath = resolveLibraryPath();
+      return new MessageFrameCodec(
+          config.getTextBufferSize(),
+          config.getUperBufferSize(),
+          config.getErrorBufferSize(),
+          libPath
+      );
+    }
+
+    private Path resolveLibraryPath() {
+      if (LibraryDetector.detectOS().equals("windows")) {
+        if (LibraryDetector.detectArchitecture().equals("arm64")
+            && config.getWindowsArm64LibraryPath() != null
+            && !config.getWindowsArm64LibraryPath().isBlank()) {
+          return Paths.get(config.getWindowsArm64LibraryPath());
+        }
+        return Paths.get(config.getWindowsLibraryPath());
+      }
+      return Paths.get(config.getLibraryPath());
     }
 
 }

@@ -18,16 +18,20 @@ Set-PSDebug -Trace 1
 # Copy the native library out to the shared volume
 Copy-Item C:\build\out\* C:\build-lib\
 
-# Copy the generated C files to the shared volume. -Force merges into an
+# Copy the generated Java code to the shared volume. -Force merges into an
 # already-populated destination instead of erroring (this folder is likely
 # already populated from a prior Linux build).
 New-Item -ItemType Directory -Force C:\generated-files | Out-Null
 Copy-Item -Recurse -Force C:\build\generated-files\* C:\generated-files\
 
-# Copy the generated Java code to the shared volume (separate folder from the
-# Linux output -- these bindings are Windows-specific and must not overwrite it)
-New-Item -ItemType Directory -Force C:\generated-jextract-windows | Out-Null
-Copy-Item -Recurse -Force C:\build\java-src\* C:\generated-jextract-windows\
+# Copy Windows jextract output when present (skipped for ARM64-only DLL builds)
+if (Test-Path C:\build\java-src) {
+    $javaSrcFiles = Get-ChildItem C:\build\java-src -ErrorAction SilentlyContinue
+    if ($javaSrcFiles) {
+        New-Item -ItemType Directory -Force C:\generated-jextract-windows | Out-Null
+        Copy-Item -Recurse -Force C:\build\java-src\* C:\generated-jextract-windows\
+    }
+}
 
 # Keep the container running
 while ($true) { Start-Sleep -Seconds 3600 }

@@ -1,15 +1,16 @@
-name: build-container-windows
+name: build-container-windows-arm64
 services:
-  build-container-windows:
+  build-container-windows-arm64:
     build:
       context: .
       dockerfile: Dockerfile-build-windows
       args:
+        # Host toolchain (x86_64) cross-compiles ARM64 via aarch64-w64-mingw32-clang.
         LLVM_MINGW_ARCH: x86_64
-        LIBRARY_SUFFIX:
+        LIBRARY_SUFFIX: -arm64
         JEXTRACT_ARCH: x64
-        GENERATE_JEXTRACT: "true"
-    image: build-container-windows:latest
+        GENERATE_JEXTRACT: "false"
+    image: build-container-windows-arm64:latest
     restart: no
     volumes:
       - type: bind

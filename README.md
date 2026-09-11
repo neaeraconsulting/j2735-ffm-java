@@ -440,7 +440,6 @@ cp asnapplication-arm64.dll ../src/test/resources/j2735ffm/ 2>/dev/null || true
 ```
 
 
-
 ## Unit Tests
 
 The unit tests can be run in either Linux or Windows.

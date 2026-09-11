@@ -44,9 +44,11 @@ publishing {
                 classifier = 'linux-x86_64'
                 extension = 'so'
             }
-            artifact(linuxArm64ArtifactPath) {
-                classifier = 'linux-aarch64'
-                extension = 'so'
+            if (file(linuxArm64ArtifactPath).exists()) {
+                artifact(linuxArm64ArtifactPath) {
+                    classifier = 'linux-aarch64'
+                    extension = 'so'
+                }
             }
             artifact(windowsArtifactPath) {
                 classifier = 'windows-x86_64'

@@ -126,7 +126,7 @@ RUN if ($env:GENERATE_JEXTRACT -ne 'true') { \
         Remove-Item jextract.tar.gz ; \
         & $env:JEXTRACT --include-dir C:\\build\\headers \
             --output C:\\build\\java-src \
-            --target-package generated \
+            --target-package generated.windows \
             --library asnapplication \
             C:\\build\\src\\convert.h ; \
     }

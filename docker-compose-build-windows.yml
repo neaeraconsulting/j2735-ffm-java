@@ -1,0 +1,18 @@
+name: build-container-windows
+services:
+  build-container-windows:
+    build:
+      context: .
+      dockerfile: Dockerfile-build-windows
+    image: build-container-windows:latest
+    restart: no
+    volumes:
+      - type: bind
+        source: ./lib
+        target: C:\build-lib\
+      - type: bind
+        source: ./generated-jextract-windows
+        target: C:\generated-jextract-windows\
+      - type: bind
+        source: ./generated-files
+        target: C:\generated-files\

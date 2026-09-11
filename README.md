@@ -163,7 +163,7 @@ Prerequisites:
 
 * Java 25 is required to build and use version 3.x of the library.
 * The build scripts require Docker.
-* Visual Studio 2022 is required to rebuild for Windows.
+* Windows Pro 11 with Docker Desktop is required to run the Windows build scripts.
 
 To get started check out the repository with submodules
 
@@ -187,9 +187,44 @@ docker compose -f docker-compose-build.yml up --build -d
 docker compose -f docker-compose-build-arm64.yml up --build -d
 ```
 
-**Note:** If you're building ARM64 libraries on an x86 CPU, you'll need to use Docker buildx with platform emulation. See the [Cross-Platform Builds](#cross-platform-builds) section below.
+**Note:** If you're building ARM64 libraries on an x86 CPU, you'll need to use Docker buildx with platform emulation. See the [Cross-Platform Linux Builds](#cross-platform-linux-builds) section below.
 
-### Cross-Platform Builds
+The compiled shared library is copied to the `lib` folder.
+
+The Java source code for Linux from jextract is copied to the `generated-jextract` folder.
+
+The Windows images can only be built on a Windows machine.
+To rebuild the Windows DLL, switch Docker Desktop to Windows Containers, and run:
+
+```powershell
+docker compose -f docker-compose-build-windows.yml up --build -d
+```
+
+The DLL will be copied to the `/lib` folder, and Windows-specific jextract Java code is copied to `/generated-jextract-windows`.  Copy the generated code to:
+
+* folder: `/j2735-2024-ffm-lib/src/main/java/generated`
+  * linux code in subfolder: `/linux`
+  * windows code in subfolder: `/windows`
+
+Edit both copies of `convert_h.java`.  Replace this generated code:
+
+```java
+    static final SymbolLookup SYMBOL_LOOKUP = SymbolLookup.libraryLookup(System.mapLibraryName("asnapplication"), LIBRARY_ARENA)
+            .or(SymbolLookup.loaderLookup())
+            .or(Linker.nativeLinker().defaultLookup());
+```
+
+with this:
+
+```java
+    // Manual project customization: MessageFrameCodec supplies the lookup for
+    // the caller-selected native library path before invoking a downcall.
+    public static SymbolLookup SYMBOL_LOOKUP;
+```
+
+to facilitate the method this library uses for loading the library, instead of the default lookup code.
+
+### Cross-Platform Linux Builds
 
 When building ARM64 libraries on an x86 CPU (or vice versa), Docker Compose may not work directly due to architecture mismatches. Use Docker buildx instead, which supports cross-platform builds through QEMU emulation.
 
@@ -296,7 +331,7 @@ docker compose -f docker-compose-build.yml up --build -d
 docker compose -f docker-compose-build-arm64.yml up --build -d
 ```
 
-**If building ARM64 on an x86 CPU**, use Docker buildx for the ARM64 build (see [Cross-Platform Builds](#cross-platform-builds) above):
+**If building ARM64 on an x86 CPU**, use Docker buildx for the ARM64 build (see [Cross-Platform Linux Builds](#cross-platform-linux-builds) above):
 ```bash
 # Build for amd64 (native)
 docker compose -f docker-compose-build.yml up --build -d
@@ -347,6 +382,8 @@ cp libasnapplication-arm64.so ../src/test/resources/j2735ffm/ 2>/dev/null || tru
 # Copy Windows library (if available)
 cp asnapplication.dll ../src/test/resources/j2735ffm/
 ```
+
+
 
 ## Unit Tests
 

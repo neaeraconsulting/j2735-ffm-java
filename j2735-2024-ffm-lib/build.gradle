@@ -5,11 +5,11 @@ plugins {
     id "maven-publish"
     id "org.sonarqube" version "7.2.3.7755"
     id "org.jreleaser" version "1.23.0"
+    id "jacoco"
 }
 
 group = 'com.neaeraconsulting'
 version = '3.0.0-beta'
-
 
 
 repositories {
@@ -139,6 +139,23 @@ test {
     systemProperty("jextract.trace.downcalls", "true")
     useJUnitPlatform()
     testLogging.showStandardStreams = true
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    'generated/**'
+            ])
+        }))
+    }
 }
 
 sonar {

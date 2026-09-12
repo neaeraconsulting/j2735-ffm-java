@@ -28,8 +28,8 @@
  XER is 8-bit text.
 
  @param pdu_name String with the J2735, IEEE 1609.2, or SEMI PDU, e.g., "MessageFrame", "BasicSafetyMessage".
- @param from_encoding String with the name of the encoding of the input ("xer", "uper", or "oer").
- @param to_encoding Target encoding for the output ("xer", "uper", or "oer").
+ @param from_encoding String with the name of the encoding of the input ("xer", "jer", "uper", or "oer").
+ @param to_encoding Target encoding for the output ("xer", "jer", "uper", or "oer").
  @param ibuf The input byte array in raw UPER, OER, or XER text format.
  @param ibuf_len The length of the input byte array.
  @param obuf The buffer to store the output byte array.

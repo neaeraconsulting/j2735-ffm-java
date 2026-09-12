@@ -20,6 +20,8 @@
 #include <ctype.h>     /* for isprint(3) */
 
 #define EX_USAGE    64
+#define LINE_BUF_SIZE (1024 * 1024)
+#define OUT_BUF_SIZE  (1024 * 1024)
 
 #include <stddef.h>
 #include "convert.h"
@@ -29,12 +31,22 @@
 
 void usage() {
     printf("\nUsage:\n ./convert-v2x [from-encoding] [to-encoding] [PDU]\n\n");
-    printf(" where 'from-encoding' and 'to-encoding' can be 'uper', 'oer', 'xer', or 'jer'.\n Reads one line of text from stdin\n Accepts UPER as hex encoded text.\n\n");
-    printf("Examples:\n\n");
-    printf("  Convert a file containing a hex encoded UPER MessageFrame to JER:\n");
-    printf("  $ cat data.hex | ./convert-v2x uper jer MessageFrame > data.json\n\n");
-    printf("  Convert a file containing a SPAT with no MessageFrame from canonical XER to JER:\n");
-    printf("  $ cat data.xml | ./convert-v2x xer jer SPAT > data.json\n\n");
+    printf(" where 'from-encoding' and 'to-encoding' can be 'uper', 'oer', 'xer', or 'jer'.\n");
+    printf(" Reads one PDU record per line from stdin (bulk conversion is supported: one\n");
+    printf(" input line in, one converted output line out, in order). Accepts UPER/OER as\n");
+    printf(" hex encoded text. A line that fails to convert prints an empty output line\n");
+    printf(" and logs the reason to stderr; remaining lines still get processed. The\n");
+    printf(" process exit code is nonzero if any line failed.\n\n");
+    printf("Linux Examples:\n\n");
+    printf("  Convert a file of hex encoded UPER MessageFrames (one per line) to JER:\n");
+    printf("  $ cat data.hex | ./convert-v2x uper jer MessageFrame > data.jsonl\n\n");
+    printf("  Convert a file of SPATs with no MessageFrame (one per line) from canonical XER to JER:\n");
+    printf("  $ cat data.xml | ./convert-v2x xer jer SPAT > data.jsonl\n\n");
+    printf("Windows Powershell Examples:\n\n");
+    printf("  Convert 1609.2 Data from XER to OER:\n");
+    printf("  Get-Content example.xml | .\\convert-v2x.exe xer oer Ieee1609Dot2Data > example.hex\n\n");
+    printf("  Convert 1609.2 Data from OER hex to XER (line-delimited):\n");
+    printf("  Get-Content example.hex | .\\convert-v2x.exe oer xer Ieee1609Dot2Data > example.xml\n\n");
 }
 
 static void hex_to_bin(const char *hex, size_t hex_len, uint8_t *bytes) {
@@ -60,6 +72,9 @@ static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev) {
     }
     if (strcmp("xer", abbrev) == 0) {
         return ATS_CANONICAL_XER;
+    }
+    if (strcmp("jer", abbrev) == 0) {
+        return ATS_JER_MINIFIED;
     }
     if (strcmp("uper", abbrev) == 0) {
         return ATS_UNALIGNED_BASIC_PER;
@@ -131,16 +146,20 @@ static int convert_str(const char * pdu_name,
         bin_to_hex(obuf, num_encoded_bytes, hex_result);
         if (hex_result_len > max_buf_len) {
             strncpy(buf, hex_result, max_buf_len);
+            buf[max_buf_len - 1] = '\0';
             fprintf(stderr, "Warning truncating hex output.  Max buffer size %zu is too small\n", max_buf_len);
         } else {
             strncpy(buf, hex_result, hex_result_len);
+            buf[hex_result_len] = '\0';
         }
     } else {
         if (num_encoded_bytes > max_buf_len) {
             strncpy(buf, (const char *)obuf, max_buf_len);
+            buf[max_buf_len - 1] = '\0';
             fprintf(stderr, "Warning, truncating output.  Max buffer size %zu is too small\n", max_buf_len);
         } else {
             strncpy(buf, (const char *)obuf, num_encoded_bytes);
+            buf[num_encoded_bytes] = '\0';
         }
     }
 
@@ -157,27 +176,28 @@ int main(int ac, char *av[]) {
         exit(EX_USAGE);
     }
 
-    printf("PDU=%s\n", av[3]);
-    printf("from=%s\n", av[1]);
-    printf("to=%s\n", av[2]);
+    static char line[LINE_BUF_SIZE];
+    char * out_buf = calloc(OUT_BUF_SIZE, sizeof(uint8_t));
+    int any_failed = 0;
 
-
-    char line[2048];
-    size_t size;
-    if (fgets(line, sizeof(line), stdin) != NULL) {
-        // Truncate after CR or LF
+    while (fgets(line, sizeof(line), stdin) != NULL) {
+        // Strip trailing CR/LF
         size_t len = strlen(line);
-        if (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
-            line[len - 1] = '\0';
+        while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
+            line[--len] = '\0';
         }
-        printf("input: %s\n", line);
+
+        int rc = convert_str(av[3], av[1], av[2], line, out_buf, OUT_BUF_SIZE);
+        if (rc < 0) {
+            any_failed = 1;
+            printf("\n");
+        } else {
+            printf("%s\n", out_buf);
+        }
     }
 
-    const size_t out_buf_size = 0xFFFFu;
-    char * out_buf = calloc(out_buf_size, sizeof(uint8_t));
-    convert_str(av[3], av[1], av[2], line, out_buf, out_buf_size);
-    printf("%s\n", out_buf);
     free(out_buf);
+    return any_failed ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 

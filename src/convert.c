@@ -34,6 +34,9 @@ static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev, char * err
     if (strcmp("xer", abbrev) == 0) {
         return ATS_CANONICAL_XER;
     }
+    if (strcmp("jer", abbrev) == 0) {
+        return ATS_JER_MINIFIED;
+    }
     if (strcmp("uper", abbrev) == 0) {
         return ATS_UNALIGNED_BASIC_PER;
     }

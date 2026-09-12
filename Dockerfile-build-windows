@@ -36,6 +36,19 @@ ARG CMAKE_VERSION=4.2.3
 ARG LLVM_MINGW_VERSION=20260908
 ARG NINJA_VERSION=1.13.1
 
+# Release (default) builds an optimized binary; the PDB still comes out either
+# way. Pass "--build-arg BUILD_TYPE=Debug" for an unoptimized build suited to
+# friendly interactive debugging in WinDbg/Visual Studio.
+#
+# Passed to cmake as a plain environment variable (read by CMakeLists.txt),
+# rather than spliced into a -D flag on the command line: PowerShell's -Command
+# reparses the whole RUN block as one string, and interpolating $env:BUILD_TYPE
+# inside a quoted -D argument on that reparsed line got the value split off
+# into its own stray positional argument instead of staying attached to the
+# flag (cmake then warned about and ignored an extra "Debug" path argument).
+ARG BUILD_TYPE=Release
+ENV BUILD_TYPE=$BUILD_TYPE
+
 # Self-contained toolchain: llvm-mingw bundles clang/lld/mingw-w64 headers+libs, so no
 # separate Visual Studio Build Tools / Windows SDK install is required. On x86_64 Windows
 # the calling convention is the same for MSVC- and MinGW-built DLLs, so this is ABI-safe
@@ -96,13 +109,15 @@ RUN $filesToRemove = @( \
 # PowerShell-terminating errors, not a non-zero exit code from a native
 # process, so check explicitly after each cmake invocation instead of
 # silently falling through to Copy-Item.
-RUN cmake -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Release . ; \
+RUN cmake -G Ninja -DCMAKE_C_COMPILER=clang . ; \
     if ($LASTEXITCODE -ne 0) { throw "cmake configure failed with exit code $LASTEXITCODE" } ; \
     cmake --build . --verbose ; \
     if ($LASTEXITCODE -ne 0) { throw "cmake build failed with exit code $LASTEXITCODE" } ; \
     New-Item -ItemType Directory -Force out | Out-Null ; \
     Copy-Item asnapplication.dll out\\asnapplication.dll ; \
-    Copy-Item convert-v2x.exe out\\convert-v2x.exe
+    Copy-Item asnapplication.pdb out\\asnapplication.pdb ; \
+    Copy-Item convert-v2x.exe out\\convert-v2x.exe ; \
+    Copy-Item convert-v2x.pdb out\\convert-v2x.pdb
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["powershell", "-Command", "while ($true) { Start-Sleep -Seconds 3600 }"]

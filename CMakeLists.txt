@@ -1,4 +1,4 @@
-#   Copyright 2025 Neaera Consulting LLC
+#   Copyright 2025-2026 Neaera Consulting LLC
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -18,7 +18,24 @@ cmake_minimum_required(VERSION 3.28)
 set(LIB_SO_VERSION 1)
 project(asnapplication LANGUAGES C VERSION ${LIB_SO_VERSION}.0.0 DESCRIPTION "shared library")
 set(CMAKE_C_STANDARD 23)
-set(CMAKE_C_FLAGS "-DASN_PDU_COLLECTION -Wno-parentheses-equality -O2")
+
+# Default to an optimized Release build when the caller doesn't choose a build
+# type. Pass -DCMAKE_BUILD_TYPE=Debug (or set the BUILD_TYPE environment
+# variable, as the Windows Docker build does) for friendly interactive
+# debugging (unoptimized, full debug info); the PDB emission below happens
+# either way. The environment variable fallback exists so the Windows build
+# doesn't need to splice a -D flag into a PowerShell-reparsed command line.
+if(NOT CMAKE_BUILD_TYPE)
+    if(DEFINED ENV{BUILD_TYPE} AND NOT "$ENV{BUILD_TYPE}" STREQUAL "")
+        set(CMAKE_BUILD_TYPE "$ENV{BUILD_TYPE}" CACHE STRING "Build type" FORCE)
+    else()
+        set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+    endif()
+endif()
+
+# Optimization level comes from CMAKE_BUILD_TYPE (CMAKE_C_FLAGS_RELEASE / _DEBUG)
+# rather than being hardcoded here, so Debug actually builds unoptimized.
+set(CMAKE_C_FLAGS "-DASN_PDU_COLLECTION -Wno-parentheses-equality")
 
 file (GLOB generated_SRC
         "generated-files/2024/*.h"
@@ -57,3 +74,14 @@ add_executable(convert-v2x
         src/main.c
 )
 target_link_libraries(convert-v2x PRIVATE asnapplication)
+
+# Emit CodeView debug info (clang's -gcodeview, understood by WinDbg/Visual Studio,
+# unlike the DWARF clang emits by default on non-Windows targets) and have lld
+# collect it into a .pdb next to each binary, even for this optimized Release
+# build, so crashes can be analyzed post-mortem in WinDbg.
+if(WIN32)
+    target_compile_options(asnapplication PRIVATE -g -gcodeview)
+    target_compile_options(convert-v2x PRIVATE -g -gcodeview)
+    target_link_options(asnapplication PRIVATE -Wl,--pdb=asnapplication.pdb)
+    target_link_options(convert-v2x PRIVATE -Wl,--pdb=convert-v2x.pdb)
+endif()

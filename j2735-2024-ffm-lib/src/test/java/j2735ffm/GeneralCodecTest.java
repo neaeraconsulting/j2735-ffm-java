@@ -102,6 +102,7 @@ public class GeneralCodecTest {
   @ParameterizedTest
   @MethodSource("ieee1609OerHex")
   public void convertGeneral_oerToXer_and_back_ieee1609(final String oerHex) {
+    log.info("oer hex: {}", oerHex);
     byte[] oer = hexNoWs(oerHex);
     byte[] xerBytes = null;
     try {

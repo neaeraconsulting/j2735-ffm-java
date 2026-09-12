@@ -12,7 +12,7 @@ on:
       - snapshot
       - "**"
 jobs:
-  test-windows:
+  test-x86-windows:
     runs-on: windows-2022
     permissions:
       contents: read

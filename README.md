@@ -374,7 +374,7 @@ http://localhost:4000/api-docs.yaml
 Testing native exe with WinDbg:
 
 ```powershell
-windbgx -y "C:\Users\ivan\asn1\j2735-ffm-java\lib" -srcpath "C:\Users\ivan\asn1\j2735-ffm-java\src;C:\Users\ivan\asn1\j2735-ffm-java\generated-files\2024" -o -c "g" powershell.exe -Command "Set-Location  'C:\Users\ivan\asn1\j2735-ffm-java\lib'; Get-Content example2.xml | .\convert-v2x.exe xer oer Ieee1609Dot2Data"
+cmd /c 'cd /d C:\Users\ivan\asn1\j2735-ffm-java\lib && windbgx -y "C:\Users\ivan\asn1\j2735-ffm-java\lib" -srcpath "C:\Users\ivan\asn1\j2735-ffm-java\src;C:\Users\ivan\asn1\j2735-ffm-java\generated-files\2024" convert-v2x.exe xer oer Ieee1609Dot2Data < example2.xml' 
 ```
 
 

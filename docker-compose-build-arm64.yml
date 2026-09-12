@@ -1,14 +1,14 @@
-name: build-container
+name: build-container-arm64
 services:
-  build-container:
+  build-container-arm64:
     build:
       context: .
       dockerfile: Dockerfile-build
       args:
-        TARGETARCH: amd64
-        JEXTRACT_ARCH: x64
-        LIBRARY_SUFFIX:
-    image: build-container:latest
+        TARGETARCH: arm64
+        JEXTRACT_ARCH: aarch64
+        LIBRARY_SUFFIX: -arm64
+    image: build-container-arm64:latest
     restart: no
     volumes:
       - type: bind

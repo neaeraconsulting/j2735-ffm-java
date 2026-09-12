@@ -15,6 +15,7 @@
 */
 package j2735ffm;
 
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,14 +26,18 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class LibraryDetector {
-    
+
+    private LibraryDetector() {
+        // Utility class
+    }
+
     /**
      * Detects the current system architecture.
      * @return Architecture string (amd64, arm64, etc.)
      */
     public static String detectArchitecture() {
         String osArch = System.getProperty("os.arch").toLowerCase();
-        
+
         // Normalize architecture names
         if (osArch.contains("amd64") || osArch.contains("x86_64") || osArch.equals("x64")) {
             return "amd64";
@@ -41,10 +46,10 @@ public class LibraryDetector {
         } else if (osArch.contains("arm")) {
             return "arm";
         }
-        
+
         return osArch;
     }
-    
+
     /**
      * Detects the operating system.
      * @return OS string (linux, windows, macos)
@@ -60,30 +65,29 @@ public class LibraryDetector {
         }
         return osName;
     }
-    
+
     /**
      * Gets the library filename for the current platform.
+     * Linux and Windows are supported; other operating systems return null.
      * @param baseName Base name of the library (e.g., "asnapplication")
-     * @return Library filename
+     * @return Library filename, or null if the OS is not supported
      */
     public static String getLibraryFilename(String baseName) {
         String os = detectOS();
         String arch = detectArchitecture();
-        
+
         if (os.equals("windows")) {
             return baseName + ".dll";
-        } else if (os.equals("macos")) {
-            return "lib" + baseName + ".dylib";
-        } else {
-            // Linux
+        }
+        if (os.equals("linux")) {
             if (arch.equals("arm64")) {
                 return "lib" + baseName + "-arm64.so";
-            } else {
-                return "lib" + baseName + ".so";
             }
+            return "lib" + baseName + ".so";
         }
+        return null;
     }
-    
+
     /**
      * Finds the native library in a directory, trying architecture-specific paths first.
      * @param baseDirectory Base directory to search
@@ -91,39 +95,38 @@ public class LibraryDetector {
      * @return Path to the library, or null if not found
      */
     public static Path findLibrary(Path baseDirectory, String libraryName) {
+        String filename = libraryFilenameIfSupported(libraryName);
+        if (filename == null) {
+            return null;
+        }
         String os = detectOS();
         String arch = detectArchitecture();
-        
-        // Try architecture-specific subdirectory first (e.g., lib/linux-amd64/)
-        if (os.equals("linux")) {
-            Path archSpecificPath = baseDirectory.resolve("linux-" + arch)
-                .resolve(getLibraryFilename(libraryName));
-            if (Files.exists(archSpecificPath)) {
-                log.info("Found library in architecture-specific directory: {}", archSpecificPath);
-                return archSpecificPath;
-            }
+
+        Path found = existingFile(
+            baseDirectory.resolve(os + "-" + arch).resolve(filename),
+            "architecture-specific directory");
+        if (found != null) {
+            return found;
         }
-        
-        // Try root directory
-        Path rootPath = baseDirectory.resolve(getLibraryFilename(libraryName));
-        if (Files.exists(rootPath)) {
-            log.info("Found library in root directory: {}", rootPath);
-            return rootPath;
+
+        found = existingFile(baseDirectory.resolve(filename), "root directory");
+        if (found != null) {
+            return found;
         }
-        
+
         // Try without architecture suffix for Linux (backward compatibility)
         if (os.equals("linux") && !arch.equals("amd64")) {
-            Path fallbackPath = baseDirectory.resolve("lib" + libraryName + ".so");
-            if (Files.exists(fallbackPath)) {
-                log.warn("Using fallback library path (may be wrong architecture): {}", fallbackPath);
-                return fallbackPath;
+            found = existingFile(baseDirectory.resolve("lib" + libraryName + ".so"), null);
+            if (found != null) {
+                log.warn("Using fallback library path (may be wrong architecture): {}", found);
+                return found;
             }
         }
-        
+
         log.error("Library not found in {}", baseDirectory);
         return null;
     }
-    
+
     /**
      * Finds the native library from a resource path (for use in JARs).
      * @param resourceBasePath Base resource path (e.g., "j2735ffm")
@@ -131,42 +134,62 @@ public class LibraryDetector {
      * @return Path to the library, or null if not found
      */
     public static Path findLibraryFromResource(String resourceBasePath, String libraryName) {
+        String filename = libraryFilenameIfSupported(libraryName);
+        if (filename == null) {
+            return null;
+        }
         String os = detectOS();
         String arch = detectArchitecture();
-        String libraryFilename = getLibraryFilename(libraryName);
-        
-        // Try architecture-specific resource path first
-        if (os.equals("linux")) {
-            String archResourcePath = resourceBasePath + "/linux-" + arch + "/" + libraryFilename;
-            java.net.URL url = LibraryDetector.class.getClassLoader().getResource(archResourcePath);
-            if (url != null) {
-                try {
-                    Path path = Paths.get(url.toURI());
-                    log.info("Found library resource: {}", archResourcePath);
-                    return path;
-                } catch (Exception e) {
-                    log.warn("Error converting resource URL to path: {}", e.getMessage());
-                }
-            }
+
+        Path found = resourceAsPath(resourceBasePath + "/" + os + "-" + arch + "/" + filename);
+        if (found != null) {
+            return found;
         }
-        
-        // Try root resource path
-        String rootResourcePath = resourceBasePath + "/" + libraryFilename;
-        java.net.URL url = LibraryDetector.class.getClassLoader().getResource(rootResourcePath);
-        if (url != null) {
-            try {
-                Path path = Paths.get(url.toURI());
-                log.info("Found library resource: {}", rootResourcePath);
-                return path;
-            } catch (Exception e) {
-                log.warn("Error converting resource URL to path: {}", e.getMessage());
-            }
+
+        found = resourceAsPath(resourceBasePath + "/" + filename);
+        if (found != null) {
+            return found;
         }
-        
-        log.error("Library resource not found: {}", rootResourcePath);
+
+        log.error("Library resource not found: {}/{}", resourceBasePath, filename);
         return null;
     }
+
+    private static String libraryFilenameIfSupported(String libraryName) {
+        String os = detectOS();
+        if (os.equals("macos")) {
+            log.error("macOS is not supported");
+            return null;
+        }
+        if (!os.equals("linux") && !os.equals("windows")) {
+            log.error("Unsupported operating system: {}", os);
+            return null;
+        }
+        return getLibraryFilename(libraryName);
+    }
+
+    private static Path existingFile(Path path, String locationDescription) {
+        if (!Files.exists(path)) {
+            return null;
+        }
+        if (locationDescription != null) {
+            log.info("Found library in {}: {}", locationDescription, path);
+        }
+        return path;
+    }
+
+    private static Path resourceAsPath(String resourcePath) {
+        URL url = LibraryDetector.class.getClassLoader().getResource(resourcePath);
+        if (url == null) {
+            return null;
+        }
+        try {
+            Path path = Paths.get(url.toURI());
+            log.info("Found library resource: {}", resourcePath);
+            return path;
+        } catch (Exception e) {
+            log.warn("Error converting resource URL to path: {}", e.getMessage());
+            return null;
+        }
+    }
 }
-
-
-

@@ -123,7 +123,7 @@ int convert_bytes(const char * pdu_name,
     if (num_encoded_bytes > max_obuf_len) {
         memcpy(obuf, enc_result.buffer, max_obuf_len);
         snprintf(err_buf, err_buf_len,
-          "Error, truncating output.  Max buffer size %ld is too small\n", max_obuf_len);
+          "Error, truncating output.  Max buffer size %zu is too small\n", max_obuf_len);
         free(enc_result.buffer);
         return RETURN_ERROR;
     } else {

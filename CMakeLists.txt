@@ -43,3 +43,17 @@ set_property(TARGET asnapplication PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 # Export all symbols for windows dll
 set_property(TARGET asnapplication PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+# MinGW defaults to a "lib" prefix even for Windows DLLs, but System.loadLibrary("asnapplication")
+# looks for "asnapplication.dll" (no prefix) on Windows. Drop the prefix there so the build
+# output matches what the Java FFM bindings expect, and so convert-v2x.exe links against
+# that same name without needing a renamed copy.
+if(WIN32)
+    set_target_properties(asnapplication PROPERTIES PREFIX "")
+endif()
+
+# CLI utility for exercising convert_bytes() from the command line
+add_executable(convert-v2x
+        src/main.c
+)
+target_link_libraries(convert-v2x PRIVATE asnapplication)

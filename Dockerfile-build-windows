@@ -92,15 +92,17 @@ RUN $filesToRemove = @( \
         -replace '&asn_DEF_DetectedChargeObject,', '// &asn_DEF_DetectedChargeObject,' \
         | Set-Content $pduPath ;
 
-# Build the DLL. $ErrorActionPreference only catches PowerShell-terminating
-# errors, not a non-zero exit code from a native process, so check explicitly
-# after each cmake invocation instead of silently falling through to Copy-Item.
+# Build the DLL and the convert-v2x CLI. $ErrorActionPreference only catches
+# PowerShell-terminating errors, not a non-zero exit code from a native
+# process, so check explicitly after each cmake invocation instead of
+# silently falling through to Copy-Item.
 RUN cmake -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Release . ; \
     if ($LASTEXITCODE -ne 0) { throw "cmake configure failed with exit code $LASTEXITCODE" } ; \
     cmake --build . --verbose ; \
     if ($LASTEXITCODE -ne 0) { throw "cmake build failed with exit code $LASTEXITCODE" } ; \
     New-Item -ItemType Directory -Force out | Out-Null ; \
-    Copy-Item libasnapplication.dll out\\asnapplication.dll
+    Copy-Item asnapplication.dll out\\asnapplication.dll ; \
+    Copy-Item convert-v2x.exe out\\convert-v2x.exe
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["powershell", "-Command", "while ($true) { Start-Sleep -Seconds 3600 }"]

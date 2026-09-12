@@ -4,6 +4,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-build-windows
+      args:
+        # Set BUILD_TYPE=Debug (e.g. '$env:BUILD_TYPE="Debug"' before 'docker compose build')
+        # for an unoptimized build of the native exe suitable for friendly interactive debugging.
+        BUILD_TYPE: ${BUILD_TYPE:-Release}
     image: build-container-windows:latest
     restart: no
     volumes:

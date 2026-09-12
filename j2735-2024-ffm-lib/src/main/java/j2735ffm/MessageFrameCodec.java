@@ -16,18 +16,8 @@
 
 package j2735ffm;
 
-import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
-import java.lang.foreign.SymbolLookup;
-import java.nio.charset.StandardCharsets;
-
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import lombok.extern.slf4j.Slf4j;
-
-import static j2735ffm.AsnEncoding.XER;
-import static j2735ffm.AsnEncoding.UPER;
 
 /**
  * Functions for interconverting J2735 (2024) MessageFrames between XER, and UPER encodings
@@ -36,44 +26,9 @@ import static j2735ffm.AsnEncoding.UPER;
  * @author Ivan Yourshaw
  */
 @Slf4j
-public class MessageFrameCodec {
+public class MessageFrameCodec extends GeneralCodec {
 
     public final static String MESSAGE_FRAME_PDU = "MessageFrame";
-
-    /**
-     * Output buffer size for XER and JSON.  Messages larger than this can't be produced.
-     */
-    public final long textBufferSize;
-
-    /**
-     * Buffer size for UPER binary messages.  Messages larger than this can't be produced.
-     */
-    public final long uperBufferSize;
-
-    /**
-     * Buffer size for error messages returned from the native library.
-     */
-    public final long errorBufferSize;
-
-    private final static Path DEFAULT_LIBRARY_PATH = Paths.get("/usr/lib/libasnapplication.so");
-
-    /**
-     * jextract-generated bindings are platform-specific (e.g. C {@code long} is
-     * 8 bytes on Linux/macOS but 4 bytes on Windows), so two pre-generated
-     * binding sets are shipped ({@code generated.linux}, {@code generated.windows})
-     * and selected at runtime based on the running OS.
-     */
-    private static final boolean IS_WINDOWS =
-        System.getProperty("os.name").toLowerCase().contains("win");
-
-    @Deprecated
-    public MessageFrameCodec(
-            long textBufferSize,
-            long uperBufferSize,
-            @Deprecated long messageFrameAllocateSize,
-            @Deprecated long asnCodecCtxMaxStackSize) {
-        this(textBufferSize, uperBufferSize, 256L, DEFAULT_LIBRARY_PATH);
-    }
 
     /**
      * Constructor.  Configures the library and loads the underlying native library
@@ -83,96 +38,8 @@ public class MessageFrameCodec {
      */
     public MessageFrameCodec(long textBufferSize, long uperBufferSize, long errorBufferSize,
             Path libraryPath) {
-        this.textBufferSize = textBufferSize;
-        this.uperBufferSize = uperBufferSize;
-        this.errorBufferSize = errorBufferSize;
-        loadLibrary(libraryPath);
-        log.info("MessageFrameCodec initialized with textBufferSize: {}, uperBufferSize: {}, libraryPath: {}",
-            textBufferSize, uperBufferSize, libraryPath);
+        super(textBufferSize, uperBufferSize, errorBufferSize, libraryPath);
     }
-
-
-
-    /**
-     * load library with given class loader.
-     * @param libraryPath The URI of the library resource
-     */
-    private void loadLibrary(Path libraryPath) {
-        // Load the library into a garbage-collected arena
-        if (!Files.exists(libraryPath)) {
-            String errMsg = String.format("Library not found at path: %s", libraryPath);
-            log.error(errMsg);
-            throw new RuntimeException(errMsg);
-        }
-        try {
-            Arena arena = Arena.ofAuto();
-            SymbolLookup lookup = SymbolLookup.libraryLookup(libraryPath, arena);
-            log.info("Loaded library: {}", libraryPath);
-            var symbol = lookup.find("convert_bytes");
-            if (symbol.isPresent()) {
-                log.info("found symbol convert_bytes: {}", symbol);
-            } else {
-                throw new RuntimeException("symbol 'convert_bytes' not found in the library");
-            }
-            // Note: Assign the lookup to a static field in the generated code.
-            // This will prevent the library from being garbage collected until
-            // the class loader that loaded the "convert_h" class is itself garbage collected.
-            // Normally that would happen when the JVM exits, but could happen sooner if this library is
-            // loaded dynamically by a custom class loader or is used in the context of OSGI or
-            // something. We do this instead of using the global arena to prevent memory leaks
-            // in case of that unlikely, but possible, scenario.
-            if (IS_WINDOWS) {
-                generated.windows.convert_h.SYMBOL_LOOKUP = lookup;
-            } else {
-                generated.linux.convert_h.SYMBOL_LOOKUP = lookup;
-            }
-        } catch (Throwable e) {
-            String errMsg = String.format("Error loading library: %s: %s", libraryPath, e);
-            log.error(errMsg);
-            throw new RuntimeException(errMsg, e);
-        }
-    }
-
-    /**
-     * General purpose conversion function that can convert any PDU to or from
-     * any encoding.
-     * @param inputBytes Input byte array: XER or UPER binary
-     * @param pdu The name of the PDU, e.g., "MessageFrame", "MessageFrame", "VehicleEventFlags", etc.
-     * @param fromEncoding Input encoding, may be "xer" or "uper"
-     * @param toEncoding Output encoding, may be "xer" or "uper"
-     * @return The encoded message as bytes or UTF-8 string
-     */
-    public byte[] convertGeneral(byte[] inputBytes, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding) {
-        log.debug("convertGeneral PDU: {}, {} -> {}", pdu, fromEncoding, toEncoding);
-        if (!fromEncoding.isSupported()) {
-            String errMsg = String.format("Unsupported fromEncoding: %s", fromEncoding);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
-        if (!toEncoding.isSupported()) {
-            String errMsg = String.format("Unsupported toEncoding: %s", toEncoding);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
-        final long inputBufferSize = fromEncoding.isBinary() ? uperBufferSize : textBufferSize;
-        if (inputBytes.length > inputBufferSize) {
-            String errMsg = String.format("Input message too large: %d > %d", inputBytes.length, inputBufferSize);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
-        final long outputBufferSize = toEncoding.isBinary() ? uperBufferSize : textBufferSize;
-        try (var arena = Arena.ofConfined()) {
-            MemorySegment inputBuffer = arena.allocate(inputBufferSize);
-            MemorySegment outputBuffer = arena.allocate(outputBufferSize);
-            MemorySegment errorBuffer = arena.allocate(errorBufferSize);
-            return convert(arena, inputBytes, fromEncoding.getName(),
-                toEncoding.getName(), inputBuffer, outputBuffer, outputBufferSize, errorBuffer,
-                errorBufferSize, pdu);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
     /**
      * Convert an XER encoded MessageFrame to UPER
@@ -180,22 +47,7 @@ public class MessageFrameCodec {
      * @return Byte array with the UPER encoding
      */
     public byte[] xerToUper(String xer) {
-        log.debug("xerToUper: {}", xer);
-        if (xer.length() > textBufferSize) {
-            String errMsg = String.format("Input XER message too large: %d > %d", xer.length(), textBufferSize);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
-        try (var arena = Arena.ofConfined()) {
-            MemorySegment inputBuffer = arena.allocate(textBufferSize);
-            MemorySegment outputBuffer = arena.allocate(uperBufferSize);
-            MemorySegment errorBuffer = arena.allocate(errorBufferSize);
-            return convert(arena, xer.getBytes(StandardCharsets.UTF_8), XER.getName(),
-                UPER.getName(), inputBuffer, outputBuffer, uperBufferSize, errorBuffer,
-                errorBufferSize, MESSAGE_FRAME_PDU);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return super.xerToUper(MESSAGE_FRAME_PDU, xer);
     }
 
     /**
@@ -204,64 +56,18 @@ public class MessageFrameCodec {
      * @return XER encoded result
      */
     public String uperToXer(byte[] uper) {
-        log.trace("Received {} bytes", uper.length);
-        if (uper.length > uperBufferSize) {
-            String errMsg = String.format("Input UPER message too large: %d > %d", uper.length, uperBufferSize);
-            log.error(errMsg);
-            throw new IllegalArgumentException(errMsg);
-        }
-        try (var arena = Arena.ofConfined()) {
-            MemorySegment inputBuffer = arena.allocate(uperBufferSize);
-            MemorySegment outputBuffer = arena.allocate(textBufferSize);
-            MemorySegment errorBuffer = arena.allocate(errorBufferSize);
-            byte[] xerBytes = convert(arena, uper, UPER.getName(), XER.getName(),
-                inputBuffer, outputBuffer, textBufferSize, errorBuffer, errorBufferSize,
-                MESSAGE_FRAME_PDU);
-            return new String(xerBytes, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return super.uperToXer(MESSAGE_FRAME_PDU, uper);
     }
 
-
-    private byte[] convert(Arena arena, final byte[] bytes,
-            final String fromEncoding, final String toEncoding, MemorySegment inputBuffer,
-            MemorySegment outputBuffer, long outputBufferSize, MemorySegment errorBuffer,
-            long errorBufferSize, final String pdu)
-            throws ConvertException{
-        log.debug("convert: {} {}", fromEncoding, toEncoding);
-        byte[] outputArray = null;
-
-        MemorySegment heapBytes = MemorySegment.ofArray(bytes);
-        inputBuffer.copyFrom(heapBytes);
-        MemorySegment pduName = arena.allocateFrom(pdu, StandardCharsets.UTF_8);
-        MemorySegment fromEncodingSeg = arena.allocateFrom(fromEncoding,
-            StandardCharsets.UTF_8);
-        MemorySegment toEncodingSeg = arena.allocateFrom(toEncoding, StandardCharsets.UTF_8);
-        log.debug("calling convert_bytes");
-        long numOut = 0;
-        try {
-            numOut = IS_WINDOWS
-                ? generated.windows.convert_h.convert_bytes(pduName, fromEncodingSeg, toEncodingSeg, inputBuffer,
-                    bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize)
-                : generated.linux.convert_h.convert_bytes(pduName, fromEncodingSeg, toEncodingSeg, inputBuffer,
-                    bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize);
-        } catch (Throwable ex) {
-            log.error("error converting",ex);
-            throw ex;
-        }
-        log.debug("numOut: {}", numOut);
-        if (numOut < 0) {
-            // Error was returned
-            String error = errorBuffer.getString(0);
-            log.error(error);
-            throw new ConvertException(error);
-        }
-        outputArray = new byte[(int) numOut];
-        MemorySegment heapOutput = MemorySegment.ofArray(outputArray);
-        MemorySegment.copy(outputBuffer, 0, heapOutput, 0, numOut);
-
-        return outputArray;
+    /**
+     * Convert an UPER encoded MessageFrame to XER without checking constraints.  Allows producing
+     * XER with constraint violations.  This is usually not recommended but can be useful for
+     * diagnostic purposes.
+     * @param uper The UPER encoded MessageFrame
+     * @return XER encoded result
+     */
+    public String uperToXerNoConstraintCheck(byte[] uper) {
+        return super.uperToXer(MESSAGE_FRAME_PDU, uper);
     }
 
 }

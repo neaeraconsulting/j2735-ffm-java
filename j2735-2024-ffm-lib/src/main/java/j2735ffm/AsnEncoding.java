@@ -7,7 +7,7 @@ public enum AsnEncoding {
   UPER("uper", true, true),
   XER("xer", true, false),
   JER("jer", false, false),
-  OER("oer", false, true),
+  OER("oer", true, true),
   INVALID("invalid", false, false);
 
   private final String name;

@@ -23,24 +23,24 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-public class CodecConfigTest {
+class CodecConfigTest {
 
   @Test
-  public void messageFrameCodec_selectsLibraryPathForCurrentOs() {
+  void messageFrameCodec_selectsLibraryPathForCurrentOs() {
     CodecConfig codecConfig = new CodecConfig(newConfig());
 
     assertThrowsWithExpectedPath(codecConfig::messageFrameCodec);
   }
 
   @Test
-  public void dot2Codec_selectsLibraryPathForCurrentOs() {
+  void dot2Codec_selectsLibraryPathForCurrentOs() {
     CodecConfig codecConfig = new CodecConfig(newConfig());
 
     assertThrowsWithExpectedPath(codecConfig::dot2Codec);
   }
 
   @Test
-  public void generalCodec_selectsLibraryPathForCurrentOs() {
+  void generalCodec_selectsLibraryPathForCurrentOs() {
     CodecConfig codecConfig = new CodecConfig(newConfig());
 
     assertThrowsWithExpectedPath(codecConfig::generalCodec);

@@ -37,7 +37,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 @Slf4j
-public class Ieee1609Dot2DataCodecTest {
+class Ieee1609Dot2DataCodecTest {
 
   static final long TEXT_BUFFER_SIZE = 262144L;
   static final long BINARY_BUFFER_SIZE = 8192L;
@@ -55,7 +55,7 @@ public class Ieee1609Dot2DataCodecTest {
   }
 
   @BeforeAll
-  public static void setup() {
+  static void setup() {
     String libResource = isWindows() ? "j2735ffm/asnapplication.dll" : "j2735ffm/libasnapplication.so";
     URL url = Ieee1609Dot2DataCodecTest.class.getClassLoader().getResource(libResource);
     log.info("Loading library {}", libResource);
@@ -72,12 +72,12 @@ public class Ieee1609Dot2DataCodecTest {
   }
 
   @Test
-  public void testLibraryLoaded() {
+  void testLibraryLoaded() {
     assertThat(codec, notNullValue());
   }
 
   @Test
-  public void oerToXer_unsecuredBsm() {
+  void oerToXer_unsecuredBsm() {
     String xer = codec.oerToXer(hexNoWs(loadResource("Ieee1609Dot2Data_unsecured_bsm.coer.hex")));
     assertThat(xer, notNullValue());
     assertThat(xer, containsString("<Ieee1609Dot2Data>"));
@@ -85,7 +85,7 @@ public class Ieee1609Dot2DataCodecTest {
   }
 
   @Test
-  public void oerToXer_signed() {
+  void oerToXer_signed() {
     String xer = codec.oerToXer(hexNoWs(loadResource("Ieee1609Dot2Data_signed.hex")));
     log.info("xer from oer: {}", xer);
     assertThat(xer, notNullValue());
@@ -93,7 +93,7 @@ public class Ieee1609Dot2DataCodecTest {
   }
 
   @Test
-  public void oerToXerNoConstraintCheck_matchesOerToXer() {
+  void oerToXerNoConstraintCheck_matchesOerToXer() {
     byte[] oer = hexNoWs(loadResource("Ieee1609Dot2Data_unsecured_bsm.coer.hex"));
     String xer = codec.oerToXerNoConstraintCheck(oer);
     assertThat(xer, notNullValue());
@@ -102,7 +102,7 @@ public class Ieee1609Dot2DataCodecTest {
 
   @ParameterizedTest
   @MethodSource("oerHexFixtures")
-  public void oerToXer_xerToOer_roundTrip(final String oerHex) {
+  void oerToXer_xerToOer_roundTrip(final String oerHex) {
     byte[] oer = hexNoWs(oerHex);
     String xer = codec.oerToXer(oer);
     assertThat(xer, notNullValue());
@@ -112,7 +112,7 @@ public class Ieee1609Dot2DataCodecTest {
   }
 
   @Test
-  public void xerToOer_fromSyntheticXer() {
+  void xerToOer_fromSyntheticXer() {
     byte[] oer = codec.xerToOer(UNSECURED_XER);
     assertThat(oer, notNullValue());
     String xer = codec.oerToXer(oer);

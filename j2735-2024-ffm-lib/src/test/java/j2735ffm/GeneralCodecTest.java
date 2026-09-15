@@ -43,7 +43,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 @Slf4j
-public class GeneralCodecTest {
+class GeneralCodecTest {
 
   static final long TEXT_BUFFER_SIZE = 262144L;
   static final long BINARY_BUFFER_SIZE = 8192L;
@@ -71,7 +71,7 @@ public class GeneralCodecTest {
   }
 
   @BeforeAll
-  public static void setup() {
+  static void setup() {
     String libResource = isWindows() ? "j2735ffm/asnapplication.dll" : "j2735ffm/libasnapplication.so";
     URL url = GeneralCodecTest.class.getClassLoader().getResource(libResource);
     log.info("Loading library {}", libResource);
@@ -88,7 +88,7 @@ public class GeneralCodecTest {
   }
 
   @Test
-  public void testLibraryLoaded() {
+  void testLibraryLoaded() {
     assertThat(codec, notNullValue());
     assertThat(codec.textBufferSize, equalTo(TEXT_BUFFER_SIZE));
     assertThat(codec.binaryBufferSize, equalTo(BINARY_BUFFER_SIZE));
@@ -96,7 +96,7 @@ public class GeneralCodecTest {
   }
 
   @Test
-  public void convertGeneral_uperToXer_messageFrame() {
+  void convertGeneral_uperToXer_messageFrame() {
     byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
     byte[] result = codec.convertGeneral(input, VEHICLE_EVENT_FLAGS_PDU, UPER, XER);
     assertThat(result, notNullValue());
@@ -106,7 +106,7 @@ public class GeneralCodecTest {
 
   @ParameterizedTest
   @MethodSource("ieee1609OerHex")
-  public void convertGeneral_oerToXer_and_back_ieee1609(final String oerHex) {
+  void convertGeneral_oerToXer_and_back_ieee1609(final String oerHex) {
     log.info("oer hex: {}", oerHex);
     byte[] oer = hexNoWs(oerHex);
     byte[] xerBytes = null;
@@ -131,7 +131,7 @@ public class GeneralCodecTest {
   }
 
   @Test
-  public void xerToOer_oerToXer_explicitPdu() {
+  void xerToOer_oerToXer_explicitPdu() {
     byte[] oer = codec.xerToOer(IEEE_1609_PDU, UNSECURED_XER);
     assertThat(oer, notNullValue());
     String xer = codec.oerToXer(IEEE_1609_PDU, oer);
@@ -141,7 +141,7 @@ public class GeneralCodecTest {
   }
 
   @Test
-  public void xerToUper_uperToXer_explicitPdu() {
+  void xerToUper_uperToXer_explicitPdu() {
     String xer = loadResource("SPAT_MF.xml");
     byte[] uper = codec.xerToUper(MessageFrameCodec.MESSAGE_FRAME_PDU, xer);
     assertThat(uper, notNullValue());
@@ -152,7 +152,7 @@ public class GeneralCodecTest {
   }
 
   @Test
-  public void convertGeneral_badPdu_throws() {
+  void convertGeneral_badPdu_throws() {
     byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
     assertThrows(
         RuntimeException.class,
@@ -161,7 +161,7 @@ public class GeneralCodecTest {
   }
 
   @Test
-  public void convertBatch_convertsAllItems_uperToXer() {
+  void convertBatch_convertsAllItems_uperToXer() {
     byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
     List<byte[]> results = codec.convertBatch(List.of(input, input), VEHICLE_EVENT_FLAGS_PDU, UPER, XER);
     assertThat(results, hasSize(2));
@@ -171,7 +171,7 @@ public class GeneralCodecTest {
   }
 
   @Test
-  public void convertBatch_skipsOversizedItem_returnsOnlySuccessful() {
+  void convertBatch_skipsOversizedItem_returnsOnlySuccessful() {
     byte[] oversized = new byte[(int) BINARY_BUFFER_SIZE + 1];
     byte[] valid = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
     List<byte[]> results = codec.convertBatch(List.of(oversized, valid), VEHICLE_EVENT_FLAGS_PDU, UPER, XER);
@@ -180,7 +180,7 @@ public class GeneralCodecTest {
   }
 
   @Test
-  public void convertBatch_skipsFailedItem_returnsOnlySuccessful() {
+  void convertBatch_skipsFailedItem_returnsOnlySuccessful() {
     byte[] malformed = hexFormat.parseHex(MALFORMED_SSM_UPER);
     byte[] valid = hexFormat.parseHex(loadResource("SSM.hex"));
     List<byte[]> results = codec.convertBatch(List.of(malformed, valid), SSM_PDU, UPER, XER);

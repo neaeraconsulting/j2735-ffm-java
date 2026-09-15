@@ -41,7 +41,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @Slf4j
 @WebMvcTest(ApiController.class)
-public class ApiControllerTest {
+class ApiControllerTest {
 
   @Autowired
   MockMvc mockMvc;
@@ -62,14 +62,14 @@ public class ApiControllerTest {
   private static final String SOME_PDU = "VehicleEventFlags";
 
   @Test
-  public void healthCheck_returnsOkMessage() throws Exception {
+  void healthCheck_returnsOkMessage() throws Exception {
     mockMvc.perform(get("/health"))
         .andExpect(status().isOk())
         .andExpect(content().string(equalTo("I am in good health, thanks for checking.")));
   }
 
   @Test
-  public void xerToUper_returnsUperBytes() throws Exception {
+  void xerToUper_returnsUperBytes() throws Exception {
     when(codec.xerToUper(SAMPLE_XER)).thenReturn(SAMPLE_UPER);
 
     mockMvc.perform(post("/xer/uper/bin")
@@ -83,7 +83,7 @@ public class ApiControllerTest {
   }
 
   @Test
-  public void xerToUperHex_returnsHexString() throws Exception {
+  void xerToUperHex_returnsHexString() throws Exception {
     when(codec.xerToUper(SAMPLE_XER)).thenReturn(SAMPLE_UPER);
 
     mockMvc.perform(post("/xer/uper/hex")
@@ -94,7 +94,7 @@ public class ApiControllerTest {
   }
 
   @Test
-  public void uperToXer_octetStreamBody_returnsXer() throws Exception {
+  void uperToXer_octetStreamBody_returnsXer() throws Exception {
     when(codec.uperToXer(SAMPLE_UPER)).thenReturn(SAMPLE_XER);
 
     mockMvc.perform(post("/uper/bin/xer")
@@ -105,7 +105,7 @@ public class ApiControllerTest {
   }
 
   @Test
-  public void uperHexToXer_returnsXer() throws Exception {
+  void uperHexToXer_returnsXer() throws Exception {
     when(codec.uperToXer(SAMPLE_UPER)).thenReturn(SAMPLE_XER);
 
     mockMvc.perform(post("/uper/hex/xer")
@@ -116,7 +116,7 @@ public class ApiControllerTest {
   }
 
   @Test
-  public void oerHexToXer_returnsXer() throws Exception {
+  void oerHexToXer_returnsXer() throws Exception {
     when(dot2Codec.oerToXer(SAMPLE_OER)).thenReturn(SAMPLE_XER);
 
     mockMvc.perform(post("/oer/hex/xer")
@@ -127,7 +127,7 @@ public class ApiControllerTest {
   }
 
   @Test
-  public void xerToOerHex_returnsHexString() throws Exception {
+  void xerToOerHex_returnsHexString() throws Exception {
     when(dot2Codec.xerToOer(SAMPLE_XER)).thenReturn(SAMPLE_OER);
 
     mockMvc.perform(post("/xer/oer/hex")
@@ -138,7 +138,7 @@ public class ApiControllerTest {
   }
 
   @Test
-  public void xerToUperHexAnyPdu_xmlContentType_delegatesToGeneralCodecXerToUper() throws Exception {
+  void xerToUperHexAnyPdu_xmlContentType_delegatesToGeneralCodecXerToUper() throws Exception {
     when(generalCodec.xerToUper(SOME_PDU, SAMPLE_XER)).thenReturn(SAMPLE_UPER);
 
     mockMvc.perform(post("/xer/uper/hex/" + SOME_PDU)
@@ -151,7 +151,7 @@ public class ApiControllerTest {
   }
 
   @Test
-  public void uperHexToXerAnyPdu_textPlainContentType_delegatesToGeneralCodecUperToXer() throws Exception {
+  void uperHexToXerAnyPdu_textPlainContentType_delegatesToGeneralCodecUperToXer() throws Exception {
     when(generalCodec.uperToXer(SOME_PDU, SAMPLE_UPER)).thenReturn(SAMPLE_XER);
 
     mockMvc.perform(post("/xer/uper/hex/" + SOME_PDU)
@@ -164,7 +164,7 @@ public class ApiControllerTest {
   }
 
   @Test
-  public void xerToUperHex_codecThrows_propagatesError() {
+  void xerToUperHex_codecThrows_propagatesError() {
     when(codec.xerToUper(SAMPLE_XER)).thenThrow(new RuntimeException("conversion failed"));
 
     assertThrows(Exception.class, () ->
@@ -174,7 +174,7 @@ public class ApiControllerTest {
   }
 
   @Test
-  public void uperHexToXer_malformedHex_throwsIllegalArgumentException() {
+  void uperHexToXer_malformedHex_throwsIllegalArgumentException() {
     assertThrows(Exception.class, () ->
         mockMvc.perform(post("/uper/hex/xer")
             .contentType(MediaType.TEXT_PLAIN)

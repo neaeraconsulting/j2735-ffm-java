@@ -26,16 +26,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class AsnEncodingTest {
+class AsnEncodingTest {
 
   @ParameterizedTest
   @MethodSource("nameAndExpectedEncoding")
-  public void fromName_matchesCaseInsensitively(final String name, final AsnEncoding expected) {
+  void fromName_matchesCaseInsensitively(final String name, final AsnEncoding expected) {
     assertThat(AsnEncoding.fromName(name), equalTo(expected));
   }
 
   @Test
-  public void fromName_unknownName_throwsIllegalArgumentException() {
+  void fromName_unknownName_throwsIllegalArgumentException() {
     IllegalArgumentException ex = assertThrows(
         IllegalArgumentException.class,
         () -> AsnEncoding.fromName("bogus")
@@ -44,24 +44,24 @@ public class AsnEncodingTest {
   }
 
   @Test
-  public void uper_isSupportedAndBinary() {
+  void uper_isSupportedAndBinary() {
     assertThat(AsnEncoding.UPER.isSupported(), equalTo(true));
     assertThat(AsnEncoding.UPER.isBinary(), equalTo(true));
   }
 
   @Test
-  public void xer_isSupportedButNotBinary() {
+  void xer_isSupportedButNotBinary() {
     assertThat(AsnEncoding.XER.isSupported(), equalTo(true));
     assertThat(AsnEncoding.XER.isBinary(), equalTo(false));
   }
 
   @Test
-  public void jer_isNotSupported() {
+  void jer_isNotSupported() {
     assertThat(AsnEncoding.JER.isSupported(), equalTo(false));
   }
 
   @Test
-  public void invalid_isNotSupported() {
+  void invalid_isNotSupported() {
     assertThat(AsnEncoding.INVALID.isSupported(), equalTo(false));
   }
 

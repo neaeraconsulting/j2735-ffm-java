@@ -187,7 +187,9 @@ docker compose -f docker-compose-build.yml up --build -d
 docker compose -f docker-compose-build-arm64.yml up --build -d
 ```
 
-**Note:** If you're building ARM64 libraries on an x86 CPU, you'll need to use Docker buildx with platform emulation. See the [Cross-Platform Linux Builds](#cross-platform-linux-builds) section below.
+The ARM64 Compose file sets `platform: linux/arm64`, so it works on an ARM64 host and on an x86 host when Docker Desktop or Docker Engine has ARM64 emulation available. It builds and runs the ARM64 container and writes the artifacts to the host folders shown in the Compose file.
+
+**Note:** For the x86-host setup and direct `docker buildx` alternative, see the [Cross-Platform Linux Builds](#cross-platform-linux-builds) section below.
 
 The compiled shared library is copied to the `lib` folder.
 
@@ -226,7 +228,7 @@ to facilitate the method this library uses for loading the library, instead of t
 
 ### Cross-Platform Linux Builds
 
-When building ARM64 libraries on an x86 CPU (or vice versa), Docker Compose may not work directly due to architecture mismatches. Use Docker buildx instead, which supports cross-platform builds through QEMU emulation.
+When building ARM64 libraries on an x86 CPU, the recommended path is the ARM64 Compose file above. It supplies the target platform and runs the generated ARM64 container through Docker's QEMU emulation support.
 
 #### Prerequisites
 
@@ -261,9 +263,9 @@ When building ARM64 libraries on an x86 CPU (or vice versa), Docker Compose may 
    docker buildx inspect --bootstrap
    ```
 
-#### Building ARM64 on x86 CPU
+#### Direct buildx alternative
 
-Use Docker buildx directly with the `--platform` flag:
+If you need direct buildx control, use the following commands. The example uses POSIX shell line continuations (`\`). In PowerShell, replace each trailing `\` with a backtick (`` ` ``), or run the command on one line; use `${PWD}` instead of `$(pwd)` for the volume paths. The Compose command is shell-independent and avoids these continuation differences.
 
 ```bash
 # Build for ARM64 on x86 CPU
@@ -283,36 +285,6 @@ docker run --rm \
   -v "$(pwd)/generated-jextract:/generated-jextract" \
   -v "$(pwd)/generated-files:/generated-files" \
   build-container-arm64:latest \
-  /build/run-jextract.sh
-```
-
-**Windows PowerShell:**
-
-First switch to the Linux engine (see [Prerequisites](#prerequisites) above):
-```powershell
-docker context use desktop-linux
-docker buildx use desktop-linux
-```
-
-Then build and extract artifacts:
-```powershell
-# Build for ARM64 on x86 CPU
-docker buildx build `
-  --platform linux/arm64 `
-  --build-arg TARGETARCH=arm64 `
-  --build-arg JEXTRACT_ARCH=aarch64 `
-  --build-arg LIBRARY_SUFFIX=-arm64 `
-  -f Dockerfile-build `
-  --load `
-  -t build-container-arm64:latest `
-  .
-
-# Then run the container to extract artifacts
-docker run --rm `
-  -v "${PWD}/j2735-2024-ffm-lib/lib:/build-lib" `
-  -v "${PWD}/generated-jextract:/generated-jextract" `
-  -v "${PWD}/generated-files:/generated-files" `
-  build-container-arm64:latest `
   /build/run-jextract.sh
 ```
 
@@ -331,29 +303,7 @@ docker compose -f docker-compose-build.yml up --build -d
 docker compose -f docker-compose-build-arm64.yml up --build -d
 ```
 
-**If building ARM64 on an x86 CPU**, use Docker buildx for the ARM64 build (see [Cross-Platform Linux Builds](#cross-platform-linux-builds) above):
-```bash
-# Build for amd64 (native)
-docker compose -f docker-compose-build.yml up --build -d
-
-# Build for arm64 (using buildx on x86)
-docker buildx build \
-  --platform linux/arm64 \
-  --build-arg TARGETARCH=arm64 \
-  --build-arg JEXTRACT_ARCH=aarch64 \
-  --build-arg LIBRARY_SUFFIX=-arm64 \
-  -f Dockerfile-build \
-  --load \
-  -t build-container-arm64:latest \
-  .
-
-docker run --rm \
-  -v "$(pwd)/j2735-2024-ffm-lib/lib:/build-lib" \
-  -v "$(pwd)/generated-jextract:/generated-jextract" \
-  -v "$(pwd)/generated-files:/generated-files" \
-  build-container-arm64:latest \
-  /build/run-jextract.sh
-```
+**If building ARM64 on an x86 CPU**, use the ARM64 Compose path described in [Cross-Platform Linux Builds](#cross-platform-linux-builds) above. The same Compose command works on both host architectures; only the emulation setup differs.
 
 ### Build Output
 

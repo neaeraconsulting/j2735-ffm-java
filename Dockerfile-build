@@ -27,7 +27,7 @@
 #
 FROM debian:trixie-slim AS build-shared
 ARG TARGETARCH=amd64
-ARG LIBRARY_SUFFIX=
+ARG LIBRARY_SUFFIX=""
 USER root
 WORKDIR /build
 
@@ -39,19 +39,19 @@ ENV CC=/usr/bin/clang
 
 # Set library suffix based on architecture if not provided
 RUN if [ -z "$LIBRARY_SUFFIX" ]; then \
-  if [ "$TARGETARCH" = "arm64" ]; then \
-  export LIBRARY_SUFFIX=-arm64; \
-  else \
-  export LIBRARY_SUFFIX=; \
-  fi; \
-  fi && \
-  apt update && \
-  apt install -y clang && \
-  apt install -y cmake && \
-  cmake . && \
-  cmake --build . --verbose && \
-  mkdir out && \
-  cp libasnapplication.so.1.0.0 out/libasnapplication${LIBRARY_SUFFIX}.so
+      if [ "$TARGETARCH" = "arm64" ]; then \
+        export LIBRARY_SUFFIX=-arm64; \
+      else \
+        export LIBRARY_SUFFIX=""; \
+      fi; \
+    fi && \
+    apt update && \
+    apt install -y clang && \
+    apt install -y cmake && \
+    cmake . && \
+    cmake --build . --verbose && \
+    mkdir out && \
+    cp libasnapplication.so.1.0.0 out/libasnapplication${LIBRARY_SUFFIX}.so
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
@@ -64,7 +64,7 @@ RUN if [ -z "$LIBRARY_SUFFIX" ]; then \
 FROM eclipse-temurin:25-jdk-noble AS jextract
 ARG TARGETARCH=amd64
 ARG JEXTRACT_ARCH=x64
-ARG LIBRARY_SUFFIX=
+ARG LIBRARY_SUFFIX=""
 USER root
 WORKDIR /build
 

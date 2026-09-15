@@ -1,6 +1,8 @@
+# Works on ARM64 hosts and on x86 hosts with Docker Desktop/QEMU emulation.
 name: build-container-arm64
 services:
   build-container-arm64:
+    platform: linux/arm64
     build:
       context: .
       dockerfile: Dockerfile-build

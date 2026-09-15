@@ -313,7 +313,9 @@ The build process generates:
   - `j2735-2024-ffm-lib/lib/libasnapplication.so` (amd64)
   - `j2735-2024-ffm-lib/lib/libasnapplication-arm64.so` (arm64)
 - **Generated C files** - Copied to the `generated-files` folder (useful for debugging the `src/convert.h` API in an IDE)
-- **Java bindings** - Copied to the `generated-jextract` folder (architecture-independent)
+- **Java bindings** - Copied to the `generated-jextract` folder (shared by Linux amd64 and arm64)
+
+The Linux amd64 and arm64 builds use the same LP64 ABI, so the architecture-specific jextract executable is needed to run generation in the target container but does not require a second Linux Java binding tree. Windows remains a separate binding set because its ABI differs.
 
 ### Windows Library
 

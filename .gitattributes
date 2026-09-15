@@ -1,6 +1,7 @@
 #
 # https://help.github.com/articles/dealing-with-line-endings/
 #
+# Linux shell scripts must use lf (CRLF breaks shebang in Docker on Windows)
 *.sh            text eol=lf
 /gradlew        text eol=lf
 
@@ -9,4 +10,3 @@
 
 # Binary files should be left untouched
 *.jar           binary
-

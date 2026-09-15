@@ -77,6 +77,9 @@ public class LibraryDetector {
         String arch = detectArchitecture();
 
         if (os.equals("windows")) {
+            if (arch.equals("arm64")) {
+                return baseName + "-arm64.dll";
+            }
             return baseName + ".dll";
         }
         if (os.equals("linux")) {

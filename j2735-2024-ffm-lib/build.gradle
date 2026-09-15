@@ -31,6 +31,7 @@ dependencies {
 def linuxArtifactPath = "$project.rootDir/lib/libasnapplication.so"
 def linuxArm64ArtifactPath = "$project.rootDir/lib/libasnapplication-arm64.so"
 def windowsArtifactPath = "$project.rootDir/lib/asnapplication.dll"
+def windowsArm64ArtifactPath = "$project.rootDir/lib/asnapplication-arm64.dll"
 
 publishing {
 
@@ -52,6 +53,12 @@ publishing {
             artifact(windowsArtifactPath) {
                 classifier = 'windows-x86_64'
                 extension = 'dll'
+            }
+            if (file(windowsArm64ArtifactPath).exists()) {
+                artifact(windowsArm64ArtifactPath) {
+                    classifier = 'windows-aarch64'
+                    extension = 'dll'
+                }
             }
             pom {
                 name = project.name

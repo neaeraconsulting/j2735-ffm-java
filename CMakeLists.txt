@@ -55,6 +55,14 @@ target_include_directories(asnapplication PUBLIC src)
 
 set_target_properties(asnapplication PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${LIB_SO_VERSION})
 
+# Suppress the SONAME so convert-v2x (and everything else that links against
+# this library) depends on the plain "libasnapplication.so" instead of the
+# versioned "libasnapplication.so.1" - the name used everywhere else in this
+# repo (Java FFM loading, out/libasnapplication.so in Dockerfile-build).
+if(UNIX)
+    set_target_properties(asnapplication PROPERTIES NO_SONAME TRUE)
+endif()
+
 # Sets -fPIC option to create library suitable for jextract
 set_property(TARGET asnapplication PROPERTY POSITION_INDEPENDENT_CODE ON)
 
@@ -74,6 +82,16 @@ add_executable(convert-v2x
         src/main.c
 )
 target_link_libraries(convert-v2x PRIVATE asnapplication)
+
+# So convert-v2x finds libasnapplication.so sitting next to it once copied
+# out of the build tree, matching how Windows resolves the DLL from the
+# executable's own directory.
+if(UNIX)
+    set_target_properties(convert-v2x PROPERTIES
+        BUILD_WITH_INSTALL_RPATH TRUE
+        INSTALL_RPATH "$ORIGIN"
+    )
+endif()
 
 # Emit CodeView debug info (clang's -gcodeview, understood by WinDbg/Visual Studio,
 # unlike the DWARF clang emits by default on non-Windows targets) and have lld

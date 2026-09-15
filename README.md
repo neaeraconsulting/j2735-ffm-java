@@ -228,7 +228,7 @@ with this:
 
 to facilitate the method this library uses for loading the library, instead of the default lookup code.
 
-After regenerating the native libraries to the `lib` folder, also be sure to copy them to `j2735-2024-ffm-lib/lib` and to the [j2735-2024-ffm-lib/src/test/resources/j2735ffm](j2735-2024-ffm-lib/src/test/resources/j2735ffm) folder since they are required for publication and the unit tests in that Java project via:
+After regenerating the native libraries to the `lib` folder, also be sure to copy them to [j2735-2024-ffm-lib/lib](j2735-2024-ffm-lib/lib) and to the [j2735-2024-ffm-lib/src/test/resources/j2735ffm](j2735-2024-ffm-lib/src/test/resources/j2735ffm) folder since they are required for publication and the unit tests in that Java project via:
 
 ```bash
 cd lib

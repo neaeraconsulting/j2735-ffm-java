@@ -87,6 +87,14 @@ public class MessageFrameCodecTest {
     log.info("hex: {}", hex);
   }
 
+  @Test
+  public void uperToXerNoConstraintCheck_matchesUperToXer() {
+    byte[] uper = hexFormat.parseHex(loadResource("BSM_MF.hex"));
+    String xer = codec.uperToXerNoConstraintCheck(uper);
+    assertThat(xer, notNullValue());
+    assertThat(xer, equalTo(codec.uperToXer(uper)));
+  }
+
   @ParameterizedTest
   @MethodSource("messageFrameHex")
   public void uperToXer(final String uper) {

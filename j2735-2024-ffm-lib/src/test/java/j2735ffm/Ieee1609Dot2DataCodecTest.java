@@ -17,6 +17,7 @@ package j2735ffm;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -89,6 +90,14 @@ public class Ieee1609Dot2DataCodecTest {
     log.info("xer from oer: {}", xer);
     assertThat(xer, notNullValue());
     assertThat(xer, containsString("<signedData>"));
+  }
+
+  @Test
+  public void oerToXerNoConstraintCheck_matchesOerToXer() {
+    byte[] oer = hexNoWs(loadResource("Ieee1609Dot2Data_unsecured_bsm.coer.hex"));
+    String xer = codec.oerToXerNoConstraintCheck(oer);
+    assertThat(xer, notNullValue());
+    assertThat(xer, equalTo(codec.oerToXer(oer)));
   }
 
   @ParameterizedTest

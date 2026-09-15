@@ -22,6 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -32,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HexFormat;
+import java.util.List;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -56,6 +58,9 @@ public class GeneralCodecTest {
       "<VehicleEventFlags>10000001111111</VehicleEventFlags>";
 
   private static final String IEEE_1609_PDU = Ieee1609Dot2DataCodec.IEEE1609_DOT2_DATA_PDU;
+
+  private static final String SSM_PDU = "SignalStatusMessage";
+  private static final String MALFORMED_SSM_UPER = "65e539";
 
   private static final String UNSECURED_XER =
       "<Ieee1609Dot2Data><protocolVersion>3</protocolVersion><content>"
@@ -153,6 +158,33 @@ public class GeneralCodecTest {
         RuntimeException.class,
         () -> codec.convertGeneral(input, "BadPDU", UPER, XER)
     );
+  }
+
+  @Test
+  public void convertBatch_convertsAllItems_uperToXer() {
+    byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    List<byte[]> results = codec.convertBatch(List.of(input, input), VEHICLE_EVENT_FLAGS_PDU, UPER, XER);
+    assertThat(results, hasSize(2));
+    for (byte[] result : results) {
+      assertThat(new String(result, StandardCharsets.UTF_8), equalTo(VEHICLE_EVENT_FLAGS_XER));
+    }
+  }
+
+  @Test
+  public void convertBatch_skipsOversizedItem_returnsOnlySuccessful() {
+    byte[] oversized = new byte[(int) BINARY_BUFFER_SIZE + 1];
+    byte[] valid = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    List<byte[]> results = codec.convertBatch(List.of(oversized, valid), VEHICLE_EVENT_FLAGS_PDU, UPER, XER);
+    assertThat(results, hasSize(1));
+    assertThat(new String(results.getFirst(), StandardCharsets.UTF_8), equalTo(VEHICLE_EVENT_FLAGS_XER));
+  }
+
+  @Test
+  public void convertBatch_skipsFailedItem_returnsOnlySuccessful() {
+    byte[] malformed = hexFormat.parseHex(MALFORMED_SSM_UPER);
+    byte[] valid = hexFormat.parseHex(loadResource("SSM.hex"));
+    List<byte[]> results = codec.convertBatch(List.of(malformed, valid), SSM_PDU, UPER, XER);
+    assertThat(results, hasSize(1));
   }
 
   private static Stream<String> ieee1609OerHex() {

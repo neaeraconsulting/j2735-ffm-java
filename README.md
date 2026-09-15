@@ -178,18 +178,20 @@ The native library for Linux and the jextract bindings can be regenerated using 
 ### Building for a Single Architecture
 
 **For linux/amd64 (x86_64):**
+
 ```bash
 docker compose -f docker-compose-build.yml up --build -d
 ```
 
 **For linux/arm64 (aarch64):**
+
 ```bash
 docker compose -f docker-compose-build-arm64.yml up --build -d
 ```
 
 The ARM64 Compose file sets `platform: linux/arm64`, so it works on an ARM64 host and on an x86 host when Docker Desktop or Docker Engine has ARM64 emulation available. It builds and runs the ARM64 container and writes the artifacts to the host folders shown in the Compose file.
 
-**Note:** For the x86-host setup and direct `docker buildx` alternative, see the [Cross-Platform Linux Builds](#cross-platform-linux-builds) section below.
+The unzipped C files are copied to the `generated-files` folder.  They are not persisted to the repo since they are identical to the files from asn1_codec, but it can be useful to have the unzipped files for debugging the `src/convert.h` API in an IDE.  
 
 The compiled shared library is copied to the `lib` folder.
 
@@ -226,113 +228,16 @@ with this:
 
 to facilitate the method this library uses for loading the library, instead of the default lookup code.
 
-### Cross-Platform Linux Builds
-
-When building ARM64 libraries on an x86 CPU, the recommended path is the ARM64 Compose file above. It supplies the target platform and runs the generated ARM64 container through Docker's QEMU emulation support.
-
-#### Prerequisites
-
-1. **Enable buildx** (usually included in Docker Desktop and recent Docker Engine versions):
-   ```bash
-   docker buildx version
-   ```
-
-2. **Set up emulation** — steps differ by host OS:
-
-   **Docker Desktop on Windows or macOS** (recommended):
-
-   Docker Desktop ships with ARM64 emulation built in. Switch to the Linux engine before building — do **not** run the `multiarch/qemu-user-static` command (it requires `--privileged`, which is not supported on the Windows container engine and is unnecessary here):
-
-   ```bash
-   docker context use desktop-linux
-   docker buildx use desktop-linux
-   docker buildx inspect --bootstrap
-   ```
-
-   Confirm `linux/arm64` appears in the Platforms list. To switch back to Windows containers later: `docker context use default`.
-
-   **Native Linux** (Docker Engine without Docker Desktop):
-
-   ```bash
-   docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-   ```
-
-3. **Create a buildx builder** (only if `docker buildx inspect --bootstrap` does not list your target platform):
-   ```bash
-   docker buildx create --name multiarch-builder --use
-   docker buildx inspect --bootstrap
-   ```
-
-#### Direct buildx alternative
-
-If you need direct buildx control, use the following commands. The example uses POSIX shell line continuations (`\`). In PowerShell, replace each trailing `\` with a backtick (`` ` ``), or run the command on one line; use `${PWD}` instead of `$(pwd)` for the volume paths. The Compose command is shell-independent and avoids these continuation differences.
+After regenerating the native libraries to the `lib` folder, also be sure to copy them to `j2735-2024-ffm-lib/lib` and to the [j2735-2024-ffm-lib/src/test/resources/j2735ffm](j2735-2024-ffm-lib/src/test/resources/j2735ffm) folder since they are required for publication and the unit tests in that Java project via:
 
 ```bash
-# Build for ARM64 on x86 CPU
-docker buildx build \
-  --platform linux/arm64 \
-  --build-arg TARGETARCH=arm64 \
-  --build-arg JEXTRACT_ARCH=aarch64 \
-  --build-arg LIBRARY_SUFFIX=-arm64 \
-  -f Dockerfile-build \
-  --load \
-  -t build-container-arm64:latest \
-  .
-
-# Then run the container to extract artifacts
-docker run --rm \
-  -v "$(pwd)/j2735-2024-ffm-lib/lib:/build-lib" \
-  -v "$(pwd)/generated-jextract:/generated-jextract" \
-  -v "$(pwd)/generated-files:/generated-files" \
-  build-container-arm64:latest \
-  /build/run-jextract.sh
-```
-
-**Note:** Cross-platform builds using QEMU emulation are slower than native builds. For faster builds, consider using a native ARM64 machine or a CI/CD service that supports ARM64 runners.
-
-### Building for Multiple Architectures
-
-To build libraries for both amd64 and arm64:
-
-**If building on native architectures** (amd64 machine for amd64, ARM64 machine for ARM64):
-```bash
-# Build for amd64
-docker compose -f docker-compose-build.yml up --build -d
-
-# Build for arm64 (on ARM64 machine)
-docker compose -f docker-compose-build-arm64.yml up --build -d
-```
-
-**If building ARM64 on an x86 CPU**, use the ARM64 Compose path described in [Cross-Platform Linux Builds](#cross-platform-linux-builds) above. The same Compose command works on both host architectures; only the emulation setup differs.
-
-### Build Output
-
-The build process generates:
-
-- **Native libraries** - Copied to the `j2735-2024-ffm-lib/lib` folder:
-  - `j2735-2024-ffm-lib/lib/libasnapplication.so` (amd64)
-  - `j2735-2024-ffm-lib/lib/libasnapplication-arm64.so` (arm64)
-- **Generated C files** - Copied to the `generated-files` folder (useful for debugging the `src/convert.h` API in an IDE)
-- **Java bindings** - Copied to the `generated-jextract` folder (shared by Linux amd64 and arm64)
-
-The Linux amd64 and arm64 builds use the same LP64 ABI, so the architecture-specific jextract executable is needed to run generation in the target container but does not require a second Linux Java binding tree. Windows remains a separate binding set because its ABI differs.
-
-### Windows Library
-
-The Windows library (`asnapplication.dll`) doesn't have an automated build process. It can be recreated using Visual Studio 2022 (not VSCode) with the Clang compiler for Windows. Some edits to the generated C files are required to build for Windows. Follow the instructions here: [C codec edits for Windows](generated-files/README.md). Then build via CMake in Visual Studio. The `CMakeSettings.json` file contains the Visual Studio configuration to use CMake with the clang compiler.
-
-### Copying Libraries for Unit Tests
-
-After regenerating the native libraries, copy them to the test resources folder:
-
-```bash
-cd j2735-2024-ffm-lib/lib
-# Copy amd64 library
-cp libasnapplication.so ../src/test/resources/j2735ffm/
-# Copy arm64 library (if built)
-cp libasnapplication-arm64.so ../src/test/resources/j2735ffm/ 2>/dev/null || true
-# Copy Windows library (if available)
-cp asnapplication.dll ../src/test/resources/j2735ffm/
+cd lib
+cp libasnapplication.so ../j2735-2024-ffm-lib/lib/
+cp libasnapplication-arm64.so ../j2735-2024-ffm-lib/lib/
+cp asnapplication.dll ../j2735-2024-ffm-lib/lib/
+cp libasnapplication.so ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
+cp libasnapplication-arm64.so ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
+cp asnapplication.dll ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
 ```
 
 
@@ -394,4 +299,3 @@ http://localhost:4000/api-docs
 or in YAML format at:
 
 http://localhost:4000/api-docs.yaml
-

@@ -12,7 +12,7 @@ services:
     restart: no
     volumes:
       - type: bind
-        source: ./j2735-2024-ffm-lib/lib
+        source: ./lib
         target: /build-lib/
       - type: bind
         source: ./generated-jextract

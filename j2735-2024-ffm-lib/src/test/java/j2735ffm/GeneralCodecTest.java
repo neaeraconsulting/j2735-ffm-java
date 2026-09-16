@@ -15,6 +15,7 @@
 */
 package j2735ffm;
 
+import static j2735ffm.AsnEncoding.JER;
 import static j2735ffm.AsnEncoding.OER;
 import static j2735ffm.AsnEncoding.UPER;
 import static j2735ffm.AsnEncoding.XER;
@@ -104,6 +105,20 @@ class GeneralCodecTest {
     assertThat(xer, equalTo(VEHICLE_EVENT_FLAGS_XER));
   }
 
+  @Test
+  void convertGeneral_uperToJer_and_back_vehicleEventFlags() {
+    byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    log.info("uper: {}", VEHICLE_EVENT_FLAGS_UPER);
+    // Ignore constraint check for this bitstring with extension
+    byte[] jerBytes = codec.convertGeneral(input, VEHICLE_EVENT_FLAGS_PDU, UPER, JER, false);
+    assertThat("jer is null", jerBytes, notNullValue());
+    String jer = new String(jerBytes, StandardCharsets.UTF_8);
+    log.info("jer: {}", jer);
+    byte[] roundTrip = codec.convertGeneral(jerBytes, VEHICLE_EVENT_FLAGS_PDU, JER, UPER, false);
+    assertThat("round trip uper differs", hexFormat.formatHex(roundTrip),
+        equalToIgnoringCase(VEHICLE_EVENT_FLAGS_UPER));
+  }
+
   @ParameterizedTest
   @MethodSource("ieee1609OerHex")
   void convertGeneral_oerToXer_and_back_ieee1609(final String oerHex) {
@@ -141,6 +156,17 @@ class GeneralCodecTest {
   }
 
   @Test
+  void jerToOer_oerToJer_explicitPdu() {
+    byte[] oer = codec.xerToOer(IEEE_1609_PDU, UNSECURED_XER);
+    log.info("oer: {}", hexFormat.formatHex(oer));
+    String jer = codec.oerToJer(IEEE_1609_PDU, oer);
+    assertThat(jer, notNullValue());
+    log.info("jer: {}", jer);
+    byte[] roundTrip = codec.jerToOer(IEEE_1609_PDU, jer);
+    assertThat(hexFormat.formatHex(roundTrip), equalToIgnoringCase(hexFormat.formatHex(oer)));
+  }
+
+  @Test
   void xerToUper_uperToXer_explicitPdu() {
     String xer = loadResource("SPAT_MF.xml");
     byte[] uper = codec.xerToUper(MessageFrameCodec.MESSAGE_FRAME_PDU, xer);
@@ -148,6 +174,19 @@ class GeneralCodecTest {
     String roundTripXer = codec.uperToXer(MessageFrameCodec.MESSAGE_FRAME_PDU, uper);
     byte[] roundTripUper = codec.xerToUper(MessageFrameCodec.MESSAGE_FRAME_PDU, roundTripXer);
     assertThat("round trip uper differs", hexFormat.formatHex(roundTripUper),
+        equalToIgnoringCase(hexFormat.formatHex(uper)));
+  }
+
+  @Test
+  void uperToJer_jerToUper_explicitPdu() {
+    String xer = loadResource("SPAT_MF.xml");
+    byte[] uper = codec.xerToUper(MessageFrameCodec.MESSAGE_FRAME_PDU, xer);
+    log.info("uper: {}", hexFormat.formatHex(uper));
+    String jer = codec.uperToJer(MessageFrameCodec.MESSAGE_FRAME_PDU, uper);
+    assertThat(jer, notNullValue());
+    log.info("jer: {}", jer);
+    byte[] roundTrip = codec.jerToUper(MessageFrameCodec.MESSAGE_FRAME_PDU, jer);
+    assertThat("round trip uper differs", hexFormat.formatHex(roundTrip),
         equalToIgnoringCase(hexFormat.formatHex(uper)));
   }
 

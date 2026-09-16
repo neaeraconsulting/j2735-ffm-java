@@ -111,6 +111,29 @@ class Ieee1609Dot2DataCodecTest {
         equalToIgnoringCase(oerHex.replaceAll("\\s", "")));
   }
 
+  @ParameterizedTest
+  @MethodSource("oerHexFixtures")
+  void oerToJer_jerToOer_roundTrip(final String oerHex) {
+    byte[] oer = hexNoWs(oerHex);
+    log.info("oer: {}", hexFormat.formatHex(oer));
+    String jer = codec.oerToJer(oer);
+    assertThat(jer, notNullValue());
+    log.info("jer: {}", jer);
+    byte[] roundTrip = codec.jerToOer(jer);
+    assertThat("round trip oer differs", hexFormat.formatHex(roundTrip),
+        equalToIgnoringCase(oerHex.replaceAll("\\s", "")));
+  }
+
+  @Test
+  void oerToJerNoConstraintCheck_matchesOerToJer() {
+    byte[] oer = hexNoWs(loadResource("Ieee1609Dot2Data_unsecured_bsm.coer.hex"));
+    log.info("oer: {}", hexFormat.formatHex(oer));
+    String jer = codec.oerToJerNoConstraintCheck(oer);
+    assertThat(jer, notNullValue());
+    log.info("jer: {}", jer);
+    assertThat(jer, equalTo(codec.oerToJer(oer)));
+  }
+
   @Test
   void xerToOer_fromSyntheticXer() {
     byte[] oer = codec.xerToOer(UNSECURED_XER);

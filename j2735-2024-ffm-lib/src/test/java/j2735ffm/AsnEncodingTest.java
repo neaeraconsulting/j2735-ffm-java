@@ -56,8 +56,9 @@ class AsnEncodingTest {
   }
 
   @Test
-  void jer_isNotSupported() {
-    assertThat(AsnEncoding.JER.isSupported(), equalTo(false));
+  void jer_isSupportedButNotBinary() {
+    assertThat(AsnEncoding.JER.isSupported(), equalTo(true));
+    assertThat(AsnEncoding.JER.isBinary(), equalTo(false));
   }
 
   @Test

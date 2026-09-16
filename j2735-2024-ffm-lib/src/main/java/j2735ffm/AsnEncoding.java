@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum AsnEncoding {
   UPER("uper", true, true),
   XER("xer", true, false),
-  JER("jer", false, false),
+  JER("jer", true, false),
   OER("oer", true, true),
   INVALID("invalid", false, false);
 

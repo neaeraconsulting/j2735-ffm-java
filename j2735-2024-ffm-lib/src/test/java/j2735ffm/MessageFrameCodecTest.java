@@ -109,6 +109,29 @@ class MessageFrameCodecTest {
   }
 
   @ParameterizedTest
+  @MethodSource("messageFrameHex")
+  void uperToJer(final String uper) {
+    log.info("uper: {}", uper);
+    String jer = codec.uperToJer(HexFormat.of().parseHex(uper));
+    assertThat("jer is null", jer, notNullValue());
+    log.info("jer: {}", jer);
+    byte[] roundTripUper = codec.jerToUper(jer);
+    String roundTripUperHex = hexFormat.formatHex(roundTripUper);
+    log.info("round trip uper: {}", roundTripUperHex);
+    assertThat("round trip hex differs", roundTripUperHex, equalToIgnoringCase(uper));
+  }
+
+  @Test
+  void uperToJerNoConstraintCheck_matchesUperToJer() {
+    byte[] uper = hexFormat.parseHex(loadResource("BSM_MF.hex"));
+    log.info("uper: {}", hexFormat.formatHex(uper));
+    String jer = codec.uperToJerNoConstraintCheck(uper);
+    assertThat(jer, notNullValue());
+    log.info("jer: {}", jer);
+    assertThat(jer, equalTo(codec.uperToJer(uper)));
+  }
+
+  @ParameterizedTest
   @MethodSource("convertData")
   void testConvertGeneral(final String pdu, final String inputHex, final String expectXer) {
     byte[] inputBytes = hexFormat.parseHex(inputHex);

@@ -23,19 +23,25 @@
 
 
 /**
- Convert a byte array representation of a J2735 PDU from one encoding to another.
- UPER format is rww bytes, not hex.
+ Convert a byte array representation of a PDU from one encoding to another.
+ UPER and OER format is raw bytes, not hex.
  XER is 8-bit text.
 
- @param pdu_name String with the J2735 PDU, e.g., "MessageFrame", "BasicSafetyMessage".
- @param from_encoding String with the name of the encoding of the input ("XER", or "UPER").
- @param to_encoding Target encoding for the output ("XER", or "UPER").
- @param ibuf The input byte array in raw UPER, or XER text format.
+ @param pdu_name String with the J2735, IEEE 1609.2, or SEMI PDU, e.g., "MessageFrame", "BasicSafetyMessage".
+ @param from_encoding String with the name of the encoding of the input ("xer", "jer", "uper", or "oer").
+ @param to_encoding Target encoding for the output ("xer", "jer", "uper", or "oer").
+ @param ibuf The input byte array in raw UPER, OER, or XER text format.
  @param ibuf_len The length of the input byte array.
  @param obuf The buffer to store the output byte array.
  @param max_obuf_len The maximum length of the output buffer.
  @param err_buf A buffer to store any error messages, populated with the error if the return value is -1.
  @param err_buf_len The size of the error buffer.
+ @param check_constraints Whether to check constraints.  1 = check constraints, 0 = don't check.
+ Generally it is good to check constraints but it can be useful to disable the check to see
+ the re-encoded output in case of violation.  The encoding with constraint violations is more likely to succeed if the
+ target encoding is textual (e.g. XER).  If the target is a binary format it may or may not be
+ possible to encode messages with constraint violations in which case a more cryptic error message
+ would be produced without the constraint check.
  @return The length of the converted output byte array, or -1 if there was an error doing the conversion.
 */
 int convert_bytes(
@@ -47,7 +53,8 @@ int convert_bytes(
     uint8_t * obuf,
     size_t max_obuf_len,
     char * err_buf,
-    size_t err_buf_len);
+    size_t err_buf_len,
+    int check_constraints);
 
 
 

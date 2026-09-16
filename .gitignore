@@ -7,6 +7,7 @@ build
 .idea/
 .profileconfig.json
 
+/lib/
 bin/
 **/bin/
 
@@ -22,4 +23,8 @@ out.log
 
 # Visual Studio
 .vs/
+
+# AI Tools
+.claude/
+CLAUDE.md
 

@@ -42,7 +42,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 @Slf4j
-public class MessageFrameCodecTest {
+class MessageFrameCodecTest {
 
   static MessageFrameCodec codec;
   final static HexFormat hexFormat = HexFormat.of();
@@ -53,7 +53,7 @@ public class MessageFrameCodecTest {
   }
 
   @BeforeAll
-  public static void setup() {
+  static void setup() {
 
     String libResource = isWindows() ? "j2735ffm/asnapplication.dll" : "j2735ffm/libasnapplication.so";
     URL url = MessageFrameCodecTest.class.getClassLoader().getResource(libResource);
@@ -73,13 +73,13 @@ public class MessageFrameCodecTest {
   }
 
   @Test
-  public void testLibraryLoaded() {
+  void testLibraryLoaded() {
     assertThat(codec, notNullValue());
     log.info("Library loaded");
   }
 
   @Test
-  public void testXerToUper() {
+  void testXerToUper() {
     final String xer = loadResource("SPAT_MF.xml");
     byte[] uper = codec.xerToUper(xer);
     assertThat(uper, notNullValue());
@@ -87,9 +87,17 @@ public class MessageFrameCodecTest {
     log.info("hex: {}", hex);
   }
 
+  @Test
+  void uperToXerNoConstraintCheck_matchesUperToXer() {
+    byte[] uper = hexFormat.parseHex(loadResource("BSM_MF.hex"));
+    String xer = codec.uperToXerNoConstraintCheck(uper);
+    assertThat(xer, notNullValue());
+    assertThat(xer, equalTo(codec.uperToXer(uper)));
+  }
+
   @ParameterizedTest
   @MethodSource("messageFrameHex")
-  public void uperToXer(final String uper) {
+  void uperToXer(final String uper) {
     // Normalize case
     String xer = codec.uperToXer(HexFormat.of().parseHex(uper));
     assertThat("xer is null", xer, notNullValue());
@@ -101,8 +109,31 @@ public class MessageFrameCodecTest {
   }
 
   @ParameterizedTest
+  @MethodSource("messageFrameHex")
+  void uperToJer(final String uper) {
+    log.info("uper: {}", uper);
+    String jer = codec.uperToJer(HexFormat.of().parseHex(uper));
+    assertThat("jer is null", jer, notNullValue());
+    log.info("jer: {}", jer);
+    byte[] roundTripUper = codec.jerToUper(jer);
+    String roundTripUperHex = hexFormat.formatHex(roundTripUper);
+    log.info("round trip uper: {}", roundTripUperHex);
+    assertThat("round trip hex differs", roundTripUperHex, equalToIgnoringCase(uper));
+  }
+
+  @Test
+  void uperToJerNoConstraintCheck_matchesUperToJer() {
+    byte[] uper = hexFormat.parseHex(loadResource("BSM_MF.hex"));
+    log.info("uper: {}", hexFormat.formatHex(uper));
+    String jer = codec.uperToJerNoConstraintCheck(uper);
+    assertThat(jer, notNullValue());
+    log.info("jer: {}", jer);
+    assertThat(jer, equalTo(codec.uperToJer(uper)));
+  }
+
+  @ParameterizedTest
   @MethodSource("convertData")
-  public void testConvertGeneral(final String pdu, final String inputHex, final String expectXer) {
+  void testConvertGeneral(final String pdu, final String inputHex, final String expectXer) {
     byte[] inputBytes = hexFormat.parseHex(inputHex);
     byte[] result = codec.convertGeneral(inputBytes, pdu, UPER, XER);
     assertThat("result is null", result, notNullValue());
@@ -113,7 +144,7 @@ public class MessageFrameCodecTest {
   }
 
   @Test
-  public void invalidPduError() {
+  void invalidPduError() {
     byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
     assertThrows(
         RuntimeException.class,
@@ -124,7 +155,7 @@ public class MessageFrameCodecTest {
   }
 
   @Test
-  public void invalidInputEncodingError() {
+  void invalidInputEncodingError() {
     byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
     assertThrows(
         RuntimeException.class,
@@ -135,7 +166,7 @@ public class MessageFrameCodecTest {
   }
 
   @Test
-  public void invalidOutputEncodingError() {
+  void invalidOutputEncodingError() {
     byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
     assertThrows(
         RuntimeException.class,
@@ -146,7 +177,7 @@ public class MessageFrameCodecTest {
   }
 
   @Test
-  public void malformedUperError() {
+  void malformedUperError() {
     byte[] inputBytes = hexFormat.parseHex(MALFORMED_SSM);
     assertThrows(
         RuntimeException.class,
@@ -157,7 +188,7 @@ public class MessageFrameCodecTest {
   }
 
   @Test
-  public void testConvertGeneral_InputTooBig() {
+  void testConvertGeneral_InputTooBig() {
     byte[] inputBytes = new byte[10000];
     RuntimeException re = assertThrows(
         RuntimeException.class,
@@ -169,7 +200,7 @@ public class MessageFrameCodecTest {
   }
 
   @Test
-  public void testUperToXer_InputTooBig() {
+  void testUperToXer_InputTooBig() {
     byte[] inputBytes = new byte[10000];
     RuntimeException re = assertThrows(
         RuntimeException.class,
@@ -181,7 +212,7 @@ public class MessageFrameCodecTest {
   }
 
   @Test
-  public void testXerToUper_InputTooBig() {
+  void testXerToUper_InputTooBig() {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < 262144L + 10; i++) {
       sb.append("A");

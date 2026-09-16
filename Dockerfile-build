@@ -37,7 +37,8 @@ RUN apt update && \
     cmake . && \
     cmake --build . --verbose && \
     mkdir out && \
-    cp libasnapplication.so.1.0.0 out/libasnapplication.so
+    cp libasnapplication.so out/libasnapplication.so && \
+    cp convert-v2x out/convert-v2x
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["tail", "-f", "/dev/null"]

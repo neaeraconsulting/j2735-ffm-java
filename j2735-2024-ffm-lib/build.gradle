@@ -65,10 +65,11 @@ publishing {
                         organization = 'Neaera Consulting'
                         organizationUrl = 'https://neaeraconsulting.com/'
                     }
-                }
-                contributors {
-                    contributor {
+                    developer {
+                        id = 'menglish'
                         name = 'Michael English'
+                        organization = 'Neaera Consulting'
+                        organizationUrl = 'https://neaeraconsulting.com/'
                     }
                 }
                 scm {

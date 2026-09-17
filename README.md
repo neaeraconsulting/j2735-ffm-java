@@ -25,12 +25,12 @@ Add the Java dependency to the `dependencies` section in the normal way, and als
 ```groovy
 dependencies {
     ...
-    implementation 'com.neaeraconsulting:j2735-2024-ffm-lib:3.0.0'
+    implementation 'com.neaeraconsulting:j2735-2024-ffm-lib:3.0.0-beta1'
     
     nativeLibraryArtifact_windows_x86_64 (
             group: 'com.neaeraconsulting',
             name: 'j2735-2024-ffm-lib',
-            version: '3.0.0-beta',
+            version: '3.0.0-beta1',
             classifier: 'windows-x86_64',
             ext: 'dll',
             transitive: false
@@ -39,7 +39,7 @@ dependencies {
     nativeLibraryArtifact_linux_x86_64 (
             group: 'com.neaeraconsulting',
             name: 'j2735-2024-ffm-lib',
-            version: '3.0.0-beta',
+            version: '3.0.0-beta1',
             classifier: 'linux-x86_64',
             ext: 'so',
             transitive: false

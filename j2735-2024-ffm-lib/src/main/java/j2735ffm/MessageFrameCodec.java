@@ -38,6 +38,9 @@ import static j2735ffm.AsnEncoding.UPER;
 @Slf4j
 public class MessageFrameCodec {
 
+    /**
+     * PDU name for the MessageFrame message
+     */
     public final static String MESSAGE_FRAME_PDU = "MessageFrame";
 
     /**
@@ -66,6 +69,13 @@ public class MessageFrameCodec {
     private static final boolean IS_WINDOWS =
         System.getProperty("os.name").toLowerCase().contains("win");
 
+    /**
+     * Constructor.  Deprecated in favor of {@link #MessageFrameCodec(long, long, long, Path)}
+     * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
+     * @param uperBufferSize - Size of the input or output buffer for UPER binary encoding.
+     * @param messageFrameAllocateSize - Unused
+     * @param asnCodecCtxMaxStackSize - Unused
+     */
     @Deprecated
     public MessageFrameCodec(
             long textBufferSize,
@@ -79,6 +89,7 @@ public class MessageFrameCodec {
      * Constructor.  Configures the library and loads the underlying native library
      * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
      * @param uperBufferSize - Size of the input or output buffer for UPER binary encoding.
+     * @param errorBufferSize - Size of the buffer for error messages returned from the native library
      * @param libraryPath - Absolute or relative path to the native library, e.g. "/usr/lib/libasnapplication.so"
      */
     public MessageFrameCodec(long textBufferSize, long uperBufferSize, long errorBufferSize,

@@ -23,3 +23,5 @@ out.log
 # Visual Studio
 .vs/
 
+# Agents related files
+.agents/**

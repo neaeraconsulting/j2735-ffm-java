@@ -89,7 +89,8 @@ public class LibraryDetector {
     }
 
     /**
-     * Finds the native library in a directory, trying architecture-specific paths first.
+     * Finds the native library in a directory, checking an OS/arch subdirectory then the root.
+     * Does not fall back across architectures.
      * @param baseDirectory Base directory to search
      * @param libraryName Base name of the library (e.g., "asnapplication")
      * @return Path to the library, or null if not found
@@ -114,21 +115,13 @@ public class LibraryDetector {
             return found;
         }
 
-        // Try without architecture suffix for Linux (backward compatibility)
-        if (os.equals("linux") && !arch.equals("amd64")) {
-            found = existingFile(baseDirectory.resolve("lib" + libraryName + ".so"), null);
-            if (found != null) {
-                log.warn("Using fallback library path (may be wrong architecture): {}", found);
-                return found;
-            }
-        }
-
         log.error("Library not found in {}", baseDirectory);
         return null;
     }
 
     /**
-     * Finds the native library from a resource path (for use in JARs).
+     * Finds the native library as an exploded classpath {@code file:} resource.
+     * Does not load natives from inside a JAR; use {@link #findLibrary} for that.
      * @param resourceBasePath Base resource path (e.g., "j2735ffm")
      * @param libraryName Base name of the library (e.g., "asnapplication")
      * @return Path to the library, or null if not found
@@ -181,6 +174,14 @@ public class LibraryDetector {
     private static Path resourceAsPath(String resourcePath) {
         URL url = LibraryDetector.class.getClassLoader().getResource(resourcePath);
         if (url == null) {
+            return null;
+        }
+        if (!"file".equalsIgnoreCase(url.getProtocol())) {
+            log.error(
+                "Library resource is not a filesystem path (protocol {}): {}. "
+                    + "Native libraries must be loaded from a file path, not from inside a JAR.",
+                url.getProtocol(),
+                resourcePath);
             return null;
         }
         try {

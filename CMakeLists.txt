@@ -104,3 +104,7 @@ if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_link_options(asnapplication PRIVATE -Wl,--pdb=asnapplication.pdb)
     target_link_options(convert-v2x PRIVATE -Wl,--pdb=convert-v2x.pdb)
 endif()
+
+# convert-v2x CLI tests, run with `ctest --output-on-failure`
+enable_testing()
+add_subdirectory(test/cli)

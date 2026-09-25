@@ -414,6 +414,12 @@ cd j2735-2024-ffm-lib
 ./gradlew clean build test
 ```
 
+The `convert-v2x` CLI has black-box tests in [test/cli](test/cli) that pipe the data files through the binary and check stdout, stderr and the exit code.  Both Docker builds run them with `ctest` right after compiling, so a failing test fails the build.  To run them in a local CMake build directory:
+
+```bash
+cmake . && cmake --build . && ctest --output-on-failure
+```
+
 ## Demo API and Test Scripts
 
 Requires:

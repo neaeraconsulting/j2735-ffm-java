@@ -190,6 +190,11 @@ public class GeneralCodec {
             MemorySegment inputBuffer = arena.allocate(inputBufferSize);
             MemorySegment outputBuffer = arena.allocate(outputBufferSize);
             MemorySegment errorBuffer = arena.allocate(errorBufferSize);
+            MemorySegment pduName = arena.allocateFrom(pdu, StandardCharsets.UTF_8);
+            MemorySegment fromEncodingSeg = arena.allocateFrom(fromEncoding.getName(),
+                StandardCharsets.UTF_8);
+            MemorySegment toEncodingSeg = arena.allocateFrom(toEncoding.getName(),
+                StandardCharsets.UTF_8);
             for (byte[] inputBytes : inputBytesList) {
                 if (inputBytes.length > inputBufferSize) {
                     String errMsg = String.format("One batched input message is too large: %d > %d",
@@ -198,10 +203,9 @@ public class GeneralCodec {
                     continue;
                 }
                 try {
-                    byte[] outputBytes = convert(arena, inputBytes, fromEncoding.getName(),
-                        toEncoding.getName(), inputBuffer, outputBuffer, outputBufferSize,
-                        errorBuffer,
-                        errorBufferSize, pdu, checkConstraints);
+                    byte[] outputBytes = convert(arena, inputBytes, inputBuffer, pduName,
+                        fromEncodingSeg, toEncodingSeg, outputBuffer, outputBufferSize, errorBuffer,
+                        errorBufferSize, checkConstraints);
                     outputBytesList.add(outputBytes);
                 } catch (ConvertException ce) {
                     log.error("error converting one batched item", ce);
@@ -384,14 +388,29 @@ public class GeneralCodec {
             long errorBufferSize, final String pdu, boolean checkConstraints)
             throws ConvertException {
         log.debug("convert: {} {}, check constraints: {}", fromEncoding, toEncoding, checkConstraints);
-        byte[] outputArray = null;
-
-        MemorySegment heapBytes = MemorySegment.ofArray(bytes);
-        inputBuffer.copyFrom(heapBytes);
         MemorySegment pduName = arena.allocateFrom(pdu, StandardCharsets.UTF_8);
         MemorySegment fromEncodingSeg = arena.allocateFrom(fromEncoding,
             StandardCharsets.UTF_8);
         MemorySegment toEncodingSeg = arena.allocateFrom(toEncoding, StandardCharsets.UTF_8);
+        return convert(arena, bytes, inputBuffer, pduName, fromEncodingSeg, toEncodingSeg,
+            outputBuffer, outputBufferSize, errorBuffer, errorBufferSize, checkConstraints);
+    }
+
+    // Converts a single message with the given pre-allocated input/output buffers
+    // Does not dispose of the buffers.  Does not allocate any buffers including pdu
+    // and encoding string buffers.
+    private byte[] convert(Arena arena, final byte[] bytes,
+        MemorySegment inputBuffer, MemorySegment pduName,
+        MemorySegment fromEncodingSeg, MemorySegment toEncodingSeg,
+        MemorySegment outputBuffer, long outputBufferSize, MemorySegment errorBuffer,
+        long errorBufferSize, boolean checkConstraints)
+        throws ConvertException {
+
+        byte[] outputArray = null;
+
+        MemorySegment heapBytes = MemorySegment.ofArray(bytes);
+        inputBuffer.copyFrom(heapBytes);
+
         log.debug("calling convert_bytes");
         long numOut = 0;
         int iCheckConstraints = checkConstraints ? 1 : 0;

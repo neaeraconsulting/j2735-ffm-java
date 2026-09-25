@@ -27,15 +27,17 @@ WORKDIR /build
 ADD ./asn1_codec/asn1c_combined/generated-files/2024.tar.gz /build
 ADD ./CMakeLists.txt                                        /build
 COPY ./src                                                  /build/src/
+COPY ./test                                                 /build/test/
 
 ENV CC=/usr/bin/clang
 
-# Install prereqs
+# Install prereqs, build, and run the convert-v2x CLI tests
 RUN apt update && \
     apt install -y clang && \
     apt install -y cmake && \
     cmake . && \
     cmake --build . --verbose && \
+    ctest --output-on-failure && \
     mkdir out && \
     cp libasnapplication.so out/libasnapplication.so && \
     cp convert-v2x out/convert-v2x

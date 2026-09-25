@@ -73,6 +73,7 @@ RUN [Environment]::SetEnvironmentVariable('PATH', 'C:\\cmake\\bin;C:\\llvm-mingw
 ADD ./asn1_codec/asn1c_combined/generated-files/2024.tar.gz C:/build/
 COPY ./CMakeLists.txt C:/build/
 COPY ./src            C:/build/src/
+COPY ./test           C:/build/test/
 
 # Windows-specific asn1c workarounds:
 #
@@ -105,14 +106,16 @@ RUN $filesToRemove = @( \
         -replace '&asn_DEF_DetectedChargeObject,', '// &asn_DEF_DetectedChargeObject,' \
         | Set-Content $pduPath ;
 
-# Build the DLL and the convert-v2x CLI. $ErrorActionPreference only catches
-# PowerShell-terminating errors, not a non-zero exit code from a native
-# process, so check explicitly after each cmake invocation instead of
-# silently falling through to Copy-Item.
+# Build the DLL and the convert-v2x CLI, then run the CLI tests.
+# $ErrorActionPreference only catches PowerShell-terminating errors, not a
+# non-zero exit code from a native process, so check explicitly after each
+# cmake/ctest invocation instead of silently falling through to Copy-Item.
 RUN cmake -G Ninja -DCMAKE_C_COMPILER=clang . ; \
     if ($LASTEXITCODE -ne 0) { throw "cmake configure failed with exit code $LASTEXITCODE" } ; \
     cmake --build . --verbose ; \
     if ($LASTEXITCODE -ne 0) { throw "cmake build failed with exit code $LASTEXITCODE" } ; \
+    ctest --output-on-failure ; \
+    if ($LASTEXITCODE -ne 0) { throw "ctest failed with exit code $LASTEXITCODE" } ; \
     New-Item -ItemType Directory -Force out | Out-Null ; \
     Copy-Item asnapplication.dll out\\asnapplication.dll ; \
     Copy-Item convert-v2x.exe out\\convert-v2x.exe ; \

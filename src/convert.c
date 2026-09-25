@@ -44,7 +44,7 @@ static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev, char * err
     	return ATS_CANONICAL_OER;
     }
     snprintf(err_buf, err_buf_len,
-      "Unknown encoding: %s  Expect 'xer', 'uper', or 'oer'.\n", abbrev);
+      "Unknown encoding: %s  Expect 'xer', 'jer', 'uper', or 'oer'.\n", abbrev);
     return ATS_INVALID;
 }
 
@@ -76,13 +76,13 @@ int convert_bytes(const char * pdu_name,
     enum asn_transfer_syntax osyntax = abbrev_to_syntax(to_encoding, err_buf, err_buf_len);
     if (osyntax == ATS_INVALID) {
         snprintf(err_buf, err_buf_len,
-          "Unknown output encoding: %s  Expect 'xer', 'uper', or 'oer'.\n", to_encoding);
+          "Unknown output encoding: %s  Expect 'xer', 'jer', 'uper', or 'oer'.\n", to_encoding);
         return RETURN_ERROR;
     }
     enum asn_transfer_syntax isyntax = abbrev_to_syntax(from_encoding, err_buf, err_buf_len);
     if (isyntax == ATS_INVALID) {
         snprintf(err_buf, err_buf_len,
-          "Unknown input encoding: %s  Expect 'xer', 'uper', or 'oer'.\n", from_encoding);
+          "Unknown input encoding: %s  Expect 'xer', 'jer', 'uper', or 'oer'.\n", from_encoding);
         return RETURN_ERROR;
     }
 

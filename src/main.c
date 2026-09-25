@@ -34,9 +34,11 @@ void usage() {
     printf(" where 'from-encoding' and 'to-encoding' can be 'uper', 'oer', 'xer', or 'jer'.\n");
     printf(" Reads one PDU record per line from stdin (bulk conversion is supported: one\n");
     printf(" input line in, one converted output line out, in order). Accepts UPER/OER as\n");
-    printf(" hex encoded text. A line that fails to convert prints an empty output line\n");
+    printf(" hex encoded text (an even number of hex digits, no whitespace or prefix).\n");
+    printf(" A line that fails to convert prints an empty output line\n");
     printf(" and logs the reason to stderr; remaining lines still get processed. The\n");
-    printf(" process exit code is nonzero if any line failed.\n\n");
+    printf(" process exit code is nonzero if any line failed. Lines longer than %d\n", LINE_BUF_SIZE - 1);
+    printf(" characters fail.\n\n");
     printf("Linux Examples:\n\n");
     printf("  Convert a file of hex encoded UPER MessageFrames (one per line) to JER:\n");
     printf("  $ cat data.hex | ./convert-v2x uper jer MessageFrame > data.jsonl\n\n");
@@ -49,19 +51,48 @@ void usage() {
     printf("  Get-Content example.hex | .\\convert-v2x.exe oer xer Ieee1609Dot2Data > example.xml\n\n");
 }
 
+static int hex_nibble(char c) {
+    if (c >= '0' && c <= '9') return c - '0';
+    if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+    if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+    return -1;
+}
+
+// Checks that hex is a nonempty, even-length string of hex digits.
+// Returns 0 if valid, otherwise logs the reason to stderr and returns -1.
+static int validate_hex(const char *hex, size_t hex_len) {
+    if (hex_len == 0) {
+        fprintf(stderr, "Invalid hex input: empty line\n");
+        return -1;
+    }
+    if (hex_len % 2 != 0) {
+        fprintf(stderr, "Invalid hex input: odd length %zu\n", hex_len);
+        return -1;
+    }
+    for (size_t i = 0; i < hex_len; i++) {
+        if (hex_nibble(hex[i]) < 0) {
+            fprintf(stderr, "Invalid hex input: non-hex character at offset %zu\n", i);
+            return -1;
+        }
+    }
+    return 0;
+}
+
+// hex must already have passed validate_hex.
 static void hex_to_bin(const char *hex, size_t hex_len, uint8_t *bytes) {
-    size_t bin_len = hex_len / 2;
-    for (unsigned int i = 0, j = 0; i < bin_len; i++, j+=2) {
-        bytes[i] = (hex[j] % 32 + 9) % 25 * 16 + (hex[j+1] % 32 + 9) % 25;
+    for (size_t i = 0; i < hex_len / 2; i++) {
+        bytes[i] = (uint8_t)(hex_nibble(hex[2 * i]) << 4 | hex_nibble(hex[2 * i + 1]));
     }
 }
 
+// Writes 2 * bytes_len hex digits plus a NUL terminator.
 static void bin_to_hex(const uint8_t *bytes, size_t bytes_len, char *hex) {
     if (!bytes) {
         fprintf(stderr, "Null byte array passed to bin_to_hex\n");
         exit(EXIT_FAILURE);
     }
-    for (unsigned int i = 0; i < bytes_len; i++) {
+    *hex = '\0';
+    for (size_t i = 0; i < bytes_len; i++) {
         hex += sprintf(hex, "%02x", bytes[i]);
     }
 }
@@ -104,6 +135,12 @@ static int convert_str(const char * pdu_name,
 
     int num_encoded_bytes;
 
+    // Reject malformed hex before converting, so a bad line fails rather than
+    // being decoded as some other payload.
+    if ((is_from_uper || is_from_oer) && validate_hex(ibuf, len) != 0) {
+        return -1;
+    }
+
     uint8_t* obuf = calloc(max_buf_len, sizeof(uint8_t));
 
     const size_t err_buf_len = 255;
@@ -113,11 +150,12 @@ static int convert_str(const char * pdu_name,
     // If input is UPER or OER, convert from hex string to byte array
     if (is_from_uper || is_from_oer) {
         size_t input_bytes_len = len / 2;
-        unsigned char bytes[input_bytes_len];
+        uint8_t *bytes = malloc(input_bytes_len);
         hex_to_bin(ibuf, len, bytes);
         num_encoded_bytes = convert_bytes(pdu_name, from_encoding, to_encoding,
             bytes, input_bytes_len, obuf, max_buf_len,
             err_buf, err_buf_len, check_constraints);
+        free(bytes);
     } else {
         num_encoded_bytes = convert_bytes(pdu_name, from_encoding, to_encoding,
             (const uint8_t*)ibuf, len, obuf, max_buf_len,
@@ -138,29 +176,21 @@ static int convert_str(const char * pdu_name,
     }
 
 
-    // If output is UPER or OER, convert to hex string
-    if (is_to_uper || is_to_oer) {
-        // Convert UPER result to hex
-        size_t hex_result_len = num_encoded_bytes * 2;
-        char hex_result[hex_result_len];
-        bin_to_hex(obuf, num_encoded_bytes, hex_result);
-        if (hex_result_len > max_buf_len) {
-            strncpy(buf, hex_result, max_buf_len);
-            buf[max_buf_len - 1] = '\0';
-            fprintf(stderr, "Warning truncating hex output.  Max buffer size %zu is too small\n", max_buf_len);
-        } else {
-            strncpy(buf, hex_result, hex_result_len);
-            buf[hex_result_len] = '\0';
-        }
+    // Output that doesn't fit (with its NUL terminator) fails the line rather
+    // than being truncated into a different payload.
+    const size_t out_len = (is_to_uper || is_to_oer)
+        ? (size_t)num_encoded_bytes * 2
+        : (size_t)num_encoded_bytes;
+    if (out_len >= max_buf_len) {
+        fprintf(stderr, "Output of %zu characters does not fit in max buffer size %zu\n",
+            out_len, max_buf_len);
+        num_encoded_bytes = -1;
+    } else if (is_to_uper || is_to_oer) {
+        // If output is UPER or OER, convert to hex string
+        bin_to_hex(obuf, num_encoded_bytes, buf);
     } else {
-        if (num_encoded_bytes > max_buf_len) {
-            strncpy(buf, (const char *)obuf, max_buf_len);
-            buf[max_buf_len - 1] = '\0';
-            fprintf(stderr, "Warning, truncating output.  Max buffer size %zu is too small\n", max_buf_len);
-        } else {
-            strncpy(buf, (const char *)obuf, num_encoded_bytes);
-            buf[num_encoded_bytes] = '\0';
-        }
+        memcpy(buf, obuf, out_len);
+        buf[out_len] = '\0';
     }
 
     free(obuf);
@@ -181,8 +211,27 @@ int main(int ac, char *av[]) {
     int any_failed = 0;
 
     while (fgets(line, sizeof(line), stdin) != NULL) {
-        // Strip trailing CR/LF
         size_t len = strlen(line);
+
+        // A full buffer with no newline means fgets stopped mid-line. Unless the
+        // newline (or EOF) is the very next character, the line is too long:
+        // discard the rest of it and fail it as one record, rather than letting
+        // the remainder come back as extra records.
+        if (len == sizeof(line) - 1 && line[len - 1] != '\n') {
+            int c = getc(stdin);
+            if (c != '\n' && c != EOF) {
+                while (c != '\n' && c != EOF) {
+                    c = getc(stdin);
+                }
+                fprintf(stderr, "Input line exceeds maximum length of %zu characters\n",
+                    sizeof(line) - 1);
+                any_failed = 1;
+                printf("\n");
+                continue;
+            }
+        }
+
+        // Strip trailing CR/LF
         while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
             line[--len] = '\0';
         }

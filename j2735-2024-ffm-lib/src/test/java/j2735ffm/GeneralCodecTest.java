@@ -15,6 +15,7 @@
 */
 package j2735ffm;
 
+import static j2735ffm.AsnEncoding.INVALID;
 import static j2735ffm.AsnEncoding.JER;
 import static j2735ffm.AsnEncoding.OER;
 import static j2735ffm.AsnEncoding.UPER;
@@ -27,36 +28,31 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HexFormat;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 @Slf4j
-class GeneralCodecTest {
-
-  static final long TEXT_BUFFER_SIZE = 262144L;
-  static final long BINARY_BUFFER_SIZE = 8192L;
-  static final long ERROR_BUFFER_SIZE = 256L;
+class GeneralCodecTest extends BaseCodecTest {
 
   static GeneralCodec codec;
-  final static HexFormat hexFormat = HexFormat.of();
 
   private static final String VEHICLE_EVENT_FLAGS_PDU = "VehicleEventFlags";
-  private static final String VEHICLE_EVENT_FLAGS_UPER = "8740FE";
-  private static final String VEHICLE_EVENT_FLAGS_XER =
+  private static final String VEHICLE_EVENT_FLAGS_UPER_14BITS = "8740FE";
+  private static final String VEHICLE_EVENT_FLAGS_XER_14BITS =
       "<VehicleEventFlags>10000001111111</VehicleEventFlags>";
+  private static final String VEHICLE_EVENT_FLAGS_JER_14BITS = """
+      {"value":"81FC","length":14}""";
+  private static final String VEHICLE_EVENT_FLAGS_UPER_13BITS = "4004";
+  private static final String VEHICLE_EVENT_FLAGS_JER_13BITS = """
+      {"value":"8008","length":13}""";
+  private static final String VEHICLE_EVENT_FLAGS_XER_13BITS = "<VehicleEventFlags>1000000000001</VehicleEventFlags>";
 
   private static final String IEEE_1609_PDU = Ieee1609Dot2DataCodec.IEEE1609_DOT2_DATA_PDU;
 
@@ -67,25 +63,9 @@ class GeneralCodecTest {
       "<Ieee1609Dot2Data><protocolVersion>3</protocolVersion><content>"
           + "<unsecuredData>0102030405</unsecuredData></content></Ieee1609Dot2Data>";
 
-  static boolean isWindows() {
-    return System.getProperty("os.name").toLowerCase().contains("win");
-  }
-
   @BeforeAll
   static void setup() {
-    String libResource = isWindows() ? "j2735ffm/asnapplication.dll" : "j2735ffm/libasnapplication.so";
-    URL url = GeneralCodecTest.class.getClassLoader().getResource(libResource);
-    log.info("Loading library {}", libResource);
-    if (url == null) {
-      throw new RuntimeException("libasnapplication not found");
-    }
-    try {
-      Path libPath = Paths.get(url.toURI());
-      codec = new GeneralCodec(TEXT_BUFFER_SIZE, BINARY_BUFFER_SIZE, ERROR_BUFFER_SIZE, libPath);
-      log.info("Created codec");
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
-    }
+    codec = new GeneralCodec(TEXT_BUFFER_SIZE, BINARY_BUFFER_SIZE, ERROR_BUFFER_SIZE, getLibPath());
   }
 
   @Test
@@ -98,31 +78,31 @@ class GeneralCodecTest {
 
   @Test
   void convertGeneral_uperToXer_messageFrame() {
-    byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
     byte[] result = codec.convertGeneral(input, VEHICLE_EVENT_FLAGS_PDU, UPER, XER);
     assertThat(result, notNullValue());
     String xer = new String(result, StandardCharsets.UTF_8);
-    assertThat(xer, equalTo(VEHICLE_EVENT_FLAGS_XER));
+    assertThat(xer, equalTo(VEHICLE_EVENT_FLAGS_XER_14BITS));
   }
 
   @Test
   void convertGeneral_uperToJer_and_back_vehicleEventFlags() {
-    byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
-    log.info("uper: {}", VEHICLE_EVENT_FLAGS_UPER);
+    byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
+    log.debug("uper: {}", VEHICLE_EVENT_FLAGS_UPER_14BITS);
     // Ignore constraint check for this bitstring with extension
     byte[] jerBytes = codec.convertGeneral(input, VEHICLE_EVENT_FLAGS_PDU, UPER, JER, false);
     assertThat("jer is null", jerBytes, notNullValue());
     String jer = new String(jerBytes, StandardCharsets.UTF_8);
-    log.info("jer: {}", jer);
+    log.debug("jer: {}", jer);
     byte[] roundTrip = codec.convertGeneral(jerBytes, VEHICLE_EVENT_FLAGS_PDU, JER, UPER, false);
     assertThat("round trip uper differs", hexFormat.formatHex(roundTrip),
-        equalToIgnoringCase(VEHICLE_EVENT_FLAGS_UPER));
+        equalToIgnoringCase(VEHICLE_EVENT_FLAGS_UPER_14BITS));
   }
 
   @ParameterizedTest
   @MethodSource("ieee1609OerHex")
   void convertGeneral_oerToXer_and_back_ieee1609(final String oerHex) {
-    log.info("oer hex: {}", oerHex);
+    log.debug("oer hex: {}", oerHex);
     byte[] oer = hexNoWs(oerHex);
     byte[] xerBytes = null;
     try {
@@ -132,12 +112,12 @@ class GeneralCodecTest {
       xerBytes = codec.convertGeneral(oer, IEEE_1609_PDU, OER, XER, false);
       assertThat("xer is null", xerBytes, notNullValue());
       String xer = new String(xerBytes, StandardCharsets.UTF_8);
-      log.info("xer: {}", xer);
+      log.debug("xer: {}", xer);
       throw e;
     }
     assertThat("xer is null", xerBytes, notNullValue());
     String xer = new String(xerBytes, StandardCharsets.UTF_8);
-    log.info("xer: {}", xer);
+    log.debug("xer: {}", xer);
     assertThat(xer, containsString("<Ieee1609Dot2Data>"));
 
     byte[] roundTrip = codec.convertGeneral(xerBytes, IEEE_1609_PDU, XER, OER);
@@ -158,10 +138,10 @@ class GeneralCodecTest {
   @Test
   void jerToOer_oerToJer_explicitPdu() {
     byte[] oer = codec.xerToOer(IEEE_1609_PDU, UNSECURED_XER);
-    log.info("oer: {}", hexFormat.formatHex(oer));
+    log.debug("oer: {}", hexFormat.formatHex(oer));
     String jer = codec.oerToJer(IEEE_1609_PDU, oer);
     assertThat(jer, notNullValue());
-    log.info("jer: {}", jer);
+    log.debug("jer: {}", jer);
     byte[] roundTrip = codec.jerToOer(IEEE_1609_PDU, jer);
     assertThat(hexFormat.formatHex(roundTrip), equalToIgnoringCase(hexFormat.formatHex(oer)));
   }
@@ -181,10 +161,10 @@ class GeneralCodecTest {
   void uperToJer_jerToUper_explicitPdu() {
     String xer = loadResource("SPAT_MF.xml");
     byte[] uper = codec.xerToUper(MessageFrameCodec.MESSAGE_FRAME_PDU, xer);
-    log.info("uper: {}", hexFormat.formatHex(uper));
+    log.debug("uper: {}", hexFormat.formatHex(uper));
     String jer = codec.uperToJer(MessageFrameCodec.MESSAGE_FRAME_PDU, uper);
     assertThat(jer, notNullValue());
-    log.info("jer: {}", jer);
+    log.debug("jer: {}", jer);
     byte[] roundTrip = codec.jerToUper(MessageFrameCodec.MESSAGE_FRAME_PDU, jer);
     assertThat("round trip uper differs", hexFormat.formatHex(roundTrip),
         equalToIgnoringCase(hexFormat.formatHex(uper)));
@@ -192,7 +172,7 @@ class GeneralCodecTest {
 
   @Test
   void convertGeneral_badPdu_throws() {
-    byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
     assertThrows(
         RuntimeException.class,
         () -> codec.convertGeneral(input, "BadPDU", UPER, XER)
@@ -201,21 +181,22 @@ class GeneralCodecTest {
 
   @Test
   void convertBatch_convertsAllItems_uperToXer() {
-    byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
     List<byte[]> results = codec.convertBatch(List.of(input, input), VEHICLE_EVENT_FLAGS_PDU, UPER, XER);
     assertThat(results, hasSize(2));
     for (byte[] result : results) {
-      assertThat(new String(result, StandardCharsets.UTF_8), equalTo(VEHICLE_EVENT_FLAGS_XER));
+      assertThat(new String(result, StandardCharsets.UTF_8), equalTo(VEHICLE_EVENT_FLAGS_XER_14BITS));
     }
   }
 
   @Test
   void convertBatch_skipsOversizedItem_returnsOnlySuccessful() {
     byte[] oversized = new byte[(int) BINARY_BUFFER_SIZE + 1];
-    byte[] valid = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    byte[] valid = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
     List<byte[]> results = codec.convertBatch(List.of(oversized, valid), VEHICLE_EVENT_FLAGS_PDU, UPER, XER);
     assertThat(results, hasSize(1));
-    assertThat(new String(results.getFirst(), StandardCharsets.UTF_8), equalTo(VEHICLE_EVENT_FLAGS_XER));
+    assertThat(new String(results.getFirst(), StandardCharsets.UTF_8), equalTo(
+        VEHICLE_EVENT_FLAGS_XER_14BITS));
   }
 
   @Test
@@ -226,6 +207,81 @@ class GeneralCodecTest {
     assertThat(results, hasSize(1));
   }
 
+  @Test
+  void invalidPduError() {
+    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
+    assertThrows(
+        RuntimeException.class,
+        () -> {
+          codec.convertGeneral(inputBytes, "BadPDU", UPER, XER);
+        }
+    );
+  }
+
+  @Test
+  void invalidInputEncodingError() {
+    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
+    assertThrows(
+        RuntimeException.class,
+        () -> {
+          codec.convertGeneral(inputBytes, VEHICLE_EVENT_FLAGS_PDU, INVALID, XER);
+        }
+    );
+  }
+
+  @Test
+  void invalidOutputEncodingError() {
+    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
+    assertThrows(
+        RuntimeException.class,
+        () -> {
+          codec.convertGeneral(inputBytes, VEHICLE_EVENT_FLAGS_PDU, UPER, INVALID);
+        }
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("convertData")
+  void testConvertGeneral_XER(final String pdu, final String inputHex, final String expectXer) {
+    byte[] inputBytes = hexFormat.parseHex(inputHex);
+    byte[] result = codec.convertGeneral(inputBytes, pdu, UPER, XER);
+    assertThat("result is null", result, notNullValue());
+    if (expectXer != null) {
+      String xer = new String(result, StandardCharsets.UTF_8);
+      assertThat(xer, equalTo(expectXer));
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("convertData_JER")
+  void testConvertGeneral_JER(final String pdu, final String inputHex, final String expectJer) {
+    byte[] inputBytes = hexFormat.parseHex(inputHex);
+    byte[] result = codec.convertGeneral(inputBytes, pdu, UPER, JER);
+    assertThat("result is null", result, notNullValue());
+    if (expectJer != null) {
+      String xer = new String(result, StandardCharsets.UTF_8);
+      assertThat(xer, equalTo(expectJer));
+    }
+  }
+
+  private static Stream<Arguments> convertData() {
+    return Stream.of(
+        Arguments.of(VEHICLE_EVENT_FLAGS_PDU, VEHICLE_EVENT_FLAGS_UPER_14BITS,
+            VEHICLE_EVENT_FLAGS_XER_14BITS),
+        Arguments.of(VEHICLE_EVENT_FLAGS_PDU, VEHICLE_EVENT_FLAGS_UPER_13BITS, VEHICLE_EVENT_FLAGS_XER_13BITS),
+        Arguments.of(SSM_PDU, loadResource("SSM.hex"), null)
+    );
+  }
+
+  private static Stream<Arguments> convertData_JER() {
+    return Stream.of(
+        Arguments.of(VEHICLE_EVENT_FLAGS_PDU, VEHICLE_EVENT_FLAGS_UPER_14BITS,
+            VEHICLE_EVENT_FLAGS_JER_14BITS),
+        Arguments.of(VEHICLE_EVENT_FLAGS_PDU, VEHICLE_EVENT_FLAGS_UPER_13BITS, VEHICLE_EVENT_FLAGS_JER_13BITS),
+        Arguments.of(SSM_PDU, loadResource("SSM.hex"), null)
+    );
+  }
+
   private static Stream<String> ieee1609OerHex() {
     return Stream.of(
         loadResource("Ieee1609Dot2Data_unsecured_bsm.coer.hex"),
@@ -233,15 +289,5 @@ class GeneralCodecTest {
     );
   }
 
-  private static byte[] hexNoWs(String hex) {
-    return hexFormat.parseHex(hex.replaceAll("\\s", ""));
-  }
 
-  protected static String loadResource(String name) {
-    try {
-      return IOUtils.resourceToString("/j2735ffm/" + name, StandardCharsets.UTF_8);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
 }

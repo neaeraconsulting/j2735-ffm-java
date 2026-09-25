@@ -22,12 +22,7 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.notNullValue;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HexFormat;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -37,38 +32,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 @Slf4j
-class Ieee1609Dot2DataCodecTest {
-
-  static final long TEXT_BUFFER_SIZE = 262144L;
-  static final long BINARY_BUFFER_SIZE = 8192L;
-  static final long ERROR_BUFFER_SIZE = 256L;
+class Ieee1609Dot2DataCodecTest extends BaseCodecTest {
 
   static Ieee1609Dot2DataCodec codec;
-  final static HexFormat hexFormat = HexFormat.of();
 
   private static final String UNSECURED_XER =
       "<Ieee1609Dot2Data><protocolVersion>3</protocolVersion><content>"
           + "<unsecuredData>0102030405</unsecuredData></content></Ieee1609Dot2Data>";
 
-  static boolean isWindows() {
-    return System.getProperty("os.name").toLowerCase().contains("win");
-  }
-
   @BeforeAll
   static void setup() {
-    String libResource = isWindows() ? "j2735ffm/asnapplication.dll" : "j2735ffm/libasnapplication.so";
-    URL url = Ieee1609Dot2DataCodecTest.class.getClassLoader().getResource(libResource);
-    log.info("Loading library {}", libResource);
-    if (url == null) {
-      throw new RuntimeException("libasnapplication not found");
-    }
-    try {
-      Path libPath = Paths.get(url.toURI());
-      codec = new Ieee1609Dot2DataCodec(TEXT_BUFFER_SIZE, BINARY_BUFFER_SIZE, ERROR_BUFFER_SIZE, libPath);
-      log.info("Created codec");
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
-    }
+    codec = new Ieee1609Dot2DataCodec(TEXT_BUFFER_SIZE, BINARY_BUFFER_SIZE, ERROR_BUFFER_SIZE, getLibPath());
   }
 
   @Test
@@ -151,15 +125,7 @@ class Ieee1609Dot2DataCodecTest {
     );
   }
 
-  private static byte[] hexNoWs(String hex) {
-    return hexFormat.parseHex(hex.replaceAll("\\s", ""));
-  }
 
-  protected static String loadResource(String name) {
-    try {
-      return IOUtils.resourceToString("/j2735ffm/" + name, StandardCharsets.UTF_8);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
+
+
 }

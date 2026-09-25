@@ -8,7 +8,8 @@
 * Adds support for OER (Octet Encoding Rules).
 * Adds support for JER (JSON Encoding Rules).
 * Adds `GeneralCodec` and `Ieee1609Dot2DataCodec` classes.
-* Uses asn1_codec submodule from CDOT-CV repository with fix for 1609.2 decoding.
+* Adds batch convert methods
+* Uses asn1_codec submodule to version with 1609.2, Windows, and JER support.
 * Fix XER/JER decoding of 64-bit INTEGER values (such as IEEE 1609.2 Time64 generationTime) on Windows, where C `long` is 32 bits.
 * Adds native cli tools in:
   * Linux lib/convert-v2x

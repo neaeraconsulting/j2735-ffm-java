@@ -162,7 +162,7 @@ class ApiControllerTest {
   void uperHexToXerAnyPdu_textPlainContentType_delegatesToGeneralCodecUperToXer() throws Exception {
     when(generalCodec.uperToXer(SOME_PDU, SAMPLE_UPER)).thenReturn(SAMPLE_XER);
 
-    mockMvc.perform(post("/xer/uper/hex/" + SOME_PDU)
+    mockMvc.perform(post("/uper/hex/xer/" + SOME_PDU)
             .contentType(MediaType.TEXT_PLAIN)
             .content(HEX.formatHex(SAMPLE_UPER)))
         .andExpect(status().isOk())

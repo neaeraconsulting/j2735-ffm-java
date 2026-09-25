@@ -16,6 +16,7 @@
 package j2735ffm;
 
 import static j2735ffm.AsnEncoding.INVALID;
+import static j2735ffm.AsnEncoding.JER;
 import static j2735ffm.AsnEncoding.UPER;
 import static j2735ffm.AsnEncoding.XER;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -133,13 +134,25 @@ class MessageFrameCodecTest {
 
   @ParameterizedTest
   @MethodSource("convertData")
-  void testConvertGeneral(final String pdu, final String inputHex, final String expectXer) {
+  void testConvertGeneral_XER(final String pdu, final String inputHex, final String expectXer) {
     byte[] inputBytes = hexFormat.parseHex(inputHex);
     byte[] result = codec.convertGeneral(inputBytes, pdu, UPER, XER);
     assertThat("result is null", result, notNullValue());
     if (expectXer != null) {
       String xer = new String(result, StandardCharsets.UTF_8);
       assertThat(xer, equalTo(expectXer));
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("convertData_JER")
+  void testConvertGeneral_JER(final String pdu, final String inputHex, final String expectJer) {
+    byte[] inputBytes = hexFormat.parseHex(inputHex);
+    byte[] result = codec.convertGeneral(inputBytes, pdu, UPER, JER);
+    assertThat("result is null", result, notNullValue());
+    if (expectJer != null) {
+      String xer = new String(result, StandardCharsets.UTF_8);
+      assertThat(xer, equalTo(expectJer));
     }
   }
 
@@ -236,6 +249,15 @@ class MessageFrameCodecTest {
     );
   }
 
+  private static Stream<Arguments> convertData_JER() {
+    return Stream.of(
+        Arguments.of(VEHICLE_EVENT_FLAGS_PDU, VEHICLE_EVENT_FLAGS_UPER_14BITS,
+            VEHICLE_EVENT_FLAGS_JER_14BITS),
+        Arguments.of(VEHICLE_EVENT_FLAGS_PDU, VEHICLE_EVENT_FLAGS_UPER_13BITS, VEHICLE_EVENT_FLAGS_JER_13BITS),
+        Arguments.of(SSM_PDU, loadResource("SSM.hex"), null)
+    );
+  }
+
   private static Stream<Arguments> messageFrameHex() {
     return Stream.of(
       Arguments.of(loadResource("BSM_MF.hex")),
@@ -265,7 +287,11 @@ class MessageFrameCodecTest {
 
   private static final String VEHICLE_EVENT_FLAGS_UPER_14BITS = "8740FE";
   private static final String VEHICLE_EVENT_FLAGS_XER_14BITS = "<VehicleEventFlags>10000001111111</VehicleEventFlags>";
+  private static final String VEHICLE_EVENT_FLAGS_JER_14BITS = """
+      {"value":"81FC","length":14}""";
   private static final String VEHICLE_EVENT_FLAGS_UPER_13BITS = "4004";
+  private static final String VEHICLE_EVENT_FLAGS_JER_13BITS = """
+      {"value":"8008","length":13}""";
   private static final String VEHICLE_EVENT_FLAGS_XER_13BITS = "<VehicleEventFlags>1000000000001</VehicleEventFlags>";
   private static final String VEHICLE_EVENT_FLAGS_PDU = "VehicleEventFlags";
 

@@ -145,7 +145,7 @@ class MessageFrameCodecTest {
 
   @Test
   void invalidPduError() {
-    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
     assertThrows(
         RuntimeException.class,
         () -> {
@@ -156,7 +156,7 @@ class MessageFrameCodecTest {
 
   @Test
   void invalidInputEncodingError() {
-    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
     assertThrows(
         RuntimeException.class,
         () -> {
@@ -167,7 +167,7 @@ class MessageFrameCodecTest {
 
   @Test
   void invalidOutputEncodingError() {
-    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER);
+    byte[] inputBytes = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
     assertThrows(
         RuntimeException.class,
         () -> {
@@ -229,7 +229,9 @@ class MessageFrameCodecTest {
 
   private static Stream<Arguments> convertData() {
     return Stream.of(
-        Arguments.of(VEHICLE_EVENT_FLAGS_PDU, VEHICLE_EVENT_FLAGS_UPER, VEHICLE_EVENT_FLAGS_XER),
+        Arguments.of(VEHICLE_EVENT_FLAGS_PDU, VEHICLE_EVENT_FLAGS_UPER_14BITS,
+            VEHICLE_EVENT_FLAGS_XER_14BITS),
+        Arguments.of(VEHICLE_EVENT_FLAGS_PDU, VEHICLE_EVENT_FLAGS_UPER_13BITS, VEHICLE_EVENT_FLAGS_XER_13BITS),
         Arguments.of(SSM_PDU, loadResource("SSM.hex"), null)
     );
   }
@@ -261,8 +263,10 @@ class MessageFrameCodecTest {
     return str;
   }
 
-  private static final String VEHICLE_EVENT_FLAGS_UPER = "8740FE";
-  private static final String VEHICLE_EVENT_FLAGS_XER = "<VehicleEventFlags>10000001111111</VehicleEventFlags>";
+  private static final String VEHICLE_EVENT_FLAGS_UPER_14BITS = "8740FE";
+  private static final String VEHICLE_EVENT_FLAGS_XER_14BITS = "<VehicleEventFlags>10000001111111</VehicleEventFlags>";
+  private static final String VEHICLE_EVENT_FLAGS_UPER_13BITS = "4004";
+  private static final String VEHICLE_EVENT_FLAGS_XER_13BITS = "<VehicleEventFlags>1000000000001</VehicleEventFlags>";
   private static final String VEHICLE_EVENT_FLAGS_PDU = "VehicleEventFlags";
 
   private static final String SSM_PDU = "SignalStatusMessage";

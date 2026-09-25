@@ -15,10 +15,16 @@
 */
 package j2735api;
 
+import static j2735ffm.AsnEncoding.JER;
+import static j2735ffm.AsnEncoding.OER;
+import static j2735ffm.AsnEncoding.UPER;
+import static j2735ffm.AsnEncoding.XER;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import j2735ffm.GeneralCodec;
 import j2735ffm.Ieee1609Dot2DataCodec;
 import j2735ffm.MessageFrameCodec;
+import java.nio.charset.StandardCharsets;
 import java.util.HexFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -57,6 +64,7 @@ class ApiControllerTest {
 
   private static final HexFormat HEX = HexFormat.of();
   private static final String SAMPLE_XER = "<MessageFrame><messageId>20</messageId></MessageFrame>";
+  private static final String SAMPLE_JER = "{\"messageId\":20}";
   private static final byte[] SAMPLE_UPER = HEX.parseHex("8740FE");
   private static final byte[] SAMPLE_OER = HEX.parseHex("0003010203");
   private static final String SOME_PDU = "VehicleEventFlags";
@@ -179,5 +187,154 @@ class ApiControllerTest {
         mockMvc.perform(post("/uper/hex/xer")
             .contentType(MediaType.TEXT_PLAIN)
             .content("not-valid-hex")));
+  }
+
+  @Test
+  void jerToUperHex_returnsHexString() throws Exception {
+    when(codec.jerToUper(SAMPLE_JER)).thenReturn(SAMPLE_UPER);
+
+    mockMvc.perform(post("/jer/uper/hex")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(SAMPLE_JER))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo(HEX.formatHex(SAMPLE_UPER))));
+  }
+
+  @Test
+  void uperHexToJer_returnsJer() throws Exception {
+    when(codec.uperToJer(SAMPLE_UPER)).thenReturn(SAMPLE_JER);
+
+    mockMvc.perform(post("/uper/hex/jer")
+            .contentType(MediaType.TEXT_PLAIN)
+            .content(HEX.formatHex(SAMPLE_UPER)))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().string(equalTo(SAMPLE_JER)));
+  }
+
+  @Test
+  void jerToOerHex_returnsHexString() throws Exception {
+    when(dot2Codec.jerToOer(SAMPLE_JER)).thenReturn(SAMPLE_OER);
+
+    mockMvc.perform(post("/jer/oer/hex")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(SAMPLE_JER))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo(HEX.formatHex(SAMPLE_OER))));
+  }
+
+  @Test
+  void oerHexToJer_returnsJer() throws Exception {
+    when(dot2Codec.oerToJer(SAMPLE_OER)).thenReturn(SAMPLE_JER);
+
+    mockMvc.perform(post("/oer/hex/jer")
+            .contentType(MediaType.TEXT_PLAIN)
+            .content(HEX.formatHex(SAMPLE_OER)))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().string(equalTo(SAMPLE_JER)));
+  }
+
+  @Test
+  void jerToUperHexAnyPdu_delegatesToGeneralCodec() throws Exception {
+    when(generalCodec.jerToUper(SOME_PDU, SAMPLE_JER)).thenReturn(SAMPLE_UPER);
+
+    mockMvc.perform(post("/jer/uper/hex/" + SOME_PDU)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(SAMPLE_JER))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo(HEX.formatHex(SAMPLE_UPER))));
+  }
+
+  @Test
+  void uperHexToJerAnyPdu_delegatesToGeneralCodec() throws Exception {
+    when(generalCodec.uperToJer(SOME_PDU, SAMPLE_UPER)).thenReturn(SAMPLE_JER);
+
+    mockMvc.perform(post("/uper/hex/jer/" + SOME_PDU)
+            .contentType(MediaType.TEXT_PLAIN)
+            .content(HEX.formatHex(SAMPLE_UPER)))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo(SAMPLE_JER)));
+  }
+
+  @Test
+  void batchConvert_uperHexToJer_returnsOneLinePerMessage() throws Exception {
+    byte[] uper2 = HEX.parseHex("0102");
+    String jer2 = "{\"messageId\":21}";
+    when(generalCodec.convertGeneral(aryEq(SAMPLE_UPER), eq("MessageFrame"), eq(UPER), eq(JER)))
+        .thenReturn(SAMPLE_JER.getBytes(StandardCharsets.UTF_8));
+    when(generalCodec.convertGeneral(aryEq(uper2), eq("MessageFrame"), eq(UPER), eq(JER)))
+        .thenReturn(jer2.getBytes(StandardCharsets.UTF_8));
+
+    mockMvc.perform(post("/batch/uper/jer/MessageFrame")
+            .contentType(MediaType.TEXT_PLAIN)
+            .content(HEX.formatHex(SAMPLE_UPER) + "\n" + HEX.formatHex(uper2) + "\n"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo(SAMPLE_JER + "\n" + jer2)));
+  }
+
+  @Test
+  void batchConvert_jerToUperHex_returnsHexLines() throws Exception {
+    when(generalCodec.convertGeneral(aryEq(SAMPLE_JER.getBytes(StandardCharsets.UTF_8)),
+        eq("MessageFrame"), eq(JER), eq(UPER)))
+        .thenReturn(SAMPLE_UPER);
+
+    mockMvc.perform(post("/batch/jer/uper/MessageFrame")
+            .contentType(MediaType.TEXT_PLAIN)
+            .content(SAMPLE_JER + "\r\n" + SAMPLE_JER))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo(
+            HEX.formatHex(SAMPLE_UPER) + "\n" + HEX.formatHex(SAMPLE_UPER))));
+  }
+
+  @Test
+  void batchConvert_failedLine_outputsEmptyLine() throws Exception {
+    byte[] badUper = HEX.parseHex("ff");
+    when(generalCodec.convertGeneral(aryEq(SAMPLE_UPER), eq("MessageFrame"), eq(UPER), eq(XER)))
+        .thenReturn(SAMPLE_XER.getBytes(StandardCharsets.UTF_8));
+    when(generalCodec.convertGeneral(aryEq(badUper), eq("MessageFrame"), eq(UPER), eq(XER)))
+        .thenThrow(new RuntimeException("conversion failed"));
+
+    String uperHex = HEX.formatHex(SAMPLE_UPER);
+    mockMvc.perform(post("/batch/uper/xer/MessageFrame")
+            .contentType(MediaType.TEXT_PLAIN)
+            .content(uperHex + "\nff\n" + uperHex))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo(SAMPLE_XER + "\n\n" + SAMPLE_XER)));
+  }
+
+  @Test
+  void batchConvert_malformedHexLine_outputsEmptyLine() throws Exception {
+    when(generalCodec.convertGeneral(aryEq(SAMPLE_UPER), eq("MessageFrame"), eq(UPER), eq(JER)))
+        .thenReturn(SAMPLE_JER.getBytes(StandardCharsets.UTF_8));
+
+    mockMvc.perform(post("/batch/uper/jer/MessageFrame")
+            .contentType(MediaType.TEXT_PLAIN)
+            .content("not-valid-hex\n" + HEX.formatHex(SAMPLE_UPER)))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo("\n" + SAMPLE_JER)));
+  }
+
+  @Test
+  void batchConvert_blankLines_areSkipped() throws Exception {
+    when(generalCodec.convertGeneral(aryEq(SAMPLE_OER), eq("Ieee1609Dot2Data"), eq(OER), eq(JER)))
+        .thenReturn(SAMPLE_JER.getBytes(StandardCharsets.UTF_8));
+
+    String oerHex = HEX.formatHex(SAMPLE_OER);
+    mockMvc.perform(post("/batch/oer/jer/Ieee1609Dot2Data")
+            .contentType(MediaType.TEXT_PLAIN)
+            .content("\n" + oerHex + "\n\n   \n" + oerHex + "\n"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo(SAMPLE_JER + "\n" + SAMPLE_JER)));
+  }
+
+  @Test
+  void batchConvert_invalidEncoding_returnsBadRequest() throws Exception {
+    mockMvc.perform(post("/batch/uper/json/MessageFrame")
+            .contentType(MediaType.TEXT_PLAIN)
+            .content(HEX.formatHex(SAMPLE_UPER)))
+        .andExpect(status().isBadRequest());
+
+    verify(generalCodec, never()).convertGeneral(any(byte[].class), anyString(), any(), any());
   }
 }

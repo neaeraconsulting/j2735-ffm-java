@@ -11,7 +11,9 @@ public enum AsnEncoding {
   UPER("uper", true, true),
   /** ASN.1 XML Encoding Rules - text */
   XER("xer", true, false),
+  /** ASN.1 JSON Encoding Rules - text */
   JER("jer", true, false),
+  /** ASN.1 Octet Encoding Rules - binary */
   OER("oer", true, true),
   /** Unrecognized encoding */
   INVALID("invalid", false, false);

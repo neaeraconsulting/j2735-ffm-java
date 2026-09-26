@@ -24,6 +24,8 @@ out.log
 # Visual Studio
 .vs/
 
+# Agents related files
+.agents/**
 # AI Tools
 .claude/
 CLAUDE.md

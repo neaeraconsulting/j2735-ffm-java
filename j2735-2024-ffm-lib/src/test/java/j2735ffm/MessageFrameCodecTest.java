@@ -24,6 +24,9 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.HexFormat;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
@@ -42,8 +45,18 @@ class MessageFrameCodecTest extends BaseCodecTest {
   static MessageFrameCodec codec;
 
   @BeforeAll
-  static void setup() {
-    codec = new MessageFrameCodec(TEXT_BUFFER_SIZE, BINARY_BUFFER_SIZE, ERROR_BUFFER_SIZE, getLibPath());
+  public static void setup() {
+
+    Path libPath = LibraryDetector.findLibraryFromResource("j2735ffm", "asnapplication");
+    log.info("Loading library {}", libPath);
+
+    if (libPath == null) {
+      throw new RuntimeException("libasnapplication not found");
+    }
+    codec = new MessageFrameCodec(TEXT_BUFFER_SIZE, BINARY_BUFFER_SIZE, ERROR_BUFFER_SIZE, libPath);
+    log.info("Created codec");
+
+
   }
 
   @Test

@@ -65,6 +65,18 @@ public class GeneralCodec {
     private static final boolean IS_WINDOWS =
         System.getProperty("os.name").toLowerCase().contains("win");
 
+    private static final Platform PLATFORM = detectPlatform();
+
+    protected static Platform detectPlatform() {
+        String os = LibraryDetector.detectOS();
+        return switch (os) {
+            case "linux" -> Platform.LINUX;
+            case "windows" -> Platform.WINDOWS;
+            default -> throw new UnsupportedOperationException(
+                "Unsupported operating system: " + os);
+        };
+    }
+
     /**
      * Constructor.  Configures the library and loads the underlying native library
      * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
@@ -111,7 +123,7 @@ public class GeneralCodec {
             // loaded dynamically by a custom class loader or is used in the context of OSGI or
             // something. We do this instead of using the global arena to prevent memory leaks
             // in case of that unlikely, but possible, scenario.
-            if (IS_WINDOWS) {
+            if (PLATFORM == Platform.WINDOWS) {
                 generated.windows.convert_h.SYMBOL_LOOKUP = lookup;
             } else {
                 generated.linux.convert_h.SYMBOL_LOOKUP = lookup;
@@ -122,6 +134,7 @@ public class GeneralCodec {
             throw new RuntimeException(errMsg, e);
         }
     }
+
 
     /**
      * General purpose conversion function that can convert any PDU to or from
@@ -415,7 +428,7 @@ public class GeneralCodec {
         long numOut = 0;
         int iCheckConstraints = checkConstraints ? 1 : 0;
         try {
-            if (IS_WINDOWS) {
+            if (PLATFORM == Platform.WINDOWS) {
                 numOut = generated.windows.convert_h.convert_bytes(pduName, fromEncodingSeg,
                     toEncodingSeg, inputBuffer,
                     bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize,

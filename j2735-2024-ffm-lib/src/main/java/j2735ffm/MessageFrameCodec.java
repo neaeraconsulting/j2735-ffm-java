@@ -32,7 +32,7 @@ public class MessageFrameCodec extends GeneralCodec {
 
     /**
      * Constructor.  Configures the library and loads the underlying native library
-     * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
+     * @param textBufferSize - Size of the input or output buffer for text encodings (XER, JER)
      * @param uperBufferSize - Size of the input or output buffer for UPER binary encoding.
      * @param libraryPath - Absolute or relative path to the native library, e.g. "/usr/lib/libasnapplication.so"
      */

@@ -66,8 +66,22 @@ public class MessageFrameCodec {
      * binding sets are shipped ({@code generated.linux}, {@code generated.windows})
      * and selected at runtime based on the running OS.
      */
-    private static final boolean IS_WINDOWS =
-        System.getProperty("os.name").toLowerCase().contains("win");
+    private enum Platform {
+        LINUX,
+        WINDOWS
+    }
+
+    private static final Platform PLATFORM = detectPlatform();
+
+    private static Platform detectPlatform() {
+        String os = LibraryDetector.detectOS();
+        return switch (os) {
+            case "linux" -> Platform.LINUX;
+            case "windows" -> Platform.WINDOWS;
+            default -> throw new UnsupportedOperationException(
+                "Unsupported operating system: " + os);
+        };
+    }
 
     /**
      * Constructor.  Deprecated in favor of {@link #MessageFrameCodec(long, long, long, Path)}
@@ -132,7 +146,7 @@ public class MessageFrameCodec {
             // loaded dynamically by a custom class loader or is used in the context of OSGI or
             // something. We do this instead of using the global arena to prevent memory leaks
             // in case of that unlikely, but possible, scenario.
-            if (IS_WINDOWS) {
+            if (PLATFORM == Platform.WINDOWS) {
                 generated.windows.convert_h.SYMBOL_LOOKUP = lookup;
             } else {
                 generated.linux.convert_h.SYMBOL_LOOKUP = lookup;
@@ -252,11 +266,13 @@ public class MessageFrameCodec {
         log.debug("calling convert_bytes");
         long numOut = 0;
         try {
-            numOut = IS_WINDOWS
-                ? generated.windows.convert_h.convert_bytes(pduName, fromEncodingSeg, toEncodingSeg, inputBuffer,
-                    bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize)
-                : generated.linux.convert_h.convert_bytes(pduName, fromEncodingSeg, toEncodingSeg, inputBuffer,
+            if (PLATFORM == Platform.WINDOWS) {
+                numOut = generated.windows.convert_h.convert_bytes(pduName, fromEncodingSeg, toEncodingSeg, inputBuffer,
                     bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize);
+            } else {
+                numOut = generated.linux.convert_h.convert_bytes(pduName, fromEncodingSeg, toEncodingSeg, inputBuffer,
+                    bytes.length, outputBuffer, outputBufferSize, errorBuffer, errorBufferSize);
+            }
         } catch (Throwable ex) {
             log.error("error converting",ex);
             throw ex;

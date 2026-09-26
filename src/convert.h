@@ -30,7 +30,7 @@
  @param pdu_name String with the J2735, IEEE 1609.2, or SEMI PDU, e.g., "MessageFrame", "BasicSafetyMessage".
  @param from_encoding String with the name of the encoding of the input ("xer", "jer", "uper", or "oer").
  @param to_encoding Target encoding for the output ("xer", "jer", "uper", or "oer").
- @param ibuf The input byte array in raw UPER, OER, or XER text format.
+ @param ibuf The input byte array in raw UPER or OER, or XER/JER text format.
  @param ibuf_len The length of the input byte array.
  @param obuf The buffer to store the output byte array.
  @param max_obuf_len The maximum length of the output buffer.
@@ -39,7 +39,7 @@
  @param check_constraints Whether to check constraints.  1 = check constraints, 0 = don't check.
  Generally it is good to check constraints but it can be useful to disable the check to see
  the re-encoded output in case of violation.  The encoding with constraint violations is more likely to succeed if the
- target encoding is textual (e.g. XER).  If the target is a binary format it may or may not be
+ target encoding is textual (e.g. XER or JER).  If the target is a binary format it may or may not be
  possible to encode messages with constraint violations in which case a more cryptic error message
  would be produced without the constraint check.
  @return The length of the converted output byte array, or -1 if there was an error doing the conversion.

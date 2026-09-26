@@ -7,6 +7,8 @@ package j2735ffm;
  * and selected at runtime based on the running OS.
  */
 public enum Platform {
+  /** Linux */
   LINUX,
+  /** Windows */
   WINDOWS
 }

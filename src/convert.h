@@ -25,7 +25,7 @@
 /**
  Convert a byte array representation of a PDU from one encoding to another.
  UPER and OER format is raw bytes, not hex.
- XER is 8-bit text.
+ XER and JER are text.
 
  @param pdu_name String with the J2735, IEEE 1609.2, or SEMI PDU, e.g., "MessageFrame", "BasicSafetyMessage".
  @param from_encoding String with the name of the encoding of the input ("xer", "jer", "uper", or "oer").

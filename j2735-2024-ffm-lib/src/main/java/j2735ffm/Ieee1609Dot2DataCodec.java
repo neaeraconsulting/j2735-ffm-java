@@ -10,12 +10,14 @@ import java.nio.file.Path;
  */
 public class Ieee1609Dot2DataCodec extends GeneralCodec {
 
+  /** PDU name for Ieee1609Dot2Data. */
   public final static String IEEE1609_DOT2_DATA_PDU = "Ieee1609Dot2Data";
 
   /**
    * Constructor.  Configures the library and loads the underlying native library
    * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
    * @param oerBufferSize - Size of the input or output buffer for OER binary encoding.
+   * @param errorBufferSize - Size of the buffer for error messages from the native library.
    * @param libraryPath - Absolute or relative path to the native library, e.g. "/usr/lib/libasnapplication.so"
    */
   public Ieee1609Dot2DataCodec(long textBufferSize, long oerBufferSize, long errorBufferSize,
@@ -28,6 +30,7 @@ public class Ieee1609Dot2DataCodec extends GeneralCodec {
    * find library at default location next to this JAR.
    * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
    * @param oerBufferSize - Size of the input or output buffer for OER binary encoding.
+   * @param errorBufferSize - Size of the buffer for error messages from the native library.
    */
   public Ieee1609Dot2DataCodec(long textBufferSize, long oerBufferSize, long errorBufferSize) {
     super(textBufferSize, oerBufferSize, errorBufferSize);

@@ -28,12 +28,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MessageFrameCodec extends GeneralCodec {
 
+    /** PDU name for MessageFrame. */
     public final static String MESSAGE_FRAME_PDU = "MessageFrame";
 
     /**
      * Constructor.  Configures the library and loads the underlying native library
      * @param textBufferSize - Size of the input or output buffer for text encodings (XER, JER)
      * @param uperBufferSize - Size of the input or output buffer for UPER binary encoding.
+     * @param errorBufferSize - Size of the buffer for error messages from the native library.
      * @param libraryPath - Absolute or relative path to the native library, e.g. "/usr/lib/libasnapplication.so"
      */
     public MessageFrameCodec(long textBufferSize, long uperBufferSize, long errorBufferSize,
@@ -47,6 +49,7 @@ public class MessageFrameCodec extends GeneralCodec {
      * is running.
      * @param textBufferSize - Size of the input or output buffer for text encodings (XER, JER)
      * @param uperBufferSize - Size of the input or output buffer for UPER binary encoding.
+     * @param errorBufferSize - Size of the buffer for error messages from the native library.
      */
     public MessageFrameCodec(long textBufferSize, long uperBufferSize, long errorBufferSize) {
         super(textBufferSize, uperBufferSize, errorBufferSize);

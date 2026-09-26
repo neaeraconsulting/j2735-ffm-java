@@ -67,6 +67,10 @@ public class GeneralCodec {
 
     private static final Platform PLATFORM = detectPlatform();
 
+    /**
+     * Detect the platform of the running OS.
+     * @return The detected platform
+     */
     protected static Platform detectPlatform() {
         String os = LibraryDetector.detectOS();
         return switch (os) {
@@ -83,6 +87,7 @@ public class GeneralCodec {
      * with in the default location at the same relative path where this jar is running.
      * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
      * @param binaryBufferSize - Size of the input or output buffer for UPER or OER binary encoding.
+     * @param errorBufferSize - Size of the buffer for error messages from the native library.
      */
     public GeneralCodec(long textBufferSize, long binaryBufferSize, long errorBufferSize) {
         this.textBufferSize = textBufferSize;
@@ -98,6 +103,7 @@ public class GeneralCodec {
      * Constructor.  Configures the library and loads the underlying native library
      * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
      * @param binaryBufferSize - Size of the input or output buffer for UPER or OER binary encoding.
+     * @param errorBufferSize - Size of the buffer for error messages from the native library.
      * @param libraryPath - Absolute or relative path to the native library, e.g. "/usr/lib/libasnapplication.so"
      */
     public GeneralCodec(long textBufferSize, long binaryBufferSize, long errorBufferSize,
@@ -250,6 +256,7 @@ public class GeneralCodec {
     /**
      * Convert an XER encoded MessageFrame to UPER.
      * Always check constraints going to UPER.
+     * @param pdu The name of the PDU, e.g., "MessageFrame"
      * @param xer The XER encoded MessageFrame
      * @return Byte array with the UPER encoding
      */

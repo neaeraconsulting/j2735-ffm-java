@@ -24,6 +24,16 @@ public class Ieee1609Dot2DataCodec extends GeneralCodec {
   }
 
   /**
+   * Constructor.  Configures the library and loads the underlying native library, tries to
+   * find library at default location next to this JAR.
+   * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
+   * @param oerBufferSize - Size of the input or output buffer for OER binary encoding.
+   */
+  public Ieee1609Dot2DataCodec(long textBufferSize, long oerBufferSize, long errorBufferSize) {
+    super(textBufferSize, oerBufferSize, errorBufferSize);
+  }
+
+  /**
    * Convert an XER encoded Ieee1609Dot2Data to OER
    * @param xer The XER encoded Ieee1609Dot2Data
    * @return Byte array with the OER encoding

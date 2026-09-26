@@ -78,6 +78,23 @@ public class GeneralCodec {
     }
 
     /**
+     * Constructor.  Configures the library and loads the underlying native library.
+     * Looks for the library appropriate for the current platform and architecture,
+     * with in the default location at the same relative path where this jar is running.
+     * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
+     * @param binaryBufferSize - Size of the input or output buffer for UPER or OER binary encoding.
+     */
+    public GeneralCodec(long textBufferSize, long binaryBufferSize, long errorBufferSize) {
+        this.textBufferSize = textBufferSize;
+        this.binaryBufferSize = binaryBufferSize;
+        this.errorBufferSize = errorBufferSize;
+        Path libraryPath = LibraryDetector.findLibrary(Path.of("."), "asnapplication");
+        loadLibrary(libraryPath);
+        log.info("GeneralCodec initialized with textBufferSize: {}, uperBufferSize: {}, libraryPath: {}",
+            textBufferSize, binaryBufferSize, libraryPath);
+    }
+
+    /**
      * Constructor.  Configures the library and loads the underlying native library
      * @param textBufferSize - Size of the input or output buffer for text encodings (XER)
      * @param binaryBufferSize - Size of the input or output buffer for UPER or OER binary encoding.

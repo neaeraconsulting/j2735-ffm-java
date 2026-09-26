@@ -3,9 +3,9 @@
 # Echo on
 set -ex
 
-# Copy the native library out to the shared volume
+# Copy the native library and cli executable out to the shared volume
 # The library name already includes architecture suffix (e.g., libasnapplication-arm64.so)
-cp /build/out/*.so /build-lib/
+cp /build/out/* /build-lib/
 
 # Copy generated files (architecture-independent)
 cp -r /build/generated-files/* /generated-files

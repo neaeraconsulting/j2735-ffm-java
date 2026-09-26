@@ -42,6 +42,17 @@ public class MessageFrameCodec extends GeneralCodec {
     }
 
     /**
+     * Constructor.  Configures the library and loads the underlying native library.
+     * Tries to locate the library at the default location in the same directory where this JAR
+     * is running.
+     * @param textBufferSize - Size of the input or output buffer for text encodings (XER, JER)
+     * @param uperBufferSize - Size of the input or output buffer for UPER binary encoding.
+     */
+    public MessageFrameCodec(long textBufferSize, long uperBufferSize, long errorBufferSize) {
+        super(textBufferSize, uperBufferSize, errorBufferSize);
+    }
+
+    /**
      * Convert an XER encoded MessageFrame to UPER
      * @param xer The XER encoded MessageFrame
      * @return Byte array with the UPER encoding

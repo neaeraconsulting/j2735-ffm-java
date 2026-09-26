@@ -7,7 +7,9 @@ It includes the same complete implementation of J2735 (2024) as the [USDOT asn1_
 
 It enables converting between these ASN.1 encodings:
 * XER - XML Encoding Rules
+* JER - JSON Encoding Rules
 * UPER - Unaligned Packed Encoding Rules
+* OER - Octet Encoding Rules
 
 ## Using the Library
 
@@ -106,22 +108,169 @@ Instructions for consuming from a Maven POM are similar, writeup TBD.
 
 ### Java Library JAR
 
-The `j2735-2024-ffm-lib` project is a Java library that exposes the [MessageFrameCodec](j2735-2024-ffm-lib/src/main/java/j2735ffm/MessageFrameCodec.java) class which has two methods:
+The `j2735-2024-ffm-lib` project is a Java library that exposes three codec classes:
 
-## `byte[] xerToUper(String xer)`
+* **`GeneralCodec`** - Methods to interconvert any PDU within the J2735, IEEE 1609.2, or SEMI specifications between XER, JER, UPER, and OER, including batch conversion of lists of messages.
+* **`MessageFrameCodec`** - Convenience methods for converting J2735 Message Frames between UPER and XER or JER.
+* **`Ieee1609Dot2DataCodec`** - Convenience methods for converting IEEE 1609.2 Data between OER and XER or JER.
+
+## MessageFrameCodec Methods include:
+
+### *byte[] xerToUper(String xer)*
 
 Converts an XER encoded MessageFrame to UPER
 
-* Parameter **xer** The XER encoded MessageFrame
+* **xer** - The XER encoded MessageFrame
 * **returns** Byte array with the UPER encoding
 
 
-## `String uperToXer(byte[] uper)`
+###  *String uperToXer(byte[] uper)*
 
 Convert an UPER encoded MessageFrame to XER
 
-* Parameter **uper** - The UPER encoded MessageFrame
+* **uper** - The UPER encoded MessageFrame
 * Returns the XER encoded result
+
+### *byte[] jerToUper(String jer)*
+
+Converts a JER encoded MessageFrame to UPER
+
+* **jer** - The JER encoded MessageFrame
+* **returns** Byte array with the UPER encoding
+
+### *String uperToJer(byte[] uper)*
+
+Convert an UPER encoded MessageFrame to JER
+
+* **uper** - The UPER encoded MessageFrame
+* **returns** The JER encoded result
+
+## Ieee1609Dot2DataCodec methods include:
+
+### *byte[] xerToOer(String xer)*
+
+Convert an XER encoded Ieee1609Dot2Data to OER
+
+* **xer** - The XER encoded Ieee1609Dot2Data
+* **returns** Byte array with the OER encoding
+
+### *String oerToXer(byte[] oer)*
+
+Convert an OER encoded Ieee1609Dot2Data to XER
+
+* **oer** - The OER encoded Ieee1609Dot2Data
+* **returns** XER encoded result
+
+### *byte[] jerToOer(String jer)*
+
+Convert a JER encoded Ieee1609Dot2Data to OER
+
+* **jer** - The JER encoded Ieee1609Dot2Data
+* **returns** Byte array with the OER encoding
+
+### *String oerToJer(byte[] oer)*
+
+Convert an OER encoded Ieee1609Dot2Data to JER
+
+* **oer** - The OER encoded Ieee1609Dot2Data
+* **returns** JER encoded result
+
+## GeneralCodec methods include:
+
+### *byte[] convertGeneral(byte[] inputBytes, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding)*
+
+General purpose conversion function that can convert any PDU to or from any encoding
+
+* **inputBytes** - Input byte array: XER or JER text as UTF-8 bytes, or UPER or OER binary
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame", "Ieee1609Dot2Data", "VehicleEventFlags", etc.
+* **fromEncoding** - Input encoding, one of `XER`, `JER`, `UPER`, or `OER`
+* **toEncoding** - Output encoding, one of `XER`, `JER`, `UPER`, or `OER`
+* **returns** The encoded message as bytes (XER and JER results should be converted to a UTF-8 string by the caller)
+
+### *List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding)*
+
+Batch conversion of a list of messages of the same PDU and encodings, reusing the input and output buffers for efficiency.  Includes constraint check.
+
+* **inputBytesList** - List of encoded messages
+* **pdu** - The PDU to convert
+* **fromEncoding** - The input encoding: `XER`, `JER`, `OER`, or `UPER`
+* **toEncoding** - The output encoding: `XER`, `JER`, `OER`, or `UPER`
+* **returns** List of converted messages. Any input message that fails to convert is logged and omitted from the result rather than aborting the batch.
+
+### *List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding, boolean checkConstraints)*
+
+Batch conversion as above, with the option to skip the constraint check
+
+* **inputBytesList** - List of encoded messages
+* **pdu** - The PDU to convert
+* **fromEncoding** - The input encoding: `XER`, `JER`, `OER`, or `UPER`
+* **toEncoding** - The output encoding: `XER`, `JER`, `OER`, or `UPER`
+* **checkConstraints** - Whether to check constraints
+* **returns** List of converted messages. Any input message that fails to convert is logged and omitted from the result rather than aborting the batch.
+
+### *byte[] xerToUper(String pdu, String xer)*
+
+Converts an XER encoded PDU to UPER
+
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame"
+* **xer** - The XER encoded PDU
+* **returns** Byte array with the UPER encoding
+
+### *String uperToXer(String pdu, byte[] uper)*
+
+Convert a UPER encoded PDU to XER
+
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame"
+* **uper** - The UPER encoded PDU
+* **returns** The XER encoded result
+
+### *byte[] jerToUper(String pdu, String jer)*
+
+Converts a JER encoded PDU to UPER
+
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame"
+* **jer** - The JER encoded PDU
+* **returns** Byte array with the UPER encoding
+
+### *String uperToJer(String pdu, byte[] uper)*
+
+Convert a UPER encoded PDU to JER
+
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame"
+* **uper** - The UPER encoded PDU
+* **returns** The JER encoded result
+
+### *byte[] xerToOer(String pdu, String xer)*
+
+Convert an XER encoded PDU to OER
+
+* **pdu** - The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
+* **xer** - The XER encoded PDU
+* **returns** Byte array with the OER encoding
+
+### *String oerToXer(String pdu, byte[] oer)*
+
+Convert an OER encoded PDU to XER
+
+* **pdu** - The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
+* **oer** - The OER encoded PDU
+* **returns** The XER encoded result
+
+### *byte[] jerToOer(String pdu, String jer)*
+
+Convert a JER encoded PDU to OER
+
+* **pdu** - The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
+* **jer** - The JER encoded PDU
+* **returns** Byte array with the OER encoding
+
+### *String oerToJer(String pdu, byte[] oer)*
+
+Convert an OER encoded PDU to JER
+
+* **pdu** - The Protocol Data Unit, e.g. "Ieee1609Dot2Data"
+* **oer** - The OER encoded PDU
+* **returns** The JER encoded result
 
 ### Usage example
 
@@ -139,6 +288,30 @@ byte[] uper = codec.xerToUper("<MessageFrame><messageId>19</messageId><value><SP
 
 // Convert UPER to XER
 String xer = codec.uperToXer(HexFormat.of().parseHex("001338000817a780000089680500204642b342b34802021a15a955a940181190acd0acd20100868555c555c00104342aae2aae002821a155715570"));
+
+// Convert UPER to JER
+String jer = codec.uperToJer(HexFormat.of().parseHex("001338000817a780000089680500204642b342b34802021a15a955a940181190acd0acd20100868555c555c00104342aae2aae002821a155715570"));
+
+// Convert JER to UPER
+byte[] uperFromJer = codec.jerToUper(jer);
+```
+
+### Batch conversion example
+
+```java
+// Initialize the general codec
+GeneralCodec generalCodec = new GeneralCodec(262144L, 8192L, 512L, libPath);
+
+// Convert a list of UPER encoded MessageFrames to JER, reusing the native buffers
+List<byte[]> uperList = List.of(
+    HexFormat.of().parseHex("001338000817a780000089680500204642b342b34802021a15a955a940181190acd0acd20100868555c555c00104342aae2aae002821a155715570"),
+    uperFromJer);
+List<byte[]> jerList = generalCodec.convertBatch(uperList, "MessageFrame", AsnEncoding.UPER, AsnEncoding.JER);
+
+// JER results are UTF-8 text
+for (byte[] jerBytes : jerList) {
+    System.out.println(new String(jerBytes, StandardCharsets.UTF_8));
+}
 ```
 
 ## How it works
@@ -253,6 +426,12 @@ cd j2735-2024-ffm-lib
 ./gradlew clean build test
 ```
 
+The `convert-v2x` CLI has black-box tests in [test/cli](test/cli) that pipe the data files through the binary and check stdout, stderr and the exit code.  Both Docker builds run them with `ctest` right after compiling, so a failing test fails the build.  To run them in a local CMake build directory:
+
+```bash
+cmake . && cmake --build . && ctest --output-on-failure
+```
+
 ## Demo API and Test Scripts
 
 Requires:
@@ -271,12 +450,21 @@ IntelliJ IDE, or in VSCode with the REST Client extension.
 The following translation methods are available at base URL https://localhost:4000 
 All methods are POSTs.
 
-| Method        | Description            |
-|---------------|------------------------|
-| /uper/bin/xer | UPER binary to XER     |
-| /uper/hex/xer | UPER hex string to XER |
-| /xer/uper/bin | XER to UPER binary     |
-| /xer/uper/hex | XER to UPER hex string |
+| Method         | Description            |
+|----------------|------------------------|
+| /uper/bin/xer  | UPER binary to XER     |
+| /uper/hex/xer  | UPER hex string to XER |
+| /xer/uper/bin  | XER to UPER binary     |
+| /xer/uper/hex  | XER to UPER hex string |
+| /xer/oer/hex   | XER to OER hex string  |
+| /oer/hex/xer   | OER hex string to XER  |
+| /jer/uper/hex  | JER to UPER hex string |
+| /uper/hex/jer  | UPER hex string to JER |
+| /jer/oer/hex   | JER to OER hex string  |
+| /oer/hex/jer   | OER hex string to JER  |
+| /jer/uper/hex/{pdu} | JER to UPER hex string for any PDU |
+| /uper/hex/jer/{pdu} | UPER hex string to JER for any PDU |
+| /batch/{from}/{to}/{pdu} | Batch convert line-delimited messages of any PDU |
 
 Content types are:
 
@@ -285,6 +473,30 @@ Content types are:
 | UPER binary | application/octet-stream |
 | UPER hex    | text/plain               |
 | XER         | application/xml          |
+| JER         | application/json         |
+| OER hex     | text/plain               |
+| Batch       | text/plain               |
+
+### Batch conversion
+
+The `/batch/{from}/{to}/{pdu}` method converts a line-delimited file of messages, one message per line.
+
+* **from** - The input encoding: `xer`, `jer`, `uper`, or `oer`
+* **to** - The output encoding: `xer`, `jer`, `uper`, or `oer`
+* **pdu** - The Protocol Data Unit, e.g. "MessageFrame" or "Ieee1609Dot2Data"
+
+UPER and OER messages are hex strings.  XER and JER messages must each be on a single line.  Blank input lines are skipped.  Each output line corresponds to one input line.  If a message fails to convert, the output contains an empty line in its place.  An unsupported encoding returns HTTP 400.
+
+Example:
+
+```http
+POST http://localhost:4000/batch/uper/jer/MessageFrame
+Content-Type: text/plain
+
+< ./messages_uper.txt
+```
+
+See `/j2735-2024-api/http-tests/batch.http` for more examples.
 
 ### Demo API Open API Documentation
 
@@ -299,3 +511,24 @@ http://localhost:4000/api-docs
 or in YAML format at:
 
 http://localhost:4000/api-docs.yaml
+
+
+# Notes
+
+Testing native exe with WinDbg:
+
+```powershell
+cmd /c 'cd /d C:\Users\ivan\asn1\j2735-ffm-java\lib && windbgx -y "C:\Users\ivan\asn1\j2735-ffm-java\lib" -srcpath "C:\Users\ivan\asn1\j2735-ffm-java\src;C:\Users\ivan\asn1\j2735-ffm-java\generated-files\2024" convert-v2x.exe xer oer Ieee1609Dot2Data < example2.xml' 
+```
+
+
+
+
+
+
+
+
+
+
+
+

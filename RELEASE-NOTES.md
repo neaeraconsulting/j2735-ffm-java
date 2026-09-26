@@ -1,12 +1,20 @@
 # v3.0.0
 
-Upgrade the Java library, demo API, CI, and container images from JDK 22 to JDK 25.
+* Upgrade the Java library, demo API, CI, and container images from JDK 22 to JDK 25.
+* Regenerate the Foreign Function and Memory API bindings with the JDK 25 version of jextract.
+* Java 25 is now the minimum supported build and runtime version.
+* Adds dockerfiles to be able to automatically build the Windows dll, and generate correct jextract wrapper code for Windows.
+* Adds publishing to Maven Central.
+* Adds support for OER (Octet Encoding Rules).
+* Adds support for JER (JSON Encoding Rules).
+* Adds `GeneralCodec` and `Ieee1609Dot2DataCodec` classes.
+* Adds batch convert methods
+* Uses asn1_codec submodule to version with 1609.2, Windows, and JER support.
+* Fix XER/JER decoding of 64-bit INTEGER values (such as IEEE 1609.2 Time64 generationTime) on Windows, where C `long` is 32 bits.
+* Adds native cli tools in:
+  * Linux lib/convert-v2x
+  * windows lib/convert-v2x.exe
 
-Regenerate the Foreign Function and Memory API bindings with the JDK 25 version of jextract.
-
-Java 25 is now the minimum supported build and runtime version.
-
-Adds dockerfiles to be able to automatically build the Windows dll, and generate correct jextract wrapper code for Windows. 
 
 # v2.0.2
 

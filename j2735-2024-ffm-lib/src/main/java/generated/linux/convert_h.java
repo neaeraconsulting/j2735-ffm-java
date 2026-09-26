@@ -222,7 +222,8 @@ public class convert_h extends convert_h$shared {
             convert_h.C_POINTER,
             convert_h.C_LONG,
             convert_h.C_POINTER,
-            convert_h.C_LONG
+            convert_h.C_LONG,
+            convert_h.C_INT
         );
 
         public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("convert_bytes");
@@ -233,7 +234,7 @@ public class convert_h extends convert_h$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len)
+     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len, int check_constraints)
      * }
      */
     public static FunctionDescriptor convert_bytes$descriptor() {
@@ -243,7 +244,7 @@ public class convert_h extends convert_h$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len)
+     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len, int check_constraints)
      * }
      */
     public static MethodHandle convert_bytes$handle() {
@@ -253,7 +254,7 @@ public class convert_h extends convert_h$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len)
+     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len, int check_constraints)
      * }
      */
     public static MemorySegment convert_bytes$address() {
@@ -262,16 +263,16 @@ public class convert_h extends convert_h$shared {
 
     /**
      * {@snippet lang=c :
-     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len)
+     * int convert_bytes(const char *pdu_name, const char *from_encoding, const char *to_encoding, const uint8_t *ibuf, size_t ibuf_len, uint8_t *obuf, size_t max_obuf_len, char *err_buf, size_t err_buf_len, int check_constraints)
      * }
      */
-    public static int convert_bytes(MemorySegment pdu_name, MemorySegment from_encoding, MemorySegment to_encoding, MemorySegment ibuf, long ibuf_len, MemorySegment obuf, long max_obuf_len, MemorySegment err_buf, long err_buf_len) {
+    public static int convert_bytes(MemorySegment pdu_name, MemorySegment from_encoding, MemorySegment to_encoding, MemorySegment ibuf, long ibuf_len, MemorySegment obuf, long max_obuf_len, MemorySegment err_buf, long err_buf_len, int check_constraints) {
         var mh$ = convert_bytes.HANDLE;
         try {
             if (TRACE_DOWNCALLS) {
-                traceDowncall("convert_bytes", pdu_name, from_encoding, to_encoding, ibuf, ibuf_len, obuf, max_obuf_len, err_buf, err_buf_len);
+                traceDowncall("convert_bytes", pdu_name, from_encoding, to_encoding, ibuf, ibuf_len, obuf, max_obuf_len, err_buf, err_buf_len, check_constraints);
             }
-            return (int)mh$.invokeExact(pdu_name, from_encoding, to_encoding, ibuf, ibuf_len, obuf, max_obuf_len, err_buf, err_buf_len);
+            return (int)mh$.invokeExact(pdu_name, from_encoding, to_encoding, ibuf, ibuf_len, obuf, max_obuf_len, err_buf, err_buf_len, check_constraints);
         } catch (Error | RuntimeException ex) {
            throw ex;
         } catch (Throwable ex$) {
@@ -855,3 +856,4 @@ public class convert_h extends convert_h$shared {
         return WCHAR_MIN;
     }
 }
+

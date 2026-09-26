@@ -1,0 +1,39 @@
+### IEEE 1609.2 Data
+POST http://localhost:4000/xer/oer/hex
+Content-Type: application/xml
+
+<Ieee1609Dot2Data>
+  <protocolVersion>3</protocolVersion>
+  <content>
+    <signedData>
+      <hashId>
+        <sha256/>
+      </hashId>
+      <tbsData>
+        <payload>
+          <data>
+            <protocolVersion>3</protocolVersion>
+            <content>
+              <unsecuredData>00145745EB5459EC62F626D073FA1CCE36888D3B80000000703D15C6FD7587CAB080098000640EB000C0C08117FB55080FD2402C1198FD6B76FD2420C11CD5DAB64FCA470211F425D454FC84B3A1225EE0394FC45062C654C200</unsecuredData>
+            </content>
+          </data>
+        </payload>
+        <headerInfo>
+          <psid>32</psid>
+          <generationTime>640450240844022</generationTime>
+        </headerInfo>
+      </tbsData>
+      <signer>
+        <digest>254EB75C3ADA37D5</digest>
+      </signer>
+      <signature>
+        <ecdsaNistP256Signature>
+          <rSig>
+            <compressed-y-1>CA792423EC5F6716151EEDAD6E78B4D9AF19EDA39F5D7A1A305386F56A0859EA</compressed-y-1>
+          </rSig>
+          <sSig>A936425CCF732A345E80A4B560B89681FDD23285FDBB451C9D6146271E6DA30F</sSig>
+        </ecdsaNistP256Signature>
+      </signature>
+    </signedData>
+  </content>
+</Ieee1609Dot2Data>

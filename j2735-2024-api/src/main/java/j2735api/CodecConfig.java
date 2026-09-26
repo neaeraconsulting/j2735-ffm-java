@@ -15,6 +15,8 @@
 */
 package j2735api;
 
+import j2735ffm.GeneralCodec;
+import j2735ffm.Ieee1609Dot2DataCodec;
 import j2735ffm.MessageFrameCodec;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,16 +34,40 @@ public class CodecConfig {
 
     @Bean
     public MessageFrameCodec messageFrameCodec() {
-      String libResource = System.getProperty("os.name").toLowerCase().contains("win")
-          ? config.getWindowsLibraryPath()
-          : config.getLibraryPath();
-      Path libPath = Paths.get(libResource);
-          return new MessageFrameCodec(
-              config.getTextBufferSize(),
-              config.getUperBufferSize(),
-              config.getErrorBufferSize(),
-              libPath
-          );
+      return new MessageFrameCodec(
+          config.getTextBufferSize(),
+          config.getBinaryBufferSize(),
+          config.getErrorBufferSize(),
+          libPath()
+      );
+
+    }
+
+    @Bean
+    public Ieee1609Dot2DataCodec dot2Codec() {
+        return new Ieee1609Dot2DataCodec(
+            config.getTextBufferSize(),
+            config.getBinaryBufferSize(),
+            config.getErrorBufferSize(),
+            libPath()
+        );
+    }
+
+    @Bean
+    public GeneralCodec generalCodec() {
+        return new GeneralCodec(
+            config.getTextBufferSize(),
+            config.getBinaryBufferSize(),
+            config.getErrorBufferSize(),
+            libPath()
+        );
+    }
+
+    private Path libPath() {
+        String libResource = System.getProperty("os.name").toLowerCase().contains("win")
+            ? config.getWindowsLibraryPath()
+            : config.getLibraryPath();
+        return Paths.get(libResource);
     }
 
 }

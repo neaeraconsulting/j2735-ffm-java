@@ -7,6 +7,7 @@ build
 .idea/
 .profileconfig.json
 
+/lib/
 bin/
 **/bin/
 
@@ -25,3 +26,7 @@ out.log
 
 # Agents related files
 .agents/**
+# AI Tools
+.claude/
+CLAUDE.md
+

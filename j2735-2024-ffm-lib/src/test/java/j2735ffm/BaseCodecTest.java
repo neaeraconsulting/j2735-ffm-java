@@ -25,17 +25,13 @@ public abstract class BaseCodecTest {
   }
 
   protected static Path getLibPath() {
-    String libResource = isWindows() ? "j2735ffm/asnapplication.dll" : "j2735ffm/libasnapplication.so";
-    URL url = Ieee1609Dot2DataCodecTest.class.getClassLoader().getResource(libResource);
-    log.info("Loading library {}", libResource);
-    if (url == null) {
+    Path libPath = LibraryDetector.findLibraryFromResource("j2735ffm", "asnapplication");
+    log.info("Loading library {}", libPath);
+
+    if (libPath == null) {
       throw new RuntimeException("libasnapplication not found");
     }
-    try {
-      return Paths.get(url.toURI());
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
-    }
+    return libPath;
   }
 
   protected static byte[] hexNoWs(String hex) {

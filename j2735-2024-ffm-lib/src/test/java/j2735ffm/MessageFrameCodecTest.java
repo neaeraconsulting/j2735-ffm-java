@@ -46,17 +46,8 @@ class MessageFrameCodecTest extends BaseCodecTest {
 
   @BeforeAll
   public static void setup() {
-
-    Path libPath = LibraryDetector.findLibraryFromResource("j2735ffm", "asnapplication");
-    log.info("Loading library {}", libPath);
-
-    if (libPath == null) {
-      throw new RuntimeException("libasnapplication not found");
-    }
-    codec = new MessageFrameCodec(TEXT_BUFFER_SIZE, BINARY_BUFFER_SIZE, ERROR_BUFFER_SIZE, libPath);
+    codec = new MessageFrameCodec(TEXT_BUFFER_SIZE, BINARY_BUFFER_SIZE, ERROR_BUFFER_SIZE, getLibPath());
     log.info("Created codec");
-
-
   }
 
   @Test

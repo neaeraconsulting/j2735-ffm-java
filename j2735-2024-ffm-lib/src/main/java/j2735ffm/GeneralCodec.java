@@ -233,7 +233,7 @@ public class GeneralCodec {
                     continue;
                 }
                 try {
-                    byte[] outputBytes = convert(arena, inputBytes, inputBuffer, pduName,
+                    byte[] outputBytes = convert(inputBytes, inputBuffer, pduName,
                         fromEncodingSeg, toEncodingSeg, outputBuffer, outputBufferSize, errorBuffer,
                         errorBufferSize, checkConstraints);
                     outputBytesList.add(outputBytes);
@@ -422,14 +422,14 @@ public class GeneralCodec {
         MemorySegment fromEncodingSeg = arena.allocateFrom(fromEncoding,
             StandardCharsets.UTF_8);
         MemorySegment toEncodingSeg = arena.allocateFrom(toEncoding, StandardCharsets.UTF_8);
-        return convert(arena, bytes, inputBuffer, pduName, fromEncodingSeg, toEncodingSeg,
+        return convert(bytes, inputBuffer, pduName, fromEncodingSeg, toEncodingSeg,
             outputBuffer, outputBufferSize, errorBuffer, errorBufferSize, checkConstraints);
     }
 
     // Converts a single message with the given pre-allocated input/output buffers
     // Does not dispose of the buffers.  Does not allocate any buffers including pdu
     // and encoding string buffers.
-    private byte[] convert(Arena arena, final byte[] bytes,
+    private byte[] convert(final byte[] bytes,
         MemorySegment inputBuffer, MemorySegment pduName,
         MemorySegment fromEncodingSeg, MemorySegment toEncodingSeg,
         MemorySegment outputBuffer, long outputBufferSize, MemorySegment errorBuffer,
@@ -441,7 +441,6 @@ public class GeneralCodec {
         MemorySegment heapBytes = MemorySegment.ofArray(bytes);
         inputBuffer.copyFrom(heapBytes);
 
-        log.debug("calling convert_bytes");
         long numOut = 0;
         int iCheckConstraints = checkConstraints ? 1 : 0;
         try {

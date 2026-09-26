@@ -24,10 +24,6 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.HexFormat;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
@@ -77,7 +73,7 @@ class MessageFrameCodecTest extends BaseCodecTest {
   @MethodSource("messageFrameHex")
   void uperToXer(final String uper) {
     // Normalize case
-    String xer = codec.uperToXer(HexFormat.of().parseHex(uper));
+    String xer = codec.uperToXer(hexFormat.parseHex(uper));
     assertThat("xer is null", xer, notNullValue());
     log.debug("xer: {}", xer);
     byte[] roundTripUper = codec.xerToUper(xer);
@@ -90,7 +86,7 @@ class MessageFrameCodecTest extends BaseCodecTest {
   @MethodSource("messageFrameHex")
   void uperToJer(final String uper) {
     log.debug("uper: {}", uper);
-    String jer = codec.uperToJer(HexFormat.of().parseHex(uper));
+    String jer = codec.uperToJer(hexFormat.parseHex(uper));
     assertThat("jer is null", jer, notNullValue());
     log.debug("jer: {}", jer);
     byte[] roundTripUper = codec.jerToUper(jer);

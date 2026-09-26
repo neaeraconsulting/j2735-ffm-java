@@ -406,6 +406,7 @@ public class GeneralCodec {
                 toEncoding, inputBuffer, outputBuffer, outputBufferSize, errorBuffer,
                 errorBufferSize, pdu, checkConstraints);
         } catch (Exception e) {
+            log.error("GeneralCodec: Exception converting message", e);
             throw new RuntimeException(e);
         }
     }

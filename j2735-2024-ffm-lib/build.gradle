@@ -148,7 +148,7 @@ javadoc {
 
 test {
     jvmArgs(["--enable-native-access=ALL-UNNAMED"])
-    systemProperty("jextract.trace.downcalls", "false")
+    systemProperty("jextract.trace.downcalls", "false") // set true to log native calls
     useJUnitPlatform()
     testLogging {
         showStandardStreams = true

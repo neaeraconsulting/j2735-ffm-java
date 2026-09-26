@@ -3,16 +3,15 @@ on:
   pull_request:
     types:
       - opened
-      - edited
       - synchronize
+      - reopened
   push:
     branches:
-      - main
-      - develop
-      - snapshot
       - "**"
 jobs:
   test-arm64:
+    # Same-repo PR branches are already covered by the push run; only run pull_request for forks
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-24.04-arm
     permissions:
       contents: read

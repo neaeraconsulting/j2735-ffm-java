@@ -124,6 +124,12 @@ public class GeneralCodec {
      */
     private void loadLibrary(Path libraryPath) {
         // Load the library into a garbage-collected arena
+        if (libraryPath == null) {
+            // LibraryDetector.findLibrary returns null when auto-detection finds nothing
+            String errMsg = "Library not found: no native library for this platform in the working directory";
+            log.error(errMsg);
+            throw new RuntimeException(errMsg);
+        }
         if (!Files.exists(libraryPath)) {
             String errMsg = String.format("Library not found at path: %s", libraryPath);
             log.error(errMsg);

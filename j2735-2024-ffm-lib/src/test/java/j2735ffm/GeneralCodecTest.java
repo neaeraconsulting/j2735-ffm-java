@@ -77,6 +77,16 @@ class GeneralCodecTest extends BaseCodecTest {
   }
 
   @Test
+  void autoDetectConstructor_libraryNotFound_throwsLibraryNotFound() {
+    // The test working directory is the project root, which has no native library
+    // in it or in an <os>-<arch> subdirectory, so auto-detection finds nothing.
+    RuntimeException ex = assertThrows(RuntimeException.class,
+        () -> new GeneralCodec(TEXT_BUFFER_SIZE, BINARY_BUFFER_SIZE, ERROR_BUFFER_SIZE));
+    assertThat(ex.getClass(), equalTo(RuntimeException.class));
+    assertThat(ex.getMessage(), containsString("Library not found"));
+  }
+
+  @Test
   void convertGeneral_uperToXer_messageFrame() {
     byte[] input = hexFormat.parseHex(VEHICLE_EVENT_FLAGS_UPER_14BITS);
     byte[] result = codec.convertGeneral(input, VEHICLE_EVENT_FLAGS_PDU, UPER, XER);

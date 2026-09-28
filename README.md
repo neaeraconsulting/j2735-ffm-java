@@ -13,12 +13,13 @@ It enables converting between these ASN.1 encodings:
 
 ## Using the Library
 
-The library is available in Maven Central.  The repository includes both the Java JAR and native libraries for Linux and Windows.  Consuming the native libraries from Maven Central requires some extra configuration for clients.  To use the library from a Gradle project, add a `configurations` section to `build.gradle`:
+The library is available in Maven Central.  The repository includes both the Java JAR and native libraries for Linux (x86_64 and aarch64) and Windows (x86_64).  Consuming the native libraries from Maven Central requires some extra configuration for clients.  To use the library from a Gradle project, add a `configurations` section to `build.gradle`:
 
 ```groovy
 configurations {
     nativeLibraryArtifact_windows_x86_64
     nativeLibraryArtifact_linux_x86_64
+    nativeLibraryArtifact_linux_aarch64
 }
 ```
 
@@ -27,12 +28,12 @@ Add the Java dependency to the `dependencies` section in the normal way, and als
 ```groovy
 dependencies {
     ...
-    implementation 'com.neaeraconsulting:j2735-2024-ffm-lib:3.0.0-beta1'
+    implementation 'com.neaeraconsulting:j2735-2024-ffm-lib:3.0.0-beta2'
     
     nativeLibraryArtifact_windows_x86_64 (
             group: 'com.neaeraconsulting',
             name: 'j2735-2024-ffm-lib',
-            version: '3.0.0-beta1',
+            version: '3.0.0-beta2',
             classifier: 'windows-x86_64',
             ext: 'dll',
             transitive: false
@@ -41,8 +42,17 @@ dependencies {
     nativeLibraryArtifact_linux_x86_64 (
             group: 'com.neaeraconsulting',
             name: 'j2735-2024-ffm-lib',
-            version: '3.0.0-beta1',
+            version: '3.0.0-beta2',
             classifier: 'linux-x86_64',
+            ext: 'so',
+            transitive: false
+    )
+    
+    nativeLibraryArtifact_linux_aarch64 (
+            group: 'com.neaeraconsulting',
+            name: 'j2735-2024-ffm-lib',
+            version: '3.0.0-beta2',
+            classifier: 'linux-aarch64',
             ext: 'so',
             transitive: false
     )
@@ -70,6 +80,13 @@ tasks.register('copyNativeLibrary_linux_x86_64', Copy) {
     rename { libFileName -> 'libasnapplication.so' }
 }
 
+// Copy the native library to the build directory - Linux ARM64
+tasks.register('copyNativeLibrary_linux_aarch64', Copy) {
+    from configurations.nativeLibraryArtifact_linux_aarch64
+    into "$buildDir/libs"
+    rename { libFileName -> 'libasnapplication-arm64.so' }
+}
+
 tasks.register('copyDependencies', Copy) {
     from configurations.runtimeClasspath
     into "$buildDir/libs"
@@ -81,6 +98,7 @@ Add the copy tasks to the build task:
 ```groovy
 build {
     dependsOn copyNativeLibrary_linux_x86_64
+    dependsOn copyNativeLibrary_linux_aarch64
     dependsOn copyNativeLibrary_windows_x86_64
     finalizedBy copyDependencies
 }
@@ -114,9 +132,21 @@ The `j2735-2024-ffm-lib` project is a Java library that exposes three codec clas
 * **`MessageFrameCodec`** - Convenience methods for converting J2735 Message Frames between UPER and XER or JER.
 * **`Ieee1609Dot2DataCodec`** - Convenience methods for converting IEEE 1609.2 Data between OER and XER or JER.
 
-## MessageFrameCodec Methods include:
+Each codec has two constructors:
 
-### *byte[] xerToUper(String xer)*
+* `(textBufferSize, binaryBufferSize, errorBufferSize, libraryPath)` - Loads the native library from the given path.
+* `(textBufferSize, binaryBufferSize, errorBufferSize)` - Locates the native library for the current OS and architecture relative to the working directory, checking `./<os>-<arch>/` (e.g. `./linux-arm64/`) and then `./`.  The expected file names are `asnapplication.dll` on Windows, `libasnapplication.so` on Linux x86_64, and `libasnapplication-arm64.so` on Linux aarch64.
+
+```java
+// Auto-detect the native library in the working directory
+GeneralCodec codec = new GeneralCodec(262144L, 8192L, 512L);
+```
+
+The `LibraryDetector` class exposes the same lookup (`findLibrary`, `findLibraryFromResource`, `getLibraryFilename`) for callers who want to resolve the path themselves.
+
+### MessageFrameCodec Methods include:
+
+#### *byte[] xerToUper(String xer)*
 
 Converts an XER encoded MessageFrame to UPER
 
@@ -124,60 +154,60 @@ Converts an XER encoded MessageFrame to UPER
 * **returns** Byte array with the UPER encoding
 
 
-###  *String uperToXer(byte[] uper)*
+#### *String uperToXer(byte[] uper)*
 
 Convert an UPER encoded MessageFrame to XER
 
 * **uper** - The UPER encoded MessageFrame
 * Returns the XER encoded result
 
-### *byte[] jerToUper(String jer)*
+#### *byte[] jerToUper(String jer)*
 
 Converts a JER encoded MessageFrame to UPER
 
 * **jer** - The JER encoded MessageFrame
 * **returns** Byte array with the UPER encoding
 
-### *String uperToJer(byte[] uper)*
+#### *String uperToJer(byte[] uper)*
 
 Convert an UPER encoded MessageFrame to JER
 
 * **uper** - The UPER encoded MessageFrame
 * **returns** The JER encoded result
 
-## Ieee1609Dot2DataCodec methods include:
+### Ieee1609Dot2DataCodec methods include:
 
-### *byte[] xerToOer(String xer)*
+#### *byte[] xerToOer(String xer)*
 
 Convert an XER encoded Ieee1609Dot2Data to OER
 
 * **xer** - The XER encoded Ieee1609Dot2Data
 * **returns** Byte array with the OER encoding
 
-### *String oerToXer(byte[] oer)*
+#### *String oerToXer(byte[] oer)*
 
 Convert an OER encoded Ieee1609Dot2Data to XER
 
 * **oer** - The OER encoded Ieee1609Dot2Data
 * **returns** XER encoded result
 
-### *byte[] jerToOer(String jer)*
+#### *byte[] jerToOer(String jer)*
 
 Convert a JER encoded Ieee1609Dot2Data to OER
 
 * **jer** - The JER encoded Ieee1609Dot2Data
 * **returns** Byte array with the OER encoding
 
-### *String oerToJer(byte[] oer)*
+#### *String oerToJer(byte[] oer)*
 
 Convert an OER encoded Ieee1609Dot2Data to JER
 
 * **oer** - The OER encoded Ieee1609Dot2Data
 * **returns** JER encoded result
 
-## GeneralCodec methods include:
+### GeneralCodec methods include:
 
-### *byte[] convertGeneral(byte[] inputBytes, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding)*
+#### *byte[] convertGeneral(byte[] inputBytes, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding)*
 
 General purpose conversion function that can convert any PDU to or from any encoding
 
@@ -187,7 +217,7 @@ General purpose conversion function that can convert any PDU to or from any enco
 * **toEncoding** - Output encoding, one of `XER`, `JER`, `UPER`, or `OER`
 * **returns** The encoded message as bytes (XER and JER results should be converted to a UTF-8 string by the caller)
 
-### *List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding)*
+#### *List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding)*
 
 Batch conversion of a list of messages of the same PDU and encodings, reusing the input and output buffers for efficiency.  Includes constraint check.
 
@@ -197,7 +227,7 @@ Batch conversion of a list of messages of the same PDU and encodings, reusing th
 * **toEncoding** - The output encoding: `XER`, `JER`, `OER`, or `UPER`
 * **returns** List of converted messages. Any input message that fails to convert is logged and omitted from the result rather than aborting the batch.
 
-### *List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding, boolean checkConstraints)*
+#### *List<byte[]> convertBatch(List<byte[]> inputBytesList, String pdu, AsnEncoding fromEncoding, AsnEncoding toEncoding, boolean checkConstraints)*
 
 Batch conversion as above, with the option to skip the constraint check
 
@@ -208,7 +238,7 @@ Batch conversion as above, with the option to skip the constraint check
 * **checkConstraints** - Whether to check constraints
 * **returns** List of converted messages. Any input message that fails to convert is logged and omitted from the result rather than aborting the batch.
 
-### *byte[] xerToUper(String pdu, String xer)*
+#### *byte[] xerToUper(String pdu, String xer)*
 
 Converts an XER encoded PDU to UPER
 
@@ -216,7 +246,7 @@ Converts an XER encoded PDU to UPER
 * **xer** - The XER encoded PDU
 * **returns** Byte array with the UPER encoding
 
-### *String uperToXer(String pdu, byte[] uper)*
+#### *String uperToXer(String pdu, byte[] uper)*
 
 Convert a UPER encoded PDU to XER
 
@@ -224,7 +254,7 @@ Convert a UPER encoded PDU to XER
 * **uper** - The UPER encoded PDU
 * **returns** The XER encoded result
 
-### *byte[] jerToUper(String pdu, String jer)*
+#### *byte[] jerToUper(String pdu, String jer)*
 
 Converts a JER encoded PDU to UPER
 
@@ -232,7 +262,7 @@ Converts a JER encoded PDU to UPER
 * **jer** - The JER encoded PDU
 * **returns** Byte array with the UPER encoding
 
-### *String uperToJer(String pdu, byte[] uper)*
+#### *String uperToJer(String pdu, byte[] uper)*
 
 Convert a UPER encoded PDU to JER
 
@@ -240,7 +270,7 @@ Convert a UPER encoded PDU to JER
 * **uper** - The UPER encoded PDU
 * **returns** The JER encoded result
 
-### *byte[] xerToOer(String pdu, String xer)*
+#### *byte[] xerToOer(String pdu, String xer)*
 
 Convert an XER encoded PDU to OER
 
@@ -248,7 +278,7 @@ Convert an XER encoded PDU to OER
 * **xer** - The XER encoded PDU
 * **returns** Byte array with the OER encoding
 
-### *String oerToXer(String pdu, byte[] oer)*
+#### *String oerToXer(String pdu, byte[] oer)*
 
 Convert an OER encoded PDU to XER
 
@@ -256,7 +286,7 @@ Convert an OER encoded PDU to XER
 * **oer** - The OER encoded PDU
 * **returns** The XER encoded result
 
-### *byte[] jerToOer(String pdu, String jer)*
+#### *byte[] jerToOer(String pdu, String jer)*
 
 Convert a JER encoded PDU to OER
 
@@ -264,7 +294,7 @@ Convert a JER encoded PDU to OER
 * **jer** - The JER encoded PDU
 * **returns** Byte array with the OER encoding
 
-### *String oerToJer(String pdu, byte[] oer)*
+#### *String oerToJer(String pdu, byte[] oer)*
 
 Convert an OER encoded PDU to JER
 
@@ -314,11 +344,61 @@ for (byte[] jerBytes : jerList) {
 }
 ```
 
+### Command Line Tool (convert-v2x)
+
+`convert-v2x` is a native command line tool that calls the same C API as the Java library.  It is useful for bulk conversion of files and for testing and debugging the native code without Java.  Prebuilt binaries are in the [lib](lib) folder (and also in [j2735-2024-ffm-lib/lib](j2735-2024-ffm-lib/lib)):
+
+| Platform      | Executable           | Native library it needs in the same folder         |
+|---------------|----------------------|----------------------------------------------------|
+| Linux x86_64  | `convert-v2x`        | `libasnapplication.so`                             |
+| Linux aarch64 | `convert-v2x-arm64`  | `libasnapplication.so` (a copy or rename of `libasnapplication-arm64.so`) |
+| Windows x86_64| `convert-v2x.exe`    | `asnapplication.dll`                               |
+
+Usage:
+
+```
+convert-v2x <from-encoding> <to-encoding> <PDU>
+```
+
+* **from-encoding**, **to-encoding** - one of `uper`, `oer`, `xer` (canonical XER), or `jer` (minified JER)
+* **PDU** - The Protocol Data Unit, e.g. `MessageFrame`, `SPAT`, `Ieee1609Dot2Data`
+
+Behavior:
+
+* Reads one record per line from stdin and writes one converted line per input line to stdout, in order.  Trailing CR/LF is stripped, so Windows line endings are fine.
+* UPER and OER input and output are hex strings: an even number of hex digits with no whitespace or `0x` prefix.  XER and JER records must each be on a single line.
+* Constraints are always checked.
+* If a line fails to convert, it prints an empty output line and logs the reason to stderr.  The remaining lines are still processed.
+* Input lines and output records are limited to 1 MiB each.  Longer lines fail.
+* Exit code is `0` if every line converted, `1` if any line failed, and `64` if arguments are missing (the usage text is printed).
+
+Linux examples:
+
+```bash
+# Convert a file of hex encoded UPER MessageFrames (one per line) to JER
+cat data.hex | ./convert-v2x uper jer MessageFrame > data.jsonl
+
+# Convert a file of SPATs with no MessageFrame (one per line) from canonical XER to JER
+cat data.xml | ./convert-v2x xer jer SPAT > data.jsonl
+```
+
+Windows PowerShell examples:
+
+```powershell
+# Convert 1609.2 Data from XER to OER hex
+Get-Content example.xml | .\convert-v2x.exe xer oer Ieee1609Dot2Data > example.hex
+
+# Convert 1609.2 Data from OER hex to XER
+Get-Content example.hex | .\convert-v2x.exe oer xer Ieee1609Dot2Data > example.xml
+```
+
+The tool is built by CMake together with the native library (see [Rebuilding the libraries](#rebuilding-the-libraries-and-java-bindings)), and has black-box tests (see [Unit Tests](#unit-tests)).
+
 ## How it works
 
 ### Native library
 
-A native, dynamic library, `libasnapplication.so`, is generated from asn1c generated C code. The library is installed on the same image as the Java API.
+A native, dynamic library is generated from asn1c generated C code: `libasnapplication.so` for Linux x86_64, `libasnapplication-arm64.so` for Linux aarch64, and `asnapplication.dll` for Windows x86_64. The library is installed on the same image as the Java API.
 
 ### Java library
 
@@ -366,7 +446,7 @@ The ARM64 Compose file sets `platform: linux/arm64`, so it works on an ARM64 hos
 
 The unzipped C files are copied to the `generated-files` folder.  They are not persisted to the repo since they are identical to the files from asn1_codec, but it can be useful to have the unzipped files for debugging the `src/convert.h` API in an IDE.  
 
-The compiled shared library is copied to the `lib` folder.
+The compiled shared library and the `convert-v2x` CLI are copied to the `lib` folder (`libasnapplication.so` and `convert-v2x` for x86_64, `libasnapplication-arm64.so` and `convert-v2x-arm64` for ARM64).
 
 The Java source code for Linux from jextract is copied to the `generated-jextract` folder.
 
@@ -377,7 +457,14 @@ To rebuild the Windows DLL, switch Docker Desktop to Windows Containers, and run
 docker compose -f docker-compose-build-windows.yml up --build -d
 ```
 
-The DLL will be copied to the `/lib` folder, and Windows-specific jextract Java code is copied to `/generated-jextract-windows`.  Copy the generated code to:
+The build is an optimized Release build by default.  For an unoptimized build with PDB debug symbols, suitable for debugging in WinDbg or Visual Studio, set `BUILD_TYPE` first:
+
+```powershell
+$env:BUILD_TYPE="Debug"
+docker compose -f docker-compose-build-windows.yml up --build -d
+```
+
+The DLL and `convert-v2x.exe` (plus `.pdb` files for a Debug build) will be copied to the `/lib` folder, and Windows-specific jextract Java code is copied to `/generated-jextract-windows`.  Copy the generated code to:
 
 * folder: `/j2735-2024-ffm-lib/src/main/java/generated`
   * linux code in subfolder: `/linux`
@@ -413,7 +500,13 @@ cp libasnapplication-arm64.so ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
 cp asnapplication.dll ../j2735-2024-ffm-lib/src/test/resources/j2735ffm/
 ```
 
+Also copy the CLI executables to [j2735-2024-ffm-lib/lib](j2735-2024-ffm-lib/lib):
 
+```bash
+cp convert-v2x ../j2735-2024-ffm-lib/lib/
+cp convert-v2x-arm64 ../j2735-2024-ffm-lib/lib/
+cp convert-v2x.exe ../j2735-2024-ffm-lib/lib/
+```
 
 ## Unit Tests
 
@@ -447,7 +540,7 @@ docker compose -f docker-compose-api.yml up --build -d
 Use the *.http scripts in the `/j2735-2024-api/http-tests` directory to test the API.  These scripts work with
 IntelliJ IDE, or in VSCode with the REST Client extension.
 
-The following translation methods are available at base URL https://localhost:4000 
+The following translation methods are available at base URL http://localhost:4000.
 All methods are POSTs.
 
 | Method         | Description            |
@@ -515,20 +608,8 @@ http://localhost:4000/api-docs.yaml
 
 # Notes
 
-Testing native exe with WinDbg:
+Testing the native exe with WinDbg (requires a `BUILD_TYPE=Debug` Windows build so the `.pdb` files are present in `lib`).  Replace `<repo>` with the path to your checkout:
 
 ```powershell
-cmd /c 'cd /d C:\Users\ivan\asn1\j2735-ffm-java\lib && windbgx -y "C:\Users\ivan\asn1\j2735-ffm-java\lib" -srcpath "C:\Users\ivan\asn1\j2735-ffm-java\src;C:\Users\ivan\asn1\j2735-ffm-java\generated-files\2024" convert-v2x.exe xer oer Ieee1609Dot2Data < example2.xml' 
+cmd /c 'cd /d <repo>\lib && windbgx -y "<repo>\lib" -srcpath "<repo>\src;<repo>\generated-files\2024" convert-v2x.exe xer oer Ieee1609Dot2Data < example.xml'
 ```
-
-
-
-
-
-
-
-
-
-
-
-

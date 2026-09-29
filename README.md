@@ -508,6 +508,13 @@ cp convert-v2x-arm64 ../j2735-2024-ffm-lib/lib/
 cp convert-v2x.exe ../j2735-2024-ffm-lib/lib/
 ```
 
+and make the linux tools executable in git:
+```bash
+cd ../j2735-2024-ffm-lib/lib
+git update-index --chmod=+x convert-v2x
+git update-index --chmod=+x convert-v2x-arm64
+```
+
 ## Unit Tests
 
 The unit tests can be run in either Linux or Windows.

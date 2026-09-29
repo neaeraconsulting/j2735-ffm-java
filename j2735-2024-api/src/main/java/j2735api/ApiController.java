@@ -276,6 +276,7 @@ public class ApiController {
      * Text encodings (XER, JER) are one message per line.
      * Blank input lines are skipped.  If a message fails to convert, an empty line is
      * output in its place, so each output line corresponds to an input line.
+     * Every output line, including the last, is terminated by "\n".
      * @param body Line-delimited input messages
      * @param from The input encoding: xer, jer, uper, or oer
      * @param to The output encoding: xer, jer, uper, or oer
@@ -293,8 +294,8 @@ public class ApiController {
         AsnEncoding toEncoding = parseEncoding(to);
         return body.lines()
             .filter(line -> !line.isBlank())
-            .map(line -> convertLine(line.strip(), pdu, fromEncoding, toEncoding))
-            .collect(Collectors.joining("\n"));
+            .map(line -> convertLine(line.strip(), pdu, fromEncoding, toEncoding) + "\n")
+            .collect(Collectors.joining());
     }
 
     // Convert one line of a batch, returning an empty string on failure

@@ -270,7 +270,7 @@ class ApiControllerTest {
             .contentType(MediaType.TEXT_PLAIN)
             .content(HEX.formatHex(SAMPLE_UPER) + "\n" + HEX.formatHex(uper2) + "\n"))
         .andExpect(status().isOk())
-        .andExpect(content().string(equalTo(SAMPLE_JER + "\n" + jer2)));
+        .andExpect(content().string(equalTo(SAMPLE_JER + "\n" + jer2 + "\n")));
   }
 
   @Test
@@ -284,7 +284,7 @@ class ApiControllerTest {
             .content(SAMPLE_JER + "\r\n" + SAMPLE_JER))
         .andExpect(status().isOk())
         .andExpect(content().string(equalTo(
-            HEX.formatHex(SAMPLE_UPER) + "\n" + HEX.formatHex(SAMPLE_UPER))));
+            HEX.formatHex(SAMPLE_UPER) + "\n" + HEX.formatHex(SAMPLE_UPER) + "\n")));
   }
 
   @Test
@@ -300,7 +300,7 @@ class ApiControllerTest {
             .contentType(MediaType.TEXT_PLAIN)
             .content(uperHex + "\nff\n" + uperHex))
         .andExpect(status().isOk())
-        .andExpect(content().string(equalTo(SAMPLE_XER + "\n\n" + SAMPLE_XER)));
+        .andExpect(content().string(equalTo(SAMPLE_XER + "\n\n" + SAMPLE_XER + "\n")));
   }
 
   @Test
@@ -312,7 +312,7 @@ class ApiControllerTest {
             .contentType(MediaType.TEXT_PLAIN)
             .content("not-valid-hex\n" + HEX.formatHex(SAMPLE_UPER)))
         .andExpect(status().isOk())
-        .andExpect(content().string(equalTo("\n" + SAMPLE_JER)));
+        .andExpect(content().string(equalTo("\n" + SAMPLE_JER + "\n")));
   }
 
   @Test
@@ -325,7 +325,42 @@ class ApiControllerTest {
             .contentType(MediaType.TEXT_PLAIN)
             .content("\n" + oerHex + "\n\n   \n" + oerHex + "\n"))
         .andExpect(status().isOk())
-        .andExpect(content().string(equalTo(SAMPLE_JER + "\n" + SAMPLE_JER)));
+        .andExpect(content().string(equalTo(SAMPLE_JER + "\n" + SAMPLE_JER + "\n")));
+  }
+
+  @Test
+  void batchConvert_soleFailedLine_outputsEmptyLine() throws Exception {
+    when(generalCodec.convertGeneral(any(byte[].class), anyString(), any(), any()))
+        .thenThrow(new RuntimeException("conversion failed"));
+
+    mockMvc.perform(post("/batch/uper/jer/MessageFrame")
+            .contentType(MediaType.TEXT_PLAIN)
+            .content("ff"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo("\n")));
+  }
+
+  @Test
+  void batchConvert_trailingFailedLine_outputsEmptyLine() throws Exception {
+    when(generalCodec.convertGeneral(aryEq(SAMPLE_UPER), eq("MessageFrame"), eq(UPER), eq(JER)))
+        .thenReturn(SAMPLE_JER.getBytes(StandardCharsets.UTF_8));
+
+    mockMvc.perform(post("/batch/uper/jer/MessageFrame")
+            .contentType(MediaType.TEXT_PLAIN)
+            .content(HEX.formatHex(SAMPLE_UPER) + "\nnot-valid-hex\n"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo(SAMPLE_JER + "\n\n")));
+  }
+
+  @Test
+  void batchConvert_allBlankInput_returnsEmpty() throws Exception {
+    mockMvc.perform(post("/batch/uper/jer/MessageFrame")
+            .contentType(MediaType.TEXT_PLAIN)
+            .content("\n   \n"))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo("")));
+
+    verify(generalCodec, never()).convertGeneral(any(byte[].class), anyString(), any(), any());
   }
 
   @Test

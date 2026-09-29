@@ -585,7 +585,7 @@ The `/batch/{from}/{to}/{pdu}` method converts a line-delimited file of messages
 * **to** - The output encoding: `xer`, `jer`, `uper`, or `oer`
 * **pdu** - The Protocol Data Unit, e.g. "MessageFrame" or "Ieee1609Dot2Data"
 
-UPER and OER messages are hex strings.  XER and JER messages must each be on a single line.  Blank input lines are skipped.  Each output line corresponds to one input line.  If a message fails to convert, the output contains an empty line in its place.  An unsupported encoding returns HTTP 400.
+UPER and OER messages are hex strings.  XER and JER messages must each be on a single line.  Blank input lines are skipped.  Each output line corresponds to one input line.  If a message fails to convert, the output contains an empty line in its place.  Every output line, including the last, ends with `\n`.  An unsupported encoding returns HTTP 400.
 
 Example:
 

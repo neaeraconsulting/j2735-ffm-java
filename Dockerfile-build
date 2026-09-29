@@ -34,9 +34,11 @@ WORKDIR /build
 ADD ./asn1_codec/asn1c_combined/generated-files/2024.tar.gz /build
 ADD ./CMakeLists.txt                                        /build
 COPY ./src                                                  /build/src/
+COPY ./test                                                 /build/test/
 
 ENV CC=/usr/bin/clang
 
+# Install prereqs, build, and run the convert-v2x CLI tests
 # Set library suffix based on architecture if not provided
 RUN if [ -z "$LIBRARY_SUFFIX" ]; then \
       if [ "$TARGETARCH" = "arm64" ]; then \
@@ -50,8 +52,10 @@ RUN if [ -z "$LIBRARY_SUFFIX" ]; then \
     apt install -y cmake && \
     cmake . && \
     cmake --build . --verbose && \
+    ctest --output-on-failure && \
     mkdir out && \
-    cp libasnapplication.so.1.0.0 out/libasnapplication${LIBRARY_SUFFIX}.so
+    cp libasnapplication.so out/libasnapplication${LIBRARY_SUFFIX}.so && \
+    cp convert-v2x out/convert-v2x${LIBRARY_SUFFIX}
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["tail", "-f", "/dev/null"]

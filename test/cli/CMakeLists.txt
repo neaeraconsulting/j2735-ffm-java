@@ -76,6 +76,13 @@ add_cli_test(batch_with_bad_line
     STEPS uper:jer INPUT batch.uper.hex EXPECTED batch.jer
     EXIT 1 STDERR "non-hex character at offset 0")
 
+# An encode failure fails the line instead of crashing, and the next line still
+# converts. 0x7f is not a HashAlgorithm value: OER decodes it and ENUMERATED has
+# no constraint check, but no encoder accepts it.
+add_cli_test(encode_failure
+    STEPS oer:xer INPUT bad-enum.oer.hex EXPECTED bad-enum.xer
+    EXIT 1 STDERR "Error encoding" PDU HashAlgorithm)
+
 # A line longer than the 1 MiB - 1 line buffer fails as one record instead of
 # being split into several, and the next line still converts
 add_cli_test(overlong_line

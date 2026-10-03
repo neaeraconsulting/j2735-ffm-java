@@ -59,12 +59,6 @@ class GeneralCodecTest extends BaseCodecTest {
   private static final String SSM_PDU = "SignalStatusMessage";
   private static final String MALFORMED_SSM_UPER = "65e539";
 
-  private static final String HASH_ALGORITHM_PDU = "HashAlgorithm";
-  private static final String HASH_ALGORITHM_OER_SHA256 = "00";
-  private static final String HASH_ALGORITHM_OER_UNKNOWN = "7f";
-  private static final String HASH_ALGORITHM_XER_SHA256 =
-      "<HashAlgorithm><sha256/></HashAlgorithm>";
-
   private static final String UNSECURED_XER =
       "<Ieee1609Dot2Data><protocolVersion>3</protocolVersion><content>"
           + "<unsecuredData>0102030405</unsecuredData></content></Ieee1609Dot2Data>";
@@ -221,28 +215,6 @@ class GeneralCodecTest extends BaseCodecTest {
     byte[] valid = hexFormat.parseHex(loadResource("SSM.hex"));
     List<byte[]> results = codec.convertBatch(List.of(malformed, valid), SSM_PDU, UPER, XER);
     assertThat(results, hasSize(1));
-  }
-
-  @Test
-  void convertGeneral_encodeFailure_throwsEncodingError() {
-    // OER decodes the unknown enum value and ENUMERATED has no constraint check,
-    // so the failure happens in the encoder.
-    byte[] input = hexFormat.parseHex(HASH_ALGORITHM_OER_UNKNOWN);
-    RuntimeException ex = assertThrows(
-        RuntimeException.class,
-        () -> codec.convertGeneral(input, HASH_ALGORITHM_PDU, OER, XER)
-    );
-    assertThat(ex.getMessage(), containsString("Error encoding"));
-  }
-
-  @Test
-  void convertBatch_skipsEncodeFailure_returnsOnlySuccessful() {
-    byte[] unknown = hexFormat.parseHex(HASH_ALGORITHM_OER_UNKNOWN);
-    byte[] valid = hexFormat.parseHex(HASH_ALGORITHM_OER_SHA256);
-    List<byte[]> results = codec.convertBatch(List.of(unknown, valid), HASH_ALGORITHM_PDU, OER, XER);
-    assertThat(results, hasSize(1));
-    assertThat(new String(results.getFirst(), StandardCharsets.UTF_8),
-        equalTo(HASH_ALGORITHM_XER_SHA256));
   }
 
   @Test

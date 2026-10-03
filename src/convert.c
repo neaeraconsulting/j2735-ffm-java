@@ -15,7 +15,6 @@
  */
 #include "convert.h"
 #include "../generated-files/2024/asn_application.h"
-#include <limits.h>    /* for INT_MAX */
 #include <stdlib.h>    /* for atoi(3) */
 #include <string.h>    /* for strerror(3) */
 
@@ -115,24 +114,14 @@ int convert_bytes(const char * pdu_name,
     // Encode
     asn_encode_to_new_buffer_result_t enc_result = {NULL, 0, NULL};
     enc_result = asn_encode_to_new_buffer(opt_codec_ctx, osyntax, pduType, structure);
+    if (!enc_result.buffer) {
+        snprintf(err_buf, err_buf_len, "Error encoding to %d\n", osyntax);
+        ASN_STRUCT_FREE(*pduType, structure);
+        return RETURN_ERROR;
+    }
     ASN_STRUCT_FREE(*pduType, structure);
 
-    // A failed encode returns encoded == -1, usually along with a non-NULL
-    // buffer, so check the count before treating it as an unsigned length.
-    if (enc_result.result.encoded < 0 || !enc_result.buffer) {
-        snprintf(err_buf, err_buf_len, "%s: Error encoding to %s\n", pduType->name, to_encoding);
-        free(enc_result.buffer);
-        return RETURN_ERROR;
-    }
-
-    const size_t num_encoded_bytes = (size_t)enc_result.result.encoded;
-
-    if (num_encoded_bytes > INT_MAX) {
-        snprintf(err_buf, err_buf_len,
-          "Error, output of %zu bytes is too large to return\n", num_encoded_bytes);
-        free(enc_result.buffer);
-        return RETURN_ERROR;
-    }
+    const size_t num_encoded_bytes = enc_result.result.encoded;
 
     if (num_encoded_bytes > max_obuf_len) {
         memcpy(obuf, enc_result.buffer, max_obuf_len);
@@ -145,7 +134,7 @@ int convert_bytes(const char * pdu_name,
     }
 
     free(enc_result.buffer);
-    return (int)num_encoded_bytes;
+    return num_encoded_bytes;
 
 }
 

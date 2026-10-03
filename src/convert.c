@@ -132,7 +132,7 @@ int convert_bytes(const char * pdu_name,
           "Error, output of %zu bytes is too large to return\n", num_encoded_bytes);
         free(enc_result.buffer);
         return RETURN_ERROR;
-    }
+}
 
     if (num_encoded_bytes > max_obuf_len) {
         memcpy(obuf, enc_result.buffer, max_obuf_len);

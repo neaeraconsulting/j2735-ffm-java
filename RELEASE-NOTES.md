@@ -11,11 +11,11 @@
 * Adds batch convert methods
 * Uses asn1_codec submodule to version with 1609.2, Windows, and JER support.
 * Fix XER/JER decoding of 64-bit INTEGER values (such as IEEE 1609.2 Time64 generationTime) on Windows, where C `long` is 32 bits.
-* Fix a heap over-read in `convert_bytes` when encoding fails (for example an unknown ENUMERATED value decoded from OER), which crashed the native cli and reported a misleading "truncating output" error through the Java library.
 * Adds native cli tools in:
   * Linux lib/convert-v2x
   * windows lib/convert-v2x.exe
-
+* Critical bug fix:
+  * Fix a heap over-read in `convert_bytes` when encoding fails due to casting the error code -1 to `size_t`, which crashed the native code and reported a misleading "truncating output" error through the Java library.
 
 # v2.0.2
 

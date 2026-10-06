@@ -123,39 +123,33 @@ int convert_bytes(const char * pdu_name,
       }
     }
 
-    // Encode
-    asn_encode_to_new_buffer_result_t enc_result = {NULL, 0, NULL};
-    enc_result = asn_encode_to_new_buffer(opt_codec_ctx, osyntax, pduType, structure);
+    // Encode into the caller's buffer.  The encoder stops writing when the
+    // buffer is full but keeps counting, so encoded is the whole size.
+    asn_enc_rval_t enc_result =
+        asn_encode_to_buffer(opt_codec_ctx, osyntax, pduType, structure, obuf, max_obuf_len);
     ASN_STRUCT_FREE(*pduType, structure);
 
-    // A failed encode returns encoded == -1, usually along with a non-NULL
-    // buffer, so check the count before treating it as an unsigned length.
-    if (enc_result.result.encoded < 0 || !enc_result.buffer) {
+    // A failed encode returns encoded == -1, so check the count before
+    // treating it as an unsigned length.
+    if (enc_result.encoded < 0) {
         snprintf(err_buf, err_buf_len, "%s: Error encoding to %s\n", pduType->name, to_encoding);
-        free(enc_result.buffer);
         return RETURN_ERROR;
     }
 
-    const size_t num_encoded_bytes = (size_t)enc_result.result.encoded;
+    const size_t num_encoded_bytes = (size_t)enc_result.encoded;
 
     if (num_encoded_bytes > INT_MAX) {
         snprintf(err_buf, err_buf_len,
           "Error, output of %zu bytes is too large to return\n", num_encoded_bytes);
-        free(enc_result.buffer);
         return RETURN_ERROR;
     }
 
     if (num_encoded_bytes > max_obuf_len) {
-        memcpy(obuf, enc_result.buffer, max_obuf_len);
         snprintf(err_buf, err_buf_len,
           "Error, truncating output.  Max buffer size %zu is too small\n", max_obuf_len);
-        free(enc_result.buffer);
         return RETURN_ERROR;
-    } else {
-        memcpy(obuf, enc_result.buffer, num_encoded_bytes);
     }
 
-    free(enc_result.buffer);
     return (int)num_encoded_bytes;
 
 }

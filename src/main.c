@@ -17,7 +17,6 @@
 #include <sys/types.h>
 #include <stdlib.h>    /* for atoi(3) */
 #include <string.h>    /* for strerror(3) */
-#include <ctype.h>     /* for isprint(3) */
 
 #define EX_USAGE    64
 #define LINE_BUF_SIZE (1024 * 1024)
@@ -144,10 +143,6 @@ static int convert_str(const char * pdu_name,
         return -1;
     }
 
-    // obuf is reused for every line.  The error dump below stops at the first
-    // unprintable character, so this keeps it from showing an earlier line.
-    obuf[0] = 0;
-
     char err_buf[255];
     const size_t err_buf_len = sizeof(err_buf);
     const int check_constraints = 1;
@@ -167,14 +162,11 @@ static int convert_str(const char * pdu_name,
             err_buf, err_buf_len, check_constraints);
     }
 
+    // No dump of obuf here: obuf is reused for every line, and a failed encode
+    // doesn't report how many bytes it wrote, so the rest of the buffer may
+    // hold an earlier line or uninitialized memory.
     if (num_encoded_bytes < 0) {
       fprintf(stderr, "Codec returned an error: %.*s\n", (int)err_buf_len, err_buf);
-      fprintf(stderr, "Dump of output buffer contents:");
-      // Dump only printable characters in the output buffer.
-      for (size_t i = 0; i < max_buf_len && isprint(obuf[i]); i++) {
-          fputc(obuf[i], stderr);
-      }
-      fputc('\n', stderr);
       return num_encoded_bytes;
     }
 

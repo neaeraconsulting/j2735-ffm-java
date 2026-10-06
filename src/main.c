@@ -91,10 +91,12 @@ static void bin_to_hex(const uint8_t *bytes, size_t bytes_len, char *hex) {
         fprintf(stderr, "Null byte array passed to bin_to_hex\n");
         exit(EXIT_FAILURE);
     }
-    *hex = '\0';
+    static const char digits[] = "0123456789abcdef";
     for (size_t i = 0; i < bytes_len; i++) {
-        hex += sprintf(hex, "%02x", bytes[i]);
+        *hex++ = digits[bytes[i] >> 4];
+        *hex++ = digits[bytes[i] & 0x0f];
     }
+    *hex = '\0';
 }
 
 static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev) {

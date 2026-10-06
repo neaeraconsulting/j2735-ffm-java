@@ -15,6 +15,8 @@
  */
 #include "convert.h"
 #include "../generated-files/2024/asn_application.h"
+#include "../generated-files/2024/MessageFrame.h"
+#include "../generated-files/2024/Ieee1609Dot2Data.h"
 #include <limits.h>    /* for INT_MAX */
 #include <stdlib.h>    /* for atoi(3) */
 #include <string.h>    /* for strerror(3) */
@@ -25,6 +27,20 @@
 extern asn_TYPE_descriptor_t *asn_pdu_collection[];
 
 const int RETURN_ERROR = -1;
+
+// Nearly every call is for one of two PDUs, so they are tried before the scan
+// of the collection, which has over a thousand entries.
+static asn_TYPE_descriptor_t * find_pdu(const char * pdu_name) {
+    if (strcmp("MessageFrame", pdu_name) == 0) {
+        return &asn_DEF_MessageFrame;
+    }
+    if (strcmp("Ieee1609Dot2Data", pdu_name) == 0) {
+        return &asn_DEF_Ieee1609Dot2Data;
+    }
+    asn_TYPE_descriptor_t **pdu = asn_pdu_collection;
+    while(*pdu && strcmp((*pdu)->name, pdu_name)) pdu++;
+    return *pdu;
+}
 
 static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev, char * err_buf,
                                                 size_t err_buf_len) {
@@ -63,13 +79,8 @@ int convert_bytes(const char * pdu_name,
             size_t err_buf_len,
             int check_constraints) {
 
-    asn_TYPE_descriptor_t *pduType = PDU_Type_Ptr;
-
-    asn_TYPE_descriptor_t **pdu = asn_pdu_collection;
-    while(*pdu && strcmp((*pdu)->name, pdu_name)) pdu++;
-    if(*pdu) {
-        pduType = *pdu;
-    } else {
+    asn_TYPE_descriptor_t *pduType = find_pdu(pdu_name);
+    if (!pduType) {
         snprintf(err_buf, err_buf_len, "Unrecognized PDU: %s\n", pdu_name);
         return RETURN_ERROR;
     }

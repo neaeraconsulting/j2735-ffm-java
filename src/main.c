@@ -121,6 +121,7 @@ static int convert_str(const char * pdu_name,
     const char * to_encoding,
     const char * ibuf,
     char * buf,
+    uint8_t * obuf,
     const size_t max_buf_len) {
 
     const size_t len = strlen(ibuf);
@@ -141,10 +142,12 @@ static int convert_str(const char * pdu_name,
         return -1;
     }
 
-    uint8_t* obuf = calloc(max_buf_len, sizeof(uint8_t));
+    // obuf is reused for every line.  The error dump below stops at the first
+    // unprintable character, so this keeps it from showing an earlier line.
+    obuf[0] = 0;
 
-    const size_t err_buf_len = 255;
-    char* err_buf = malloc(err_buf_len);
+    char err_buf[255];
+    const size_t err_buf_len = sizeof(err_buf);
     const int check_constraints = 1;
 
     // If input is UPER or OER, convert from hex string to byte array
@@ -170,8 +173,6 @@ static int convert_str(const char * pdu_name,
           fputc(obuf[i], stderr);
       }
       fputc('\n', stderr);
-      free(obuf);
-      free(err_buf);
       return num_encoded_bytes;
     }
 
@@ -193,9 +194,6 @@ static int convert_str(const char * pdu_name,
         buf[out_len] = '\0';
     }
 
-    free(obuf);
-    free(err_buf);
-
     return num_encoded_bytes;
 }
 
@@ -208,6 +206,11 @@ int main(int ac, char *av[]) {
 
     static char line[LINE_BUF_SIZE];
     char * out_buf = calloc(OUT_BUF_SIZE, sizeof(uint8_t));
+    uint8_t * work_buf = malloc(OUT_BUF_SIZE);
+    if (!out_buf || !work_buf) {
+        fprintf(stderr, "Out of memory\n");
+        exit(EXIT_FAILURE);
+    }
     int any_failed = 0;
 
     while (fgets(line, sizeof(line), stdin) != NULL) {
@@ -236,7 +239,7 @@ int main(int ac, char *av[]) {
             line[--len] = '\0';
         }
 
-        int rc = convert_str(av[3], av[1], av[2], line, out_buf, OUT_BUF_SIZE);
+        int rc = convert_str(av[3], av[1], av[2], line, out_buf, work_buf, OUT_BUF_SIZE);
         if (rc < 0) {
             any_failed = 1;
             printf("\n");
@@ -246,6 +249,7 @@ int main(int ac, char *av[]) {
     }
 
     free(out_buf);
+    free(work_buf);
     return any_failed ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 

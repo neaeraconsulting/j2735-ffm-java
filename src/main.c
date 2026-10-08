@@ -17,7 +17,6 @@
 #include <sys/types.h>
 #include <stdlib.h>    /* for atoi(3) */
 #include <string.h>    /* for strerror(3) */
-#include <ctype.h>     /* for isprint(3) */
 
 #define EX_USAGE    64
 #define LINE_BUF_SIZE (1024 * 1024)
@@ -91,10 +90,12 @@ static void bin_to_hex(const uint8_t *bytes, size_t bytes_len, char *hex) {
         fprintf(stderr, "Null byte array passed to bin_to_hex\n");
         exit(EXIT_FAILURE);
     }
-    *hex = '\0';
+    static const char digits[] = "0123456789abcdef";
     for (size_t i = 0; i < bytes_len; i++) {
-        hex += sprintf(hex, "%02x", bytes[i]);
+        *hex++ = digits[bytes[i] >> 4];
+        *hex++ = digits[bytes[i] & 0x0f];
     }
+    *hex = '\0';
 }
 
 static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev) {
@@ -121,6 +122,7 @@ static int convert_str(const char * pdu_name,
     const char * to_encoding,
     const char * ibuf,
     char * buf,
+    uint8_t * obuf,
     const size_t max_buf_len) {
 
     const size_t len = strlen(ibuf);
@@ -141,10 +143,8 @@ static int convert_str(const char * pdu_name,
         return -1;
     }
 
-    uint8_t* obuf = calloc(max_buf_len, sizeof(uint8_t));
-
-    const size_t err_buf_len = 255;
-    char* err_buf = malloc(err_buf_len);
+    char err_buf[255];
+    const size_t err_buf_len = sizeof(err_buf);
     const int check_constraints = 1;
 
     // If input is UPER or OER, convert from hex string to byte array
@@ -162,16 +162,11 @@ static int convert_str(const char * pdu_name,
             err_buf, err_buf_len, check_constraints);
     }
 
+    // No dump of obuf here: obuf is reused for every line, and a failed encode
+    // doesn't report how many bytes it wrote, so the rest of the buffer may
+    // hold an earlier line or uninitialized memory.
     if (num_encoded_bytes < 0) {
       fprintf(stderr, "Codec returned an error: %.*s\n", (int)err_buf_len, err_buf);
-      fprintf(stderr, "Dump of output buffer contents:");
-      // Dump only printable characters in the output buffer.
-      for (size_t i = 0; i < max_buf_len && isprint(obuf[i]); i++) {
-          fputc(obuf[i], stderr);
-      }
-      fputc('\n', stderr);
-      free(obuf);
-      free(err_buf);
       return num_encoded_bytes;
     }
 
@@ -193,9 +188,6 @@ static int convert_str(const char * pdu_name,
         buf[out_len] = '\0';
     }
 
-    free(obuf);
-    free(err_buf);
-
     return num_encoded_bytes;
 }
 
@@ -208,6 +200,11 @@ int main(int ac, char *av[]) {
 
     static char line[LINE_BUF_SIZE];
     char * out_buf = calloc(OUT_BUF_SIZE, sizeof(uint8_t));
+    uint8_t * work_buf = malloc(OUT_BUF_SIZE);
+    if (!out_buf || !work_buf) {
+        fprintf(stderr, "Out of memory\n");
+        exit(EXIT_FAILURE);
+    }
     int any_failed = 0;
 
     while (fgets(line, sizeof(line), stdin) != NULL) {
@@ -236,7 +233,7 @@ int main(int ac, char *av[]) {
             line[--len] = '\0';
         }
 
-        int rc = convert_str(av[3], av[1], av[2], line, out_buf, OUT_BUF_SIZE);
+        int rc = convert_str(av[3], av[1], av[2], line, out_buf, work_buf, OUT_BUF_SIZE);
         if (rc < 0) {
             any_failed = 1;
             printf("\n");
@@ -246,6 +243,7 @@ int main(int ac, char *av[]) {
     }
 
     free(out_buf);
+    free(work_buf);
     return any_failed ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 

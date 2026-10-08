@@ -15,6 +15,8 @@
  */
 #include "convert.h"
 #include "../generated-files/2024/asn_application.h"
+#include "../generated-files/2024/MessageFrame.h"
+#include "../generated-files/2024/Ieee1609Dot2Data.h"
 #include <limits.h>    /* for INT_MAX */
 #include <stdlib.h>    /* for atoi(3) */
 #include <string.h>    /* for strerror(3) */
@@ -25,6 +27,31 @@
 extern asn_TYPE_descriptor_t *asn_pdu_collection[];
 
 const int RETURN_ERROR = -1;
+
+#ifdef ASN_ARENA
+// Enough for the decoded structure of most messages.  A larger one spills to
+// heap chunks, which asn_arena_reset frees.
+#define ARENA_BUFFER_SIZE 65536
+// The structure is in the arena of convert_bytes and goes with it, so the
+// walk over it that frees each part is left out.
+#define FREE_STRUCTURE(pdu_type, structure) ((void)(structure))
+#else
+#define FREE_STRUCTURE(pdu_type, structure) ASN_STRUCT_FREE(*(pdu_type), structure)
+#endif
+
+// Nearly every call is for one of two PDUs, so they are tried before the scan
+// of the collection, which has over a thousand entries.
+static asn_TYPE_descriptor_t * find_pdu(const char * pdu_name) {
+    if (strcmp("MessageFrame", pdu_name) == 0) {
+        return &asn_DEF_MessageFrame;
+    }
+    if (strcmp("Ieee1609Dot2Data", pdu_name) == 0) {
+        return &asn_DEF_Ieee1609Dot2Data;
+    }
+    asn_TYPE_descriptor_t **pdu = asn_pdu_collection;
+    while(*pdu && strcmp((*pdu)->name, pdu_name)) pdu++;
+    return *pdu;
+}
 
 static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev, char * err_buf,
                                                 size_t err_buf_len) {
@@ -52,7 +79,7 @@ static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev, char * err
 
 
 
-int convert_bytes(const char * pdu_name,
+static int convert(const char * pdu_name,
             const char * from_encoding,
             const char * to_encoding,
             const uint8_t * ibuf,
@@ -63,13 +90,8 @@ int convert_bytes(const char * pdu_name,
             size_t err_buf_len,
             int check_constraints) {
 
-    asn_TYPE_descriptor_t *pduType = PDU_Type_Ptr;
-
-    asn_TYPE_descriptor_t **pdu = asn_pdu_collection;
-    while(*pdu && strcmp((*pdu)->name, pdu_name)) pdu++;
-    if(*pdu) {
-        pduType = *pdu;
-    } else {
+    asn_TYPE_descriptor_t *pduType = find_pdu(pdu_name);
+    if (!pduType) {
         snprintf(err_buf, err_buf_len, "Unrecognized PDU: %s\n", pdu_name);
         return RETURN_ERROR;
     }
@@ -94,7 +116,7 @@ int convert_bytes(const char * pdu_name,
     asn_dec_rval_t rval = asn_decode(opt_codec_ctx, isyntax, pduType, &structure, ibuf, ibuf_len);
 
     if (rval.code != RC_OK) {
-        ASN_STRUCT_FREE(*pduType, structure);
+        FREE_STRUCTURE(pduType, structure);
         snprintf(err_buf, err_buf_len, "%s: Error decoding PDU\n", pduType->name);
         return RETURN_ERROR;
     }
@@ -107,45 +129,70 @@ int convert_bytes(const char * pdu_name,
       if (constraint_result != 0) {
           snprintf(err_buf, err_buf_len,
             "Decoding was successful, but constraint check failed, can't re-encode: %s\n", errbuff);
-          ASN_STRUCT_FREE(*pduType, structure);
+          FREE_STRUCTURE(pduType, structure);
           return RETURN_ERROR;
       }
     }
 
-    // Encode
-    asn_encode_to_new_buffer_result_t enc_result = {NULL, 0, NULL};
-    enc_result = asn_encode_to_new_buffer(opt_codec_ctx, osyntax, pduType, structure);
-    ASN_STRUCT_FREE(*pduType, structure);
+    // Encode into the caller's buffer.  The encoder stops writing when the
+    // buffer is full but keeps counting, so encoded is the whole size.
+    asn_enc_rval_t enc_result =
+        asn_encode_to_buffer(opt_codec_ctx, osyntax, pduType, structure, obuf, max_obuf_len);
+    FREE_STRUCTURE(pduType, structure);
 
-    // A failed encode returns encoded == -1, usually along with a non-NULL
-    // buffer, so check the count before treating it as an unsigned length.
-    if (enc_result.result.encoded < 0 || !enc_result.buffer) {
+    // A failed encode returns encoded == -1, so check the count before
+    // treating it as an unsigned length.
+    if (enc_result.encoded < 0) {
         snprintf(err_buf, err_buf_len, "%s: Error encoding to %s\n", pduType->name, to_encoding);
-        free(enc_result.buffer);
         return RETURN_ERROR;
     }
 
-    const size_t num_encoded_bytes = (size_t)enc_result.result.encoded;
+    const size_t num_encoded_bytes = (size_t)enc_result.encoded;
 
     if (num_encoded_bytes > INT_MAX) {
         snprintf(err_buf, err_buf_len,
           "Error, output of %zu bytes is too large to return\n", num_encoded_bytes);
-        free(enc_result.buffer);
         return RETURN_ERROR;
     }
 
     if (num_encoded_bytes > max_obuf_len) {
-        memcpy(obuf, enc_result.buffer, max_obuf_len);
         snprintf(err_buf, err_buf_len,
           "Error, truncating output.  Max buffer size %zu is too small\n", max_obuf_len);
-        free(enc_result.buffer);
         return RETURN_ERROR;
-    } else {
-        memcpy(obuf, enc_result.buffer, num_encoded_bytes);
     }
 
-    free(enc_result.buffer);
     return (int)num_encoded_bytes;
+
+}
+
+int convert_bytes(const char * pdu_name,
+            const char * from_encoding,
+            const char * to_encoding,
+            const uint8_t * ibuf,
+            size_t ibuf_len,
+            uint8_t * obuf,
+            size_t max_obuf_len,
+            char * err_buf,
+            size_t err_buf_len,
+            int check_constraints) {
+
+#ifdef ASN_ARENA
+    // Everything asn1c allocates for this call comes from an arena that starts
+    // in a buffer on the stack, so each call has its own and threads don't
+    // share one.
+    char arena_buffer[ARENA_BUFFER_SIZE];
+    asn_arena_t arena;
+    asn_arena_init(&arena, arena_buffer, sizeof(arena_buffer));
+    asn_arena_t *previous = asn_arena_use(&arena);
+    const int result = convert(pdu_name, from_encoding, to_encoding, ibuf, ibuf_len,
+                               obuf, max_obuf_len, err_buf, err_buf_len, check_constraints);
+    asn_arena_use(previous);
+    asn_arena_reset(&arena);
+    return result;
+#else
+    return convert(pdu_name, from_encoding, to_encoding, ibuf, ibuf_len,
+                   obuf, max_obuf_len, err_buf, err_buf_len, check_constraints);
+#endif
 
 }
 

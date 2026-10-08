@@ -35,7 +35,8 @@ endif()
 
 # Optimization level comes from CMAKE_BUILD_TYPE (CMAKE_C_FLAGS_RELEASE / _DEBUG)
 # rather than being hardcoded here, so Debug actually builds unoptimized.
-set(CMAKE_C_FLAGS "-DASN_PDU_COLLECTION -Wno-parentheses-equality")
+# ASN_ARENA turns on the arena allocator of the asn1c skeletons, which convert.c uses.
+set(CMAKE_C_FLAGS "-DASN_PDU_COLLECTION -DASN_ARENA -Wno-parentheses-equality")
 
 file (GLOB generated_SRC
         "generated-files/2024/*.h"

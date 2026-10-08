@@ -16,6 +16,10 @@
   * windows lib/convert-v2x.exe
 * Critical bug fix:
   * Fix a heap over-read in `convert_bytes` when encoding fails due to casting the error code -1 to `size_t`, which crashed the native code and reported a misleading "truncating output" error through the Java library.
+* Performance/speed improvements:
+  * GeneralCodec: use a buffer pool
+  * native library: avoid slow pdu lookup for MessageFrame and Ieee1609Dot2Data
+  * native library: avoid creating extra output buffer
 
 # v2.0.2
 

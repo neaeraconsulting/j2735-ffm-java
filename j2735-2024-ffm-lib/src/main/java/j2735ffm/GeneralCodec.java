@@ -25,6 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
 
 import static j2735ffm.AsnEncoding.JER;
@@ -57,13 +59,88 @@ public class GeneralCodec {
     public final long errorBufferSize;
 
     /**
-     * jextract-generated bindings are platform-specific (e.g. C {@code long} is
-     * 8 bytes on Linux/macOS but 4 bytes on Windows), so two pre-generated
-     * binding sets are shipped ({@code generated.linux}, {@code generated.windows})
-     * and selected at runtime based on the running OS.
+     * Native buffers that no conversion is using.  Allocating and zeroing the buffers for
+     * each message costs more than converting a small message, so they are kept and handed
+     * out again.  There are as many as there were conversions running at the same time, up
+     * to {@link #MAX_KEPT_BUFFERS}.
      */
-    private static final boolean IS_WINDOWS =
-        System.getProperty("os.name").toLowerCase().contains("win");
+    private final ConcurrentLinkedDeque<Buffers> idleBuffers = new ConcurrentLinkedDeque<>();
+
+    /**
+     * The most sets of buffers a codec keeps.  A conversion that finds them all in use
+     * allocates buffers of its own and frees them when it is done.
+     */
+    private static final int MAX_KEPT_BUFFERS = Runtime.getRuntime().availableProcessors();
+
+    // The number of kept sets made so far, idle or in use
+    private final AtomicInteger keptBuffers = new AtomicInteger();
+
+    // The buffers of one conversion at a time, allocated when first asked for.  The memory of
+    // a kept set is released once the codec is no longer reachable.
+    private final class Buffers {
+        private final boolean kept;
+        private final Arena arena;
+        private final MemorySegment error;
+        private MemorySegment textInput;
+        private MemorySegment binaryInput;
+        private MemorySegment textOutput;
+        private MemorySegment binaryOutput;
+
+        Buffers(boolean kept) {
+            this.kept = kept;
+            this.arena = kept ? Arena.ofAuto() : Arena.ofConfined();
+            this.error = arena.allocate(errorBufferSize);
+        }
+
+        // size is textBufferSize or binaryBufferSize
+        MemorySegment input(long size) {
+            if (size == textBufferSize) {
+                if (textInput == null) {
+                    textInput = arena.allocate(size);
+                }
+                return textInput;
+            }
+            if (binaryInput == null) {
+                binaryInput = arena.allocate(size);
+            }
+            return binaryInput;
+        }
+
+        MemorySegment output(long size) {
+            if (size == textBufferSize) {
+                if (textOutput == null) {
+                    textOutput = arena.allocate(size);
+                }
+                return textOutput;
+            }
+            if (binaryOutput == null) {
+                binaryOutput = arena.allocate(size);
+            }
+            return binaryOutput;
+        }
+
+    }
+
+    private Buffers borrowBuffers() {
+        final Buffers buffers = idleBuffers.pollFirst();
+        if (buffers != null) {
+            return buffers;
+        }
+        if (keptBuffers.incrementAndGet() <= MAX_KEPT_BUFFERS) {
+            return new Buffers(true);
+        }
+        keptBuffers.decrementAndGet();
+        return new Buffers(false);
+    }
+
+    // To be called by the thread that borrowed them
+    private void returnBuffers(Buffers buffers) {
+        if (buffers.kept) {
+            idleBuffers.offerFirst(buffers);
+        } else {
+            buffers.arena.close();
+        }
+    }
 
     private static final Platform PLATFORM = detectPlatform();
 
@@ -228,10 +305,11 @@ public class GeneralCodec {
         final long inputBufferSize = fromEncoding.isBinary() ? binaryBufferSize : textBufferSize;
         final long outputBufferSize = toEncoding.isBinary() ? binaryBufferSize : textBufferSize;
         List<byte[]> outputBytesList = new ArrayList<>();
+        final Buffers buffers = borrowBuffers();
         try (var arena = Arena.ofConfined()) {
-            MemorySegment inputBuffer = arena.allocate(inputBufferSize);
-            MemorySegment outputBuffer = arena.allocate(outputBufferSize);
-            MemorySegment errorBuffer = arena.allocate(errorBufferSize);
+            MemorySegment inputBuffer = buffers.input(inputBufferSize);
+            MemorySegment outputBuffer = buffers.output(outputBufferSize);
+            MemorySegment errorBuffer = buffers.error;
             MemorySegment pduName = arena.allocateFrom(pdu, StandardCharsets.UTF_8);
             MemorySegment fromEncodingSeg = arena.allocateFrom(fromEncoding.getName(),
                 StandardCharsets.UTF_8);
@@ -255,6 +333,8 @@ public class GeneralCodec {
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            returnBuffers(buffers);
         }
         return outputBytesList;
     }
@@ -401,26 +481,27 @@ public class GeneralCodec {
     private byte[] textToBinaryEncoding(String fromEncoding, String toEncoding,
             String pdu, String text) {
         log.trace("text: {}", text);
-        validateTextSize(text);
-        return convertSingleMessage(textBufferSize, binaryBufferSize,
-            text.getBytes(StandardCharsets.UTF_8),
+        final byte[] textBytes = text.getBytes(StandardCharsets.UTF_8);
+        validateTextSize(textBytes);
+        return convertSingleMessage(textBufferSize, binaryBufferSize, textBytes,
             pdu, fromEncoding, toEncoding, true);
     }
 
-    // Allocates buffers, converts a single message, and disposes of the buffers
+    // Converts a single message in buffers that are kept for the next one
     private byte[] convertSingleMessage(long inputBufferSize, long outputBufferSize,
             byte[] inputBytes, String pdu, String fromEncoding, String toEncoding,
             boolean checkConstraints) {
+        final Buffers buffers = borrowBuffers();
+        // The arena is for the names of the PDU and the encodings
         try (var arena = Arena.ofConfined()) {
-            MemorySegment inputBuffer = arena.allocate(inputBufferSize);
-            MemorySegment outputBuffer = arena.allocate(outputBufferSize);
-            MemorySegment errorBuffer = arena.allocate(errorBufferSize);
             return convert(arena, inputBytes, fromEncoding,
-                toEncoding, inputBuffer, outputBuffer, outputBufferSize, errorBuffer,
-                errorBufferSize, pdu, checkConstraints);
+                toEncoding, buffers.input(inputBufferSize), buffers.output(outputBufferSize),
+                outputBufferSize, buffers.error, errorBufferSize, pdu, checkConstraints);
         } catch (Exception e) {
             log.error("GeneralCodec: Exception converting message", e);
             throw new RuntimeException(e);
+        } finally {
+            returnBuffers(buffers);
         }
     }
 
@@ -501,9 +582,9 @@ public class GeneralCodec {
         }
     }
 
-    // Validate text inputs fits in text buffer
-    private void validateTextSize(String xer) {
-        final int xerByteLength = xer.getBytes(StandardCharsets.UTF_8).length;
+    // Validate text input, as UTF-8, fits in text buffer
+    private void validateTextSize(byte[] xer) {
+        final int xerByteLength = xer.length;
         if (xerByteLength > textBufferSize) {
             String errMsg = String.format("Input XER message too large: %d > %d", xerByteLength,
                 textBufferSize);

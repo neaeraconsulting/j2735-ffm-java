@@ -28,6 +28,17 @@ extern asn_TYPE_descriptor_t *asn_pdu_collection[];
 
 const int RETURN_ERROR = -1;
 
+#ifdef ASN_ARENA
+// Enough for the decoded structure of most messages.  A larger one spills to
+// heap chunks, which asn_arena_reset frees.
+#define ARENA_BUFFER_SIZE 65536
+// The structure is in the arena of convert_bytes and goes with it, so the
+// walk over it that frees each part is left out.
+#define FREE_STRUCTURE(pdu_type, structure) ((void)(structure))
+#else
+#define FREE_STRUCTURE(pdu_type, structure) ASN_STRUCT_FREE(*(pdu_type), structure)
+#endif
+
 // Nearly every call is for one of two PDUs, so they are tried before the scan
 // of the collection, which has over a thousand entries.
 static asn_TYPE_descriptor_t * find_pdu(const char * pdu_name) {
@@ -68,7 +79,7 @@ static enum asn_transfer_syntax abbrev_to_syntax(const char * abbrev, char * err
 
 
 
-int convert_bytes(const char * pdu_name,
+static int convert(const char * pdu_name,
             const char * from_encoding,
             const char * to_encoding,
             const uint8_t * ibuf,
@@ -105,7 +116,7 @@ int convert_bytes(const char * pdu_name,
     asn_dec_rval_t rval = asn_decode(opt_codec_ctx, isyntax, pduType, &structure, ibuf, ibuf_len);
 
     if (rval.code != RC_OK) {
-        ASN_STRUCT_FREE(*pduType, structure);
+        FREE_STRUCTURE(pduType, structure);
         snprintf(err_buf, err_buf_len, "%s: Error decoding PDU\n", pduType->name);
         return RETURN_ERROR;
     }
@@ -118,7 +129,7 @@ int convert_bytes(const char * pdu_name,
       if (constraint_result != 0) {
           snprintf(err_buf, err_buf_len,
             "Decoding was successful, but constraint check failed, can't re-encode: %s\n", errbuff);
-          ASN_STRUCT_FREE(*pduType, structure);
+          FREE_STRUCTURE(pduType, structure);
           return RETURN_ERROR;
       }
     }
@@ -127,7 +138,7 @@ int convert_bytes(const char * pdu_name,
     // buffer is full but keeps counting, so encoded is the whole size.
     asn_enc_rval_t enc_result =
         asn_encode_to_buffer(opt_codec_ctx, osyntax, pduType, structure, obuf, max_obuf_len);
-    ASN_STRUCT_FREE(*pduType, structure);
+    FREE_STRUCTURE(pduType, structure);
 
     // A failed encode returns encoded == -1, so check the count before
     // treating it as an unsigned length.
@@ -151,6 +162,37 @@ int convert_bytes(const char * pdu_name,
     }
 
     return (int)num_encoded_bytes;
+
+}
+
+int convert_bytes(const char * pdu_name,
+            const char * from_encoding,
+            const char * to_encoding,
+            const uint8_t * ibuf,
+            size_t ibuf_len,
+            uint8_t * obuf,
+            size_t max_obuf_len,
+            char * err_buf,
+            size_t err_buf_len,
+            int check_constraints) {
+
+#ifdef ASN_ARENA
+    // Everything asn1c allocates for this call comes from an arena that starts
+    // in a buffer on the stack, so each call has its own and threads don't
+    // share one.
+    char arena_buffer[ARENA_BUFFER_SIZE];
+    asn_arena_t arena;
+    asn_arena_init(&arena, arena_buffer, sizeof(arena_buffer));
+    asn_arena_t *previous = asn_arena_use(&arena);
+    const int result = convert(pdu_name, from_encoding, to_encoding, ibuf, ibuf_len,
+                               obuf, max_obuf_len, err_buf, err_buf_len, check_constraints);
+    asn_arena_use(previous);
+    asn_arena_reset(&arena);
+    return result;
+#else
+    return convert(pdu_name, from_encoding, to_encoding, ibuf, ibuf_len,
+                   obuf, max_obuf_len, err_buf, err_buf_len, check_constraints);
+#endif
 
 }
 
